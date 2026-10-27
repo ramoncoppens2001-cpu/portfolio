@@ -364,8 +364,9 @@ details.uitklap[open] summary::before{transform:rotate(90deg)}
 .zoekvak.klein input{font-size:13.5px;padding:8px 11px 8px 32px;border-radius:var(--r-klein)}
 .zoekvak.klein .loep{left:10px}
 
-/* ---------- data: twee vakken, één voor elke querytabel, met de koppeling ertussen ----------
-   Excel-groen staat voor wat uit een werkboek komt: bestandsiconen, kopregels,
+/* ---------- data: één vak ----------
+   Sleep of kies je bestanden; de tool zoekt zelf uit wat erin staat. Excel-groen
+   staat voor wat uit een werkboek komt: bestandsiconen, tabbladen, kopregels,
    herkende kolommen en de koppeling. Geel blijft de volgende stap. */
 :root{--xl:#107C41;--xl-d:#0B5A2F;--xl-t:#E6F2EA;--xl-l:#F3F9F5;--xl-r:#B9DCC6;--let-t:#FFF1E4}
 .xlik{display:block;flex:0 0 auto}
@@ -373,121 +374,106 @@ details.uitklap[open] summary::before{transform:rotate(90deg)}
 .dataintro h1{margin:0;font-size:22px;font-weight:600;letter-spacing:-.022em}
 .dataintro p{margin:3px 0 0;color:var(--zacht);font-size:13px;max-width:760px}
 .dataintro .rechtsin{margin-left:auto;display:flex;gap:8px}
-/* bron: query-bestanden of losse rekenmodellen */
-.dataroute{display:flex;align-items:center;gap:16px;margin:0 0 16px;flex-wrap:wrap}
-.routeseg{display:inline-flex;background:rgba(0,0,0,.05);border-radius:13px;padding:3px;gap:3px}
-.routeseg button{border:0;background:none;border-radius:10px;padding:7px 16px 7px 8px;text-align:left;cursor:pointer;color:var(--zacht);display:flex;align-items:center;gap:10px;
-  transition:background var(--soepel),color var(--soepel),box-shadow var(--soepel)}
-.routeseg button:hover{color:var(--inkt)}
-.routeseg button.aan{background:var(--wit);color:var(--inkt);box-shadow:0 1px 3px rgba(0,0,0,.10),0 0 0 .5px rgba(0,0,0,.04)}
-.routeseg .rsi{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.55)}
-.routeseg button.aan .rsi{background:var(--xl-t)}
-.routeseg .rst{display:block;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
-.routeseg .rss{display:block;font-size:11.5px;color:var(--flauw)}
-.routeuitleg{font-size:12.5px;color:var(--zacht);max-width:520px;line-height:1.45;display:flex;gap:9px;align-items:flex-start}
-.routeuitleg svg{color:var(--flauw);flex:0 0 auto;margin-top:2px}
-/* de twee vakken met de brug */
-.dataslots{display:grid;grid-template-columns:minmax(0,1fr) 128px minmax(0,1fr);align-items:stretch}
-.slot{position:relative;background:var(--wit);border-radius:var(--r-groot);box-shadow:var(--schaduw);padding:18px;display:flex;flex-direction:column;min-width:0;transition:box-shadow var(--soepel)}
-.slot .vakkop{display:flex;gap:12px;align-items:flex-start}
-.slot .sikoon{width:40px;height:40px;border-radius:11px;background:var(--vlak);color:var(--flauw);flex:0 0 auto;display:flex;align-items:center;justify-content:center}
-.slot.vol .sikoon{background:var(--geel);color:var(--navy)}
-.slot .vtekst{flex:1;min-width:0}
-.slot h2{margin:1px 0 2px;font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap;letter-spacing:-.01em}
-.slot h2 code{font:600 11px ui-monospace,Menlo,Consolas,monospace;background:var(--vlak);color:var(--zacht);padding:2px 6px;border-radius:5px;letter-spacing:0}
-.slot .sonder{font-size:12.5px;color:var(--zacht);line-height:1.45}
-.slot .sknoppen{display:flex;gap:2px;flex:0 0 auto;margin-left:auto}
-.slotdrop{margin-top:16px;flex:1;border:1.5px dashed #A9D1B9;background:var(--xl-l);border-radius:13px;display:flex;align-items:center;justify-content:center;
-  padding:26px 20px;text-align:center;min-height:262px;cursor:pointer;transition:border-color var(--soepel),background var(--soepel)}
-.slotdrop:hover{border-color:#8CC3A2;background:#EEF7F1}
-.slotdrop .sd{display:flex;flex-direction:column;align-items:center;gap:4px}
-.slotdrop .sd.alsdoel,.slotdrop .sd.alsmee{display:none}
-.slotdrop b{font-size:14.5px;font-weight:600;margin-top:12px;letter-spacing:-.01em}
-.slotdrop .sub{font-size:12.5px;color:var(--zacht);max-width:340px;line-height:1.45}
-.slotdrop .fmt{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap;justify-content:center}
-.slotdrop .fmt span{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;color:var(--xl-d);background:#fff;border:1px solid var(--xl-r);border-radius:5px;padding:2px 6px}
-.slotdrop .knoppen{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.datavak{position:relative;background:var(--wit);border-radius:var(--r-groot);box-shadow:var(--schaduw);min-width:0;transition:box-shadow var(--soepel)}
+.datavak.doel{box-shadow:0 0 0 2px rgba(16,124,65,.28),var(--schaduw)}
+/* leeg: één sleepvlak, en eronder wat de tool herkent */
+.datavak.leeg{padding:18px}
+.vakdrop{border:1.5px dashed #A9D1B9;background:var(--xl-l);border-radius:14px;display:flex;align-items:center;justify-content:center;
+  padding:36px 24px;text-align:center;min-height:320px;cursor:pointer;outline:0;transition:border-color var(--soepel),background var(--soepel),box-shadow var(--soepel)}
+.vakdrop:hover{border-color:#8CC3A2;background:#EEF7F1}
+.vakdrop:focus-visible{box-shadow:0 0 0 3px var(--accent-zacht),0 0 0 1px var(--accent)}
+.vakdrop .sd{display:flex;flex-direction:column;align-items:center;gap:5px}
+.vakdrop .sd.alsdoel{display:none}
+.vakdrop b{font-size:18px;font-weight:600;margin-top:14px;letter-spacing:-.018em}
+.vakdrop .sub{font-size:13px;color:var(--zacht);max-width:480px;line-height:1.5}
+.vakdrop .fmt{display:flex;gap:5px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+.vakdrop .fmt span{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;color:var(--xl-d);background:#fff;border:1px solid var(--xl-r);border-radius:5px;padding:2px 6px}
+.vakdrop .knoppen{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 .pijlop{width:52px;height:52px;border-radius:50%;background:var(--xl);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(16,124,65,.35)}
-/* slepen: het vak onder de muis is het doel, een leeg ander vak doet mee */
-.slot.doel{box-shadow:0 0 0 2px rgba(16,124,65,.28),var(--schaduw)}
-.slot.doel .slotdrop{border:2px solid var(--xl);background:#DCEFE3;box-shadow:inset 0 0 0 4px rgba(255,255,255,.55)}
-.slot.doel .sd.gewoon,.slot.mee .sd.gewoon{display:none}
-.slot.doel .sd.alsdoel{display:flex}
-.slot.doel .sd.alsdoel .sub{color:var(--xl-d);font-weight:500}
-.slot.mee .slotdrop{border:1.5px solid #8CC3A2;background:#E8F4EC}
-.slot.mee .sd.alsmee{display:flex}
-.slot.mee .sd.alsmee .sub{color:var(--xl-d);font-weight:500}
-.slot .sleeplaag{position:absolute;inset:0;border-radius:var(--r-groot);background:rgba(220,239,227,.94);border:2px solid var(--xl);display:none;flex-direction:column;
-  align-items:center;justify-content:center;gap:8px;z-index:3;text-align:center;padding:24px 40px}
-.slot .sleeplaag b{font-size:15px}
-.slot .sleeplaag span:last-child{font-size:12.5px;color:var(--xl-d);max-width:340px;line-height:1.45}
-.slot.vol.doel .sleeplaag{display:flex}
-/* een gevuld vak */
-.slotbron{display:flex;align-items:center;gap:11px;margin-top:16px;padding:10px 12px;background:var(--vlak);border-radius:11px;min-width:0}
-.slotbron .sbt{flex:1;min-width:0}
-.slotbron .nm{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.slotbron .mt{display:block;font-size:11.5px;color:var(--zacht)}
-.slotbronregel{display:flex;align-items:center;gap:9px;margin-top:14px;padding:8px 12px;background:var(--xl-l);border-radius:10px;font-size:12.5px;color:var(--zacht);box-shadow:inset 0 0 0 1px #DCEDE2}
-.slotbronregel b{color:var(--inkt);font-weight:600}
-.slotbronregel .tabik{color:var(--xl);display:flex}
-.slotbronregel .sbt{flex:1;min-width:0}
+/* slepen: het vak licht op */
+.datavak.doel .vakdrop{border:2px solid var(--xl);background:#DCEFE3;box-shadow:inset 0 0 0 4px rgba(255,255,255,.55)}
+.datavak.doel .vakdrop .sd.gewoon{display:none}
+.datavak.doel .vakdrop .sd.alsdoel{display:flex}
+.datavak.doel .vakdrop .sd.alsdoel .sub{color:var(--xl-d);font-weight:500}
+.vakhints{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.vakhint{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--vlak)}
+.vakhint .ti{width:30px;height:30px;border-radius:8px;background:var(--wit);display:flex;align-items:center;justify-content:center;color:var(--zacht);flex:0 0 auto;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.vakhint .tt{display:block;font-size:13px;font-weight:600}
+.vakhint .ts{display:block;font-size:12px;color:var(--zacht);line-height:1.45;margin-top:2px}
+/* gevuld: de bron met de tabbladen, de objecten en de VHE's met de koppeling, de eerste regels */
+.vakkop{display:flex;align-items:center;gap:13px;padding:16px 16px 0 18px;min-width:0}
+.vakkop .vkik{display:flex;flex:0 0 auto}
+.vakkop .vkt{min-width:0;flex:1 1 auto}
+.vakkop .nm{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.01em}
+.vakkop .mt{display:block;font-size:12px;color:var(--zacht);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vakkop .vkacties{margin-left:auto;display:flex;gap:6px;align-items:center;flex:0 0 auto}
+.tweeblad{display:block;width:42px;height:36px;position:relative}
+.tweeblad .xlik{position:absolute}
+.tweeblad .xlik:first-child{left:0;top:0;opacity:.7}
+.tweeblad .xlik:last-child{left:11px;top:6px}
+.bronvb{width:34px;height:34px;border-radius:10px;background:var(--geel);color:var(--navy);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+/* de tabbladen zoals in Excel: de gebruikte zijn groen en lopen door in het vak */
+.vakbladen{display:flex;align-items:flex-end;padding:12px 18px 0;min-width:0;overflow:hidden;border-bottom:1px solid #E3E3E7}
+.vakscheid{height:14px;margin:0 18px;border-bottom:1px solid #E3E3E7}
+.bronblad{display:flex;align-items:center;gap:6px;padding:6px 12px 7px;font-size:12px;color:var(--flauw);background:#F6F6F7;border:1px solid #E3E3E7;border-bottom:0;margin:0 -1px -1px 0;
+  border-radius:7px 7px 0 0;position:relative;white-space:nowrap;flex:0 0 auto}
+.bronblad.ja{background:#fff;color:var(--xl-d);font-weight:600;padding-bottom:8px;border-bottom:1px solid #fff;z-index:1}
+.bronblad.ja svg{color:var(--goed)}
+.bronblad.ja::after{content:"";position:absolute;left:9px;right:9px;bottom:3px;height:2px;border-radius:1px;background:var(--xl)}
+.bronniet{font-size:11.5px;color:var(--flauw);padding:0 0 8px 10px;white-space:nowrap}
+/* de twee delen */
+.vakdelen{padding:8px 18px 6px}
+.vakdeel{display:grid;grid-template-columns:40px minmax(0,1fr) auto auto;gap:6px 16px;align-items:center;padding:10px 0;min-width:0}
+.vakdeel .dikoon{width:40px;height:40px;border-radius:11px;background:var(--geel);color:var(--navy);display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.vakdeel.leeg .dikoon{background:var(--vlak);color:var(--flauw)}
+.vakdeel .dtekst{min-width:0}
+.vakdeel .dtitel{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-.01em;line-height:1.3}
+.vakdeel .dtitel code{font:600 11px ui-monospace,Menlo,Consolas,monospace;background:var(--vlak);color:var(--zacht);padding:2px 6px;border-radius:5px;letter-spacing:0}
+.vakdeel .dbron{font-size:12.5px;color:var(--zacht);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.45}
+.vakdeel .dbron b{color:var(--inkt);font-weight:600}
+.vakdeel.leeg .dbron{white-space:normal}
+.vakdeel .dbest .xlik{display:inline-block;vertical-align:-2px;margin-right:4px}
+.vakdeel .dcijfers{display:grid;grid-template-columns:repeat(3,118px);gap:4px 18px}
+.vakdeel .dcijfers .cg{display:block;font-size:20px;font-weight:600;letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.15}
+.vakdeel .dcijfers .cg small{font-size:13px;color:var(--flauw);font-weight:500;margin-left:1px;letter-spacing:0}
+.vakdeel .dcijfers .cl{display:block;font-size:11.5px;color:var(--zacht);white-space:nowrap}
+.vakdeel .dknoppen{display:flex;gap:2px;justify-self:end}
 .sstip{flex:0 0 auto;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font:700 10.5px/1 -apple-system,system-ui,sans-serif;color:#fff}
 .sstip.ok{background:var(--goed)} .sstip.let{background:#E07B00}
-.slotcijfers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 2px 14px}
-.slotcijfers .cg{display:block;font-size:24px;font-weight:600;letter-spacing:-.025em;font-variant-numeric:tabular-nums;line-height:1.15}
-.slotcijfers .cg small{font-size:14px;color:var(--flauw);font-weight:500;margin-left:1px;letter-spacing:0}
-.slotcijfers .cl{display:block;font-size:12px;color:var(--zacht)}
+/* de koppeling tussen de objecten en de VHE's: een lijn tussen de twee iconen */
+.vakkoppel{display:grid;grid-template-columns:40px minmax(0,1fr);gap:16px;align-items:center;min-height:24px}
+.vakkoppel .klijn{position:relative;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.vakkoppel .klijn::before{content:"";position:absolute;left:50%;top:-12px;bottom:-12px;border-left:1.5px dashed var(--navy4);transform:translateX(-50%)}
+.vakkoppel.vol .klijn::before{border-left:2px solid var(--xl)}
+.vakkoppel.let .klijn::before{border-left-color:#E07B00}
+.vakkoppel .kring{position:relative;z-index:1;width:22px;height:22px;border-radius:50%;border:0;padding:0;background:var(--wit);box-shadow:0 0 0 3px var(--wit),0 1px 4px rgba(0,0,0,.16);
+  display:flex;align-items:center;justify-content:center;color:var(--flauw);font:700 12px/1 -apple-system,system-ui,sans-serif}
+.vakkoppel.vol .kring{background:var(--xl);color:#fff;cursor:pointer;box-shadow:0 0 0 3px var(--wit)}
+.vakkoppel.let .kring{background:#E07B00}
+.vakkoppel .ktekst{font-size:12.5px;color:var(--zacht);line-height:1.4}
+.vakkoppel .ktekst b{color:var(--inkt);font-weight:600}
+.vakkoppel .ktekst .lnk{font-size:12.5px}
+/* de eerste regels, zoals in Excel */
+.vakvoorbeeld{margin:4px 18px 0;padding:12px 0 16px;border-top:1px solid var(--lijn)}
+.vbkop{display:flex;align-items:center;gap:12px;margin-bottom:10px;min-height:26px}
+.vbkop .vbl{font-size:11.5px;font-weight:600;color:var(--flauw);letter-spacing:.05em;text-transform:uppercase}
+.vbkop .vbwat{font-size:13px;font-weight:600}
+.vbkop .lnk{margin-left:auto}
+.vbvoet{font-size:12px;color:var(--zacht);margin-top:8px}
 .slottab{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;border-radius:9px;overflow:hidden;box-shadow:0 0 0 1px var(--xl-r);table-layout:fixed}
 .slottab th{background:var(--xl-t);color:var(--xl-d);font-weight:600;text-align:left;padding:6px 10px;border-bottom:1.5px solid var(--xl);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .slottab td{padding:5.5px 10px;white-space:nowrap;border-bottom:1px solid #E7F0EA;overflow:hidden;text-overflow:ellipsis}
 .slottab tr:last-child td{border-bottom:0}
 .slottab tbody tr:nth-child(even) td{background:var(--xl-l)}
 .slottab .g{text-align:right;font-variant-numeric:tabular-nums}
-.slotmeer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:11px;font-size:12px;color:var(--zacht)}
 .lnk{border:0;background:none;color:var(--xl);font:inherit;font-size:13px;font-weight:500;cursor:pointer;padding:0;white-space:nowrap}
 .lnk:hover{text-decoration:underline;text-underline-offset:2px}
-/* de brug: koppeling op dossiernummer */
-.slotbrug{position:relative;display:flex;align-items:center;justify-content:center;min-height:120px}
-.slotbrug::before{content:"";position:absolute;left:0;right:0;top:50%;border-top:1.5px dashed var(--navy4)}
-.slotbrug.vol::before{border-top:2px solid var(--xl)}
-.slotbrug.let::before{border-top-color:#E07B00}
-.slotbrug .ring{position:relative;z-index:1;width:46px;height:46px;border-radius:50%;border:0;padding:0;background:var(--wit);box-shadow:var(--schaduw);display:flex;align-items:center;justify-content:center;color:var(--flauw);font:700 18px/1 inherit}
-.slotbrug.vol .ring{background:var(--xl);color:#fff;box-shadow:0 0 0 5px var(--papier),0 2px 10px rgba(16,124,65,.35);cursor:pointer}
-.slotbrug.let .ring{background:#E07B00;box-shadow:0 0 0 5px var(--papier),0 2px 10px rgba(224,123,0,.35)}
-.slotbrug .bt{position:absolute;left:4px;right:4px;top:calc(50% + 32px);text-align:center;font-size:11.5px;color:var(--flauw);line-height:1.4}
-.slotbrug .bt b{display:block;color:var(--inkt);font-size:12.5px;font-weight:600}
-.slotbrug .bo{position:absolute;left:4px;right:4px;bottom:calc(50% + 32px);text-align:center;font:600 10.5px/1.5 ui-monospace,Menlo,Consolas,monospace;color:var(--flauw)}
-/* één bron voor beide vakken: de balk met het bestand en zijn tabbladen */
-.databalk{background:var(--wit);border-radius:var(--r-groot);box-shadow:var(--schaduw);padding:12px 14px 12px 16px;display:flex;align-items:center;gap:14px;min-width:0}
-.databalk .dbt{min-width:0}
-.databalk .nm{display:block;font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.databalk .mt{display:block;font-size:12px;color:var(--zacht)}
-.databalk .dbacties{margin-left:auto;display:flex;gap:6px;align-items:center;flex:0 0 auto}
-.bronvb{width:34px;height:34px;border-radius:10px;background:var(--geel);color:var(--navy);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
-.bronbladen{display:flex;align-items:flex-end;align-self:stretch;margin:-12px 0 -12px 12px;padding-top:12px;min-width:0;overflow:hidden}
-.bronblad{display:flex;align-items:center;gap:6px;padding:6px 12px 8px;font-size:12px;color:var(--flauw);background:#F6F6F7;border:1px solid #E6E6E9;border-bottom:0;margin-right:-1px;
-  border-radius:7px 7px 0 0;position:relative;white-space:nowrap;flex:0 0 auto}
-.bronblad.ja{background:#fff;color:var(--xl-d);font-weight:600}
-.bronblad.ja svg{color:var(--goed)}
-.bronblad.ja::after{content:"";position:absolute;left:9px;right:9px;bottom:3px;height:2px;border-radius:1px;background:var(--xl)}
-.bronniet{font-size:11.5px;color:var(--flauw);padding:0 0 9px 10px;white-space:nowrap}
-.dataverdeel{display:grid;grid-template-columns:minmax(0,1fr) 128px minmax(0,1fr);height:34px}
-.dataverdeel .v{position:relative;display:flex;justify-content:center}
-.dataverdeel .v::before{content:"";position:absolute;top:0;bottom:0;left:50%;border-left:2px solid var(--xl)}
-.dataverdeel .v span{position:relative;z-index:1;align-self:center;font-size:11.5px;color:var(--xl-d);background:var(--xl-t);border-radius:980px;padding:2px 10px;font-weight:500;box-shadow:0 0 0 3px var(--papier);white-space:nowrap}
-.dataverdeel code{font:600 10.5px ui-monospace,Menlo,Consolas,monospace}
-/* de vraag of het andere vak ook vervangen moet worden */
-.datavraag{display:flex;align-items:center;gap:12px;background:var(--let-t);border-radius:var(--r-groot);padding:12px 14px 12px 16px;margin-bottom:14px;font-size:13px;line-height:1.45;
-  box-shadow:inset 0 0 0 1px #F3D9BF}
-.datavraag .dvik{width:24px;height:24px;border-radius:50%;background:#E07B00;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
-.datavraag .dvt{flex:1;min-width:0}
-.datavraag .dvk{display:flex;gap:8px;flex:0 0 auto}
-/* tips onder de lege vakken */
-.datatips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
-.datatip{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.45);box-shadow:inset 0 0 0 .5px var(--lijn-sterk)}
-.datatip .ti{width:30px;height:30px;border-radius:8px;background:var(--wit);display:flex;align-items:center;justify-content:center;color:var(--zacht);flex:0 0 auto;box-shadow:0 1px 2px rgba(0,0,0,.06)}
-.datatip .tt{display:block;font-size:13px;font-weight:600}
-.datatip .ts{display:block;font-size:12px;color:var(--zacht);line-height:1.45;margin-top:2px}
+/* slepen boven het gevulde vak */
+.datavak .sleeplaag{position:absolute;inset:0;border-radius:var(--r-groot);background:rgba(220,239,227,.94);border:2px solid var(--xl);display:none;flex-direction:column;
+  align-items:center;justify-content:center;gap:8px;z-index:3;text-align:center;padding:24px 40px}
+.datavak .sleeplaag b{font-size:15px}
+.datavak .sleeplaag span:last-child{font-size:12.5px;color:var(--xl-d);max-width:420px;line-height:1.45}
+.datavak.vol.doel .sleeplaag{display:flex}
 /* controle en snel rapport onder de vakken */
 .dataonder{display:grid;grid-template-columns:minmax(0,1fr) 440px;gap:14px;margin-top:14px;align-items:start}
 .dataonder.snelopen,.dataonder.zondersnel{grid-template-columns:minmax(0,1fr)}
@@ -1027,26 +1013,18 @@ body.kaartsleep .tip{display:none!important}
 @media(max-width:1180px){
   .dataonder{grid-template-columns:minmax(0,1fr)}
   .bronniet{display:none}
-}
-/* twee smalle vakken naast elkaar: zonder de derde kolom passen de bedragen */
-@media(min-width:961px) and (max-width:1180px){
-  .slottab th:nth-child(3),.slottab td:nth-child(3){display:none}
+  .vakdeel .dcijfers{grid-template-columns:repeat(3,104px);gap:4px 12px}
 }
 @media(max-width:960px){
   .kaartraster{grid-template-columns:1fr}
-  /* de vakken onder elkaar, de brug ertussen loodrecht */
-  .dataslots{grid-template-columns:minmax(0,1fr)}
-  .slotbrug{min-height:92px}
-  .slotbrug::before{left:50%;right:auto;top:0;bottom:0;border-top:0;border-left:1.5px dashed var(--navy4)}
-  .slotbrug.vol::before{border-top:0;border-left:2px solid var(--xl)}
-  .slotbrug.let::before{border-left-color:#E07B00}
-  .slotbrug .bo{display:none}
-  .slotbrug .bt{top:50%;bottom:auto;left:calc(50% + 34px);right:0;transform:translateY(-50%);text-align:left;max-width:240px}
-  .dataverdeel{display:none}
-  .databalk{flex-wrap:wrap}
-  .bronbladen{order:3;flex-basis:100%;margin:4px 0 -12px;padding-top:0}
-  .datatips{grid-template-columns:1fr}
-  .datavraag{flex-wrap:wrap}
+  /* één vak: de cijfers onder de naam, de tips onder elkaar */
+  .vakhints{grid-template-columns:1fr}
+  .vakdeel{grid-template-columns:40px minmax(0,1fr) auto;grid-template-areas:"ik tekst knop" ". cijfers cijfers"}
+  .vakdeel .dikoon{grid-area:ik}.vakdeel .dtekst{grid-area:tekst}.vakdeel .dcijfers{grid-area:cijfers}.vakdeel .dknoppen{grid-area:knop}
+  .vakkop{flex-wrap:wrap}
+  .vakkop .vkt{flex:1 1 220px}
+  .vakdeel .dcijfers{grid-template-columns:repeat(3,minmax(0,150px));gap:4px 16px}
+  .slottab .n2{display:none}
   .snelrapport{grid-template-columns:1fr}
   .snelrapport .srknoppen{grid-column:1;grid-row:auto;justify-self:start}
   .snelrapport .srvelden{grid-template-columns:1fr 1fr}
@@ -1063,10 +1041,22 @@ body.kaartsleep .tip{display:none!important}
 @media(max-width:620px){
   .merk .woord{display:none}
   .snelrapport .srvelden{grid-template-columns:1fr}
-  .slotcijfers .cg{font-size:20px}
-  .slottab th:nth-child(3),.slottab td:nth-child(3){display:none}
-  .routeseg{width:100%}
-  .routeseg button{flex:1}
+  /* één vak op een telefoon */
+  .datavak.leeg{padding:12px}
+  .vakdrop{min-height:240px;padding:26px 16px}
+  .vakdrop b{font-size:16px}
+  .vakkop{padding:14px 12px 0 14px}
+  .vakbladen{padding:10px 12px 0}
+  .vakscheid{margin:0 12px}
+  .vakdelen{padding:6px 12px 4px}
+  .vakvoorbeeld{margin:4px 12px 0}
+  .vakdeel{gap:6px 12px}
+  .vakkoppel{gap:12px}
+  .vakdeel .dcijfers{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 10px}
+  .vbkop .vbl{display:none}
+  .vakdeel .dcijfers .cg{font-size:18px}
+  .vakdeel .dcijfers .cl{white-space:normal;line-height:1.3}
+  .slottab .n3{display:none}
   .tegels{grid-template-columns:1fr 1fr}
   .kvelden{grid-template-columns:1fr}
 }
@@ -1144,7 +1134,7 @@ body.kaartsleep .tip{display:none!important}
     <div class="dataintro">
       <div>
         <h1>Portefeuilledata</h1>
-        <p>Twee tabellen, elk in een eigen vak: de objecten (<b>tblQuery</b>) en de verhuurbare eenheden (<b>tblVHE</b>). De tool koppelt ze op dossiernummer. Alles blijft in deze browser.</p>
+        <p>Sleep je bestanden in het vak: het query-bestand of de rekenmodellen. De tool zoekt zelf uit wat de objecten (<b>tblQuery</b>) en de verhuurbare eenheden (<b>tblVHE</b>) zijn, en koppelt ze op dossiernummer. Alles blijft in deze browser.</p>
       </div>
       <div class="rechtsin">
         <button class="k stil" id="knopKoppelen" disabled>Kolommen koppelen</button>
@@ -1152,16 +1142,7 @@ body.kaartsleep .tip{display:none!important}
       </div>
     </div>
 
-    <div class="dataroute" id="dataRoute"></div>
-    <div class="databron verborgen" id="dataBron"></div>
-    <div class="datavraag verborgen" id="dataVraag" role="status" aria-live="polite"></div>
-
-    <div class="dataslots" id="dataSlots">
-      <section class="slot" id="slotObj" aria-label="Objecten (tblQuery)"></section>
-      <div class="slotbrug" id="slotBrug"></div>
-      <section class="slot" id="slotVhe" aria-label="VHE's (tblVHE)"></section>
-    </div>
-    <div class="datatips" id="dataTips"></div>
+    <section class="datavak leeg" id="dataVak" aria-label="Bestanden kiezen of slepen"></section>
 
     <input type="file" id="bestandKies" accept=".xlsx,.xlsm,.xlsb,.xls,.csv,.tsv" multiple hidden>
     <input type="file" id="modelKies" accept=".xlsm,.xlsx,.xlsb" multiple hidden>
@@ -1391,10 +1372,10 @@ function tekenLogos() {
 const OPSLAG = "pfTool";
 const LS_INST = OPSLAG + "_v1";
 /* Versie: de bovenste regel van src/versies.json (de bouwstap zet de lijst hier). */
-const VERSIES = [{"nr":"1.14","datum":"2026-10-25","nieuw":["Rekenmodellen: de VHE's staan op een vaste plek, zoals in het sjabloon: de kopregel op regel 34 van het tabblad Overview (Type, Address, VPV en FV of MV) en de VHE's op regel 35 tot en met 209. Meestal zijn er maar een paar gevuld; de lege regels tellen niet mee, ook niet een lege regel tussen twee VHE's (die noemt de tool bij de opmerkingen). Een regel met alleen een type, zonder adres of waarde, is ook leeg. Wat onder regel 209 staat, hoort er niet bij","Rekenmodellen: de waarde per VHE heet per klant FV (fair value) of MV (marktwaarde). De tool herkent beide als de waarde per VHE en zet ze in één kolom, ook als de ene klant FV gebruikt en de andere MV. In regel 1 herkent de tool FV en FV_Total ook als marktwaarde","Rekenmodellen: staat er op regel 34 geen kopregel (een ouder of ander sjabloon), dan zoekt de tool de kopregel zelf in de kolommen A tot en met D en leest tot de eerste lege regel; dat staat bij de opmerkingen van dat model. Is het blok tot en met regel 209 helemaal vol, dan meldt de tool dat ook","Rekenmodellen: in het venster kies je bij VHE-blok tussen Vaste regels (de kopregel en tot en met welke regel, standaard 34 en 209) en Zelf zoeken. Een keuze die in 1.12 of 1.13 is bewaard, gaat terug naar 34 tot en met 209. Op het datascherm staat bij het vak VHE's waar ze vandaan komen, bijvoorbeeld A35:D209 van het tabblad Overview"]},{"nr":"1.13","datum":"2026-10-23","nieuw":["Data: een nieuw datascherm met twee vakken, elk voor één tabel: Objecten (tblQuery) en VHE's (tblVHE). Elk leeg vak is een sleepvlak; tijdens het slepen licht het vak op waar het bestand heen gaat. Tussen de vakken staat de koppeling op dossiernummer, met hoeveel er gekoppeld zijn","Data: een bestand met beide tabellen, elk op een eigen tabblad, sleep je op een van de twee vakken. De tool kijkt in alle tabbladen en vult beide vakken. Boven de vakken staat dan één balk met het bestand en zijn tabbladen: de gebruikte in groen, de andere grijs. Een lijntje laat zien welk tabblad in welk vak zit","Data: per vak een menu. Daarin kies je een andere tabel uit hetzelfde bestand, wijs je een tabblad aan (als de tabel er niet als Excel-tabel in staat), kies je een ander bestand alleen voor dat vak of koppel je kolommen. Het andere vak blijft dan staan. Weghalen kan per vak of in de balk voor het hele bestand","Data: staat er in het andere vak al een ander bestand, dan vraagt de tool eerst of dat vak ook vervangen moet worden. Kwamen beide vakken uit één bestand, dan vervangt een nieuwe versie van dat bestand ze allebei, zonder vraag. Laat je een bestand op het verkeerde vak vallen, dan komt het toch in het goede vak en zegt de tool dat. Voorbeelddata in het andere vak gaat weg zodra er echte data komt","Data: kies boven de vakken tussen query-bestanden en losse rekenmodellen. Met rekenmodellen vullen dezelfde twee vakken zich: regel 1 en 2 van het tabblad Overview worden het object, de kolommen A tot en met D de VHE's. Je ziet de modellen eerst in het venster, zoals in 1.12","Data: per vak de kerngetallen en de eerste drie regels als Excel-tabel. De controle staat compact onder de vakken, met de aandachtspunten; Alles tonen geeft de hele lijst. Snel rapport staat ernaast als kaart met de vier keuzes en Maak PDF; Aanpassen klapt hem uit"]},{"nr":"1.12","datum":"2026-10-23","nieuw":["Data: losse rekenmodellen (.xlsm) inlezen, één bestand per object. De tool opent van elk model alleen het tabblad Overview: regel 1 de kolomnamen, regel 2 de waarden, en daaronder in de kolommen A tot en met D de VHE's met een kopregel, tot de eerste lege regel. De rest van het model blijft dicht, zodat ook zware modellen snel gaan (een model van 1,7 MB in ongeveer 25 ms)","Data: de knop Rekenmodellen… opent een venster waarin je bestanden of een hele map kiest en eerst bekijkt wat de tool leest: per bestand (dossier, adres, marktwaarde, aantal kolommen en VHE's, opmerkingen), per kolom (herkend als welk veld, in hoeveel modellen gevuld, eerste waarde) en de VHE's. Sleep je modellen op het datascherm, dan herkent de tool ze aan het tabblad Overview en opent hetzelfde venster","Data: de naam van het tabblad en de regel van de VHE-kop zijn in te stellen; standaard zoekt de tool de kopregel zelf. Tijdelijke Excel-bestanden (~$…) en bestanden zonder het tabblad worden overgeslagen en genoemd. Formules zonder berekende waarde en foutwaarden zoals #N/A staan als opmerking bij het bestand","Data: Inlezen in de tool zet de modellen om naar dezelfde tabellen als tblQuery en tblVHE, met vooraan de kolom Bronbestand; de VHE's horen bij het object uit hetzelfde model. Op het blad Herkomst van de Excel-export staat elk model met zijn vingerafdruk (SHA-256)"]},{"nr":"1.11","datum":"2026-10-20","nieuw":["Rapport: acht extra grafieken, die je in de rapportstudio kiest met aanvinkbare tegels. Elke tegel toont een schets van de grafiek en in welk onderdeel hij komt; kan hij niet (onderdeel uit, gegevens ontbreken), dan staat erbij waarom","Samenvatting: aandachtspunten (grootste stijging en daling, 10% of meer verschil, leegstand, nieuwe objecten, bandbreedte van het rendement), de huuropbouw per groep (contracthuur, derving door leegstand en markthuur), de marktwaarde per m² tegenover het rendement, de spreiding per groep (marktwaarde / leegwaarde, anders het rendement) en de concentratie van de waarde","Backtesting: de bijdrage aan het verschil per groep, gesplitst in huur en rendement zoals de waardebrug, en de verdeling van de waardeontwikkeling over de objecten","Pagina per object: de plek van het object in de portefeuille, per kenmerk de verdeling over alle objecten met dit object als stip","Standaard staan de aandachtspunten, de huuropbouw, de bijdrage per groep en de plek in de portefeuille aan; het profiel Volledig zet alle acht aan. Een eigen profiel onthoudt de keuze","De grafieken werken in alle tien sjablonen, in het Nederlands en het Engels, liggend en staand; zonder vorige taxatie vallen de bijdrage en de verdeling weg"]},{"nr":"1.10","datum":"2026-10-20","nieuw":["Rapport: vier nieuwe sjablonen, gemaakt voor staand: Bijlage, Factsheet, Magazine en Compact. Kies je er een terwijl de richting op liggend staat, dan zet de tool hem op staand; liggend kan daarna nog steeds","Bijlage: voor naast het getekende taxatierapport. Een titelblad met de gegevens, de status en de inhoud; genummerde hoofdstukken met het nummer in de kantlijn; een lopende kop op elk blad en onderaan dat het getekende rapport voorgaat. Hoofdstukken lopen door op hetzelfde blad, de waardebrug staat als tabel, een objectpagina heeft de gegevens in de kantlijn","Factsheet: een navy band met de kop op elk blad, op het voorblad met de drie hoofdcijfers. Het voorblad toont de waarde per groep, de kaart in de kleuren van de groepen, het rendement en de waardeontwikkeling; de samenvatting een tegel per groep met de grootste objecten. Twee objecten per pagina","Magazine: de kaart als omslag, de marktwaarde als één groot getal en een paar zinnen die de tool uit de cijfers maakt (wat de huur bijdroeg en wat het rendement kostte, welke groep het meest steeg). Bij Ligging: waar de waarde zit, met de tien grootste objecten. Eén object per pagina","Compact: zoveel mogelijk op een pagina. Kerncijfers met het aantal objecten in elk verschil, de aansluiting met de Excel-export, en een objectenlijst als een grootboek: een lijn na elke vijf objecten, het totaal onderaan en bovenaan elk volgend blad een transportregel met de som tot dan toe. Vier objecten per pagina","Objectpagina's in de nieuwe sjablonen: een kaartje van de omgeving met de andere objecten uit de portefeuille in de buurt, in plaats van een foto"]},{"nr":"1.9","datum":"2026-10-16","nieuw":["Excel: naast het opgemaakte overzicht een datablad met tblQuery als Excel-tabel: één regel per object, één kolom per veld, veldnamen en waarden zoals in de bron. Om in te lezen, te filteren en draaitabellen te maken. Met VHE's staat tblVHE er op dezelfde manier bij","Excel: geen samengevoegde cellen meer; koppen staan gecentreerd over de selectie. Totalen zijn formules die meefilteren (SUBTOTAAL), gewogen gemiddelden zijn SOMPRODUCT met dezelfde gewichten als de tool. Nieuwe objecten zijn gemarkeerd en Δ staat in %, %-punt of basispunten, met de definitie onder de tabel","Excel: het blad Herkomst met de bronbestanden (datum en vingerafdruk), de toolversie, het profiel, filters en uitgezette objecten, waardepeildatum, grondslag, valuta, oppervlakte en per kolom de bron; het getekende rapport gaat voor. Het blad Controle zet aantallen en sommen per portefeuille als formules naast elkaar; elk verschil moet 0 zijn","Excel: de bestandsnaam is opdrachtgever, kenmerk, waardepeildatum en titel. Bij Rapportgegevens vul je de grondslag en de oppervlaktedefinitie in voor het blad Herkomst","Data: een lege vorige waarde in de bron betekent geen vorige taxatie. Alleen als de bron geen kolom met vorige waarden heeft, rekent de tool die terug uit de Δ-kolom","Data: foutwaarden zoals #N/A tellen als leeg en staan op het blad Herkomst; emoji en andere bijzondere tekens worden goed gelezen"]},{"nr":"1.8","datum":"2026-10-16","nieuw":["Excel: het portefeuilleoverzicht ziet eruit als het Savills-sjabloon: titel en gegevens bovenaan met het logo rechtsboven, het gele label OBJECTEN, de groepen met huidig · vorig · Δ en het totaal, zonder rasterlijnen en met een kop die blijft staan als je scrolt","Excel: meteen klaar om af te drukken, op A4 of A3 liggend: op elk blad hele groepen kolommen, met de kop, het dossier en het adres, het logo en een paginanummer","Excel: de bladen VHE's, Waardebrug en Gevoeligheid hebben dezelfde opmaak; bij de VHE's staat nu ook een totaal"]},{"nr":"1.7","datum":"2026-10-15","nieuw":["Data: ‘Snel rapport’. Zodra je data hebt geladen, maak je meteen een PDF: kies de opdrachtgever, de inhoud (de basis met kerncijfers of een profiel), het sjabloon en de taal, en klik op ‘Maak PDF’. Daarna sta je in Rapport en kun je alles nog aanpassen","Data: het blok laat zien wat er in het rapport komt, en wat wegvalt omdat de data het niet heeft (bijvoorbeeld backtesting zonder vorige taxatie). Staat er een filter, zijn objecten uitgezet of zijn er aandachtspunten in de controle, dan staat dat erbij, met een knop om het op te lossen","Data: met data geladen is het vak om bestanden te laden kleiner, zodat het snel rapport en de controle bovenaan staan","Rapport: in het objectenoverzicht en de backtesting staat het label OBJECTEN (PROPERTIES) netjes in het midden van zijn balk, en zijn de kolommen breed genoeg voor hun kop en hun cijfers, zodat er niets meer wordt afgekapt (zoals ‘Eenheden’, ‘dec 2026’ of een lange plaatsnaam)"]},{"nr":"1.6","datum":"2026-10-14","nieuw":["Rapport: zes sjablonen. Naast Klassiek nu vier sjablonen naar de Savills Brand Guidelines: Savills geel en Savills navy (met een omslag op de kubusachtergrond), Dashboard (compact, zoals de PowerBI-rapporten) en Research (als een publicatie, met één accentkleur die je kiest). Modern is vernieuwd","Rapport: in de nieuwe sjablonen Gotham voor tekst en koppen (Montserrat als Gotham niet op de computer staat), Barlow voor cijfers en tabellen, en grafieken en kaarten in de kleuren van het sjabloon","Rapport: bij een sjabloon met een omslag staan titel, opdrachtgever en datums op de omslag (bij navy en Research ook de drie belangrijkste cijfers); het blad erna heet Kerncijfers","Rapport: een lange inhoudsopgave op het voorblad van Modern staat in twee kolommen, zodat het voorblad op één blad past","Het logo staat overal in de officiële logokleuren, een eigen geel en rood alleen voor het logo: in alle sjablonen, ook Klassiek, en in de tool zelf. De gele accenten blijven Savills-geel"]},{"nr":"1.5","datum":"2026-10-13","nieuw":["Rapport: de inhoudsopgave is klikbaar, in het voorbeeld én in de PDF. Met ‘Pagina per object’ linken ook de adressen in het objectenoverzicht, de ligging, de backtesting en de opmerkingen naar de pagina van dat object","Rapport: nieuw onderdeel ‘Toelichting’, je eigen tekst na het voorblad. Een lege regel begint een nieuwe alinea, een regel met - wordt een opsomming","Objectvenster: schrijf per object een ‘Toelichting voor het rapport’. Die komt op de pagina van dat object en bij Opmerkingen, en wordt bij elke toets bewaard; in de objectentabel staat een tekstwolkje bij het adres","Rapport: de opmerkingen uit de data (Remarks en kadaster) komen alleen nog in het rapport als je ‘Ook opmerkingen uit de data’ aanzet, want ze zijn vaak intern bedoeld. Bij de profielen Volledig en Juridisch staat dat aan","Rapport: staan er nog rapportgegevens (opdrachtgever, kenmerk, toelichting) van andere data, dan vraagt de studio of ze nog kloppen, met ‘Leegmaken’ of ‘Houden’","Wat je verandert, wordt ook bewaard als je het tabblad of Chrome meteen sluit of naar een ander programma gaat"]},{"nr":"1.4","datum":"2026-10-13","nieuw":["Rapport: kies bij ‘Ligging op de kaart’ een detailkaart per plaats: alleen voor drukke plaatsen, voor elke plaats vanaf 5, 3 of 2 objecten, of geen. Zo ziet de lezer van de PDF ook kleinere steden van dichtbij, met de wijken en dezelfde nummers","Rapport: elke plaats die op de landkaart een bol is, heeft nu een eigen detailkaart (eerst alleen de zes grootste); de toelichting staat direct onder de landkaart","Rapport: detailkaarten gebruiken de ruimte op het blad beter en passen ook in het sjabloon Modern met grote tekst"]},{"nr":"1.3","datum":"2026-10-13","nieuw":["Kaart: kies meer plaatsen of provincies tegelijk met Ctrl-klik (op een Mac ⌘-klik), in de verdeling of op een bol. De lijst toont hun objecten met de samen-cijfers; de totalen en het rapport blijven over de hele selectie gaan","Kaart: wat buiten je keuze valt, wordt lichter, en een plaats in de verdeling aanwijzen laat zijn objecten oplichten. Gekozen of gefilterde plaatsen vallen eerder uit elkaar in losse objecten","Kaart: de hele verdeling is uit te klappen, de rijen werken ook met het toetsenbord, en bij een stad als Rotterdam staat de plaatsnaam er nu ook","Rapport: het voorbeeld wordt in stukjes opgemaakt, zodat de tool blijft reageren en grote rapporten veel sneller klaar zijn; na een wijziging blijft het voorbeeld op dezelfde plek staan","Afdrukken wacht tot het voorbeeld met je laatste keuzes helemaal klaar is","Profielen: het kruisje om een eigen profiel te verwijderen is altijd te zien; hetzelfde profiel nog eens inlezen werkt het bij in plaats van het dubbel te zetten","Adressen opzoeken bij PDOK geeft het op als er na 12 seconden geen antwoord is; nieuwe data laden zet de kaart weer op heel Nederland"]},{"nr":"1.2","datum":"2026-10-13","nieuw":["Inlezen robuuster: een totaalregel, een herhaalde kopregel of lege regels uit een sjabloon tellen niet meer als object; de controle laat zien wat er is overgeslagen","De query mag ook als gewoon bereik op een tabblad staan, ook als tblVHE wel een Excel-tabel is","CSV in Nederlandse en Engelse notatie (1.234,5 of 1,234.5) en zoals Excel hem in Nederland opslaat; datums ook als 31 december 2026","Meer kolomnamen herkend, ook varianten voor de vorige taxatie (_PY, vorig, previous) en voor het verschil (Δ, delta); een Δ-kolom als bedrag wordt goed omgerekend","Twee bestanden met verschillende objecten worden samengevoegd; twee versies van dezelfde query niet (de controle zegt welke is gebruikt)","Grafieken per groep tonen de 12 grootste groepen; nieuwe objecten zijn een lichte staaf, zodat staaf, streep en verschil over dezelfde objecten gaan","Snel met grote portefeuilles: bij duizenden VHE's staan de bestanden ingeklapt"]},{"nr":"1.1","datum":"2026-10-13","nieuw":["Overzicht aanpassen: kies zelf welke kerncijfers (bijvoorbeeld NAR, MV/VPV, DCF-rendementen) en welke grafieken je ziet; de kerncijfers gelden ook voor het voorblad","Kaart: een drukke plaats is op heel Nederland één bol met het aantal en de verdeling; klik erop en je zoomt in op de stad","Stadskaart met wijken en stadsdelen, en een verdeling per plaats in het zijpaneel om een stad te openen","Rapport: een detailkaart per stad met veel objecten, met dezelfde nummers als de lijst","Voorbeeld met 100 objecten, waarvan 30 in Amsterdam"]},{"nr":"1.0","datum":"2026-10-12","nieuw":["Waardebrug: het verschil met de vorige taxatie gesplitst in huur, rendement en nieuwe objecten, op het overzicht, per object en in het rapport","Gevoeligheid: wat de marktwaarde ongeveer doet bij een ander rendement of een andere huur, ook als rapportonderdeel","Werkt zonder internet: de Excel-lezer en de lettertypes van het rapport zitten nu in het bestand","Versienummer en dit venster, met de bronnen en licenties"]}];
+const VERSIES = [{"nr":"1.15","datum":"2026-10-27","nieuw":["Data: één vak in plaats van twee. Sleep je bestanden erin of klik op Bestanden kiezen: het query-bestand (tblQuery en tblVHE, samen in één bestand of in twee), losse rekenmodellen of een hele map. De tool zoekt zelf uit wat de objecten zijn en wat de VHE's; de keuze tussen query-bestanden en losse rekenmodellen is weg","Data: na het inlezen staat in hetzelfde vak waar alles vandaan kwam: het bestand met zijn tabbladen (de gebruikte in groen), daaronder de objecten en de VHE's met hun tabblad of bestand, de kerngetallen en de koppeling ertussen, en de eerste regels als Excel-tabel, te wisselen tussen objecten en VHE's","Data: wat je later in het vak sleept, komt op zijn plek. Met objecten en VHE's vervangt het alles; met één van de twee alleen dat deel, en de melding zegt wat bleef staan. De vraag of het andere vak ook vervangen moet worden is daarmee weg. Per deel kies je nog steeds een andere tabel, een tabblad of een ander bestand, en een leeg deel vul je met bijvoorbeeld VHE's toevoegen","Data: een map met rekenmodellen kun je ook slepen, met submappen; tijdelijke Excel-bestanden en andere bestanden (zoals pdf's) slaat de tool over. Een werkboek met macro's zonder tabblad Overview en zonder querytabel gaat naar het venster van de rekenmodellen, waar je de naam van het tabblad aanpast"]},{"nr":"1.14","datum":"2026-10-25","nieuw":["Rekenmodellen: de VHE's staan op een vaste plek, zoals in het sjabloon: de kopregel op regel 34 van het tabblad Overview (Type, Address, VPV en FV of MV) en de VHE's op regel 35 tot en met 209. Meestal zijn er maar een paar gevuld; de lege regels tellen niet mee, ook niet een lege regel tussen twee VHE's (die noemt de tool bij de opmerkingen). Een regel met alleen een type, zonder adres of waarde, is ook leeg. Wat onder regel 209 staat, hoort er niet bij","Rekenmodellen: de waarde per VHE heet per klant FV (fair value) of MV (marktwaarde). De tool herkent beide als de waarde per VHE en zet ze in één kolom, ook als de ene klant FV gebruikt en de andere MV. In regel 1 herkent de tool FV en FV_Total ook als marktwaarde","Rekenmodellen: staat er op regel 34 geen kopregel (een ouder of ander sjabloon), dan zoekt de tool de kopregel zelf in de kolommen A tot en met D en leest tot de eerste lege regel; dat staat bij de opmerkingen van dat model. Is het blok tot en met regel 209 helemaal vol, dan meldt de tool dat ook","Rekenmodellen: in het venster kies je bij VHE-blok tussen Vaste regels (de kopregel en tot en met welke regel, standaard 34 en 209) en Zelf zoeken. Een keuze die in 1.12 of 1.13 is bewaard, gaat terug naar 34 tot en met 209. Op het datascherm staat bij het vak VHE's waar ze vandaan komen, bijvoorbeeld A35:D209 van het tabblad Overview"]},{"nr":"1.13","datum":"2026-10-23","nieuw":["Data: een nieuw datascherm met twee vakken, elk voor één tabel: Objecten (tblQuery) en VHE's (tblVHE). Elk leeg vak is een sleepvlak; tijdens het slepen licht het vak op waar het bestand heen gaat. Tussen de vakken staat de koppeling op dossiernummer, met hoeveel er gekoppeld zijn","Data: een bestand met beide tabellen, elk op een eigen tabblad, sleep je op een van de twee vakken. De tool kijkt in alle tabbladen en vult beide vakken. Boven de vakken staat dan één balk met het bestand en zijn tabbladen: de gebruikte in groen, de andere grijs. Een lijntje laat zien welk tabblad in welk vak zit","Data: per vak een menu. Daarin kies je een andere tabel uit hetzelfde bestand, wijs je een tabblad aan (als de tabel er niet als Excel-tabel in staat), kies je een ander bestand alleen voor dat vak of koppel je kolommen. Het andere vak blijft dan staan. Weghalen kan per vak of in de balk voor het hele bestand","Data: staat er in het andere vak al een ander bestand, dan vraagt de tool eerst of dat vak ook vervangen moet worden. Kwamen beide vakken uit één bestand, dan vervangt een nieuwe versie van dat bestand ze allebei, zonder vraag. Laat je een bestand op het verkeerde vak vallen, dan komt het toch in het goede vak en zegt de tool dat. Voorbeelddata in het andere vak gaat weg zodra er echte data komt","Data: kies boven de vakken tussen query-bestanden en losse rekenmodellen. Met rekenmodellen vullen dezelfde twee vakken zich: regel 1 en 2 van het tabblad Overview worden het object, de kolommen A tot en met D de VHE's. Je ziet de modellen eerst in het venster, zoals in 1.12","Data: per vak de kerngetallen en de eerste drie regels als Excel-tabel. De controle staat compact onder de vakken, met de aandachtspunten; Alles tonen geeft de hele lijst. Snel rapport staat ernaast als kaart met de vier keuzes en Maak PDF; Aanpassen klapt hem uit"]},{"nr":"1.12","datum":"2026-10-23","nieuw":["Data: losse rekenmodellen (.xlsm) inlezen, één bestand per object. De tool opent van elk model alleen het tabblad Overview: regel 1 de kolomnamen, regel 2 de waarden, en daaronder in de kolommen A tot en met D de VHE's met een kopregel, tot de eerste lege regel. De rest van het model blijft dicht, zodat ook zware modellen snel gaan (een model van 1,7 MB in ongeveer 25 ms)","Data: de knop Rekenmodellen… opent een venster waarin je bestanden of een hele map kiest en eerst bekijkt wat de tool leest: per bestand (dossier, adres, marktwaarde, aantal kolommen en VHE's, opmerkingen), per kolom (herkend als welk veld, in hoeveel modellen gevuld, eerste waarde) en de VHE's. Sleep je modellen op het datascherm, dan herkent de tool ze aan het tabblad Overview en opent hetzelfde venster","Data: de naam van het tabblad en de regel van de VHE-kop zijn in te stellen; standaard zoekt de tool de kopregel zelf. Tijdelijke Excel-bestanden (~$…) en bestanden zonder het tabblad worden overgeslagen en genoemd. Formules zonder berekende waarde en foutwaarden zoals #N/A staan als opmerking bij het bestand","Data: Inlezen in de tool zet de modellen om naar dezelfde tabellen als tblQuery en tblVHE, met vooraan de kolom Bronbestand; de VHE's horen bij het object uit hetzelfde model. Op het blad Herkomst van de Excel-export staat elk model met zijn vingerafdruk (SHA-256)"]},{"nr":"1.11","datum":"2026-10-20","nieuw":["Rapport: acht extra grafieken, die je in de rapportstudio kiest met aanvinkbare tegels. Elke tegel toont een schets van de grafiek en in welk onderdeel hij komt; kan hij niet (onderdeel uit, gegevens ontbreken), dan staat erbij waarom","Samenvatting: aandachtspunten (grootste stijging en daling, 10% of meer verschil, leegstand, nieuwe objecten, bandbreedte van het rendement), de huuropbouw per groep (contracthuur, derving door leegstand en markthuur), de marktwaarde per m² tegenover het rendement, de spreiding per groep (marktwaarde / leegwaarde, anders het rendement) en de concentratie van de waarde","Backtesting: de bijdrage aan het verschil per groep, gesplitst in huur en rendement zoals de waardebrug, en de verdeling van de waardeontwikkeling over de objecten","Pagina per object: de plek van het object in de portefeuille, per kenmerk de verdeling over alle objecten met dit object als stip","Standaard staan de aandachtspunten, de huuropbouw, de bijdrage per groep en de plek in de portefeuille aan; het profiel Volledig zet alle acht aan. Een eigen profiel onthoudt de keuze","De grafieken werken in alle tien sjablonen, in het Nederlands en het Engels, liggend en staand; zonder vorige taxatie vallen de bijdrage en de verdeling weg"]},{"nr":"1.10","datum":"2026-10-20","nieuw":["Rapport: vier nieuwe sjablonen, gemaakt voor staand: Bijlage, Factsheet, Magazine en Compact. Kies je er een terwijl de richting op liggend staat, dan zet de tool hem op staand; liggend kan daarna nog steeds","Bijlage: voor naast het getekende taxatierapport. Een titelblad met de gegevens, de status en de inhoud; genummerde hoofdstukken met het nummer in de kantlijn; een lopende kop op elk blad en onderaan dat het getekende rapport voorgaat. Hoofdstukken lopen door op hetzelfde blad, de waardebrug staat als tabel, een objectpagina heeft de gegevens in de kantlijn","Factsheet: een navy band met de kop op elk blad, op het voorblad met de drie hoofdcijfers. Het voorblad toont de waarde per groep, de kaart in de kleuren van de groepen, het rendement en de waardeontwikkeling; de samenvatting een tegel per groep met de grootste objecten. Twee objecten per pagina","Magazine: de kaart als omslag, de marktwaarde als één groot getal en een paar zinnen die de tool uit de cijfers maakt (wat de huur bijdroeg en wat het rendement kostte, welke groep het meest steeg). Bij Ligging: waar de waarde zit, met de tien grootste objecten. Eén object per pagina","Compact: zoveel mogelijk op een pagina. Kerncijfers met het aantal objecten in elk verschil, de aansluiting met de Excel-export, en een objectenlijst als een grootboek: een lijn na elke vijf objecten, het totaal onderaan en bovenaan elk volgend blad een transportregel met de som tot dan toe. Vier objecten per pagina","Objectpagina's in de nieuwe sjablonen: een kaartje van de omgeving met de andere objecten uit de portefeuille in de buurt, in plaats van een foto"]},{"nr":"1.9","datum":"2026-10-16","nieuw":["Excel: naast het opgemaakte overzicht een datablad met tblQuery als Excel-tabel: één regel per object, één kolom per veld, veldnamen en waarden zoals in de bron. Om in te lezen, te filteren en draaitabellen te maken. Met VHE's staat tblVHE er op dezelfde manier bij","Excel: geen samengevoegde cellen meer; koppen staan gecentreerd over de selectie. Totalen zijn formules die meefilteren (SUBTOTAAL), gewogen gemiddelden zijn SOMPRODUCT met dezelfde gewichten als de tool. Nieuwe objecten zijn gemarkeerd en Δ staat in %, %-punt of basispunten, met de definitie onder de tabel","Excel: het blad Herkomst met de bronbestanden (datum en vingerafdruk), de toolversie, het profiel, filters en uitgezette objecten, waardepeildatum, grondslag, valuta, oppervlakte en per kolom de bron; het getekende rapport gaat voor. Het blad Controle zet aantallen en sommen per portefeuille als formules naast elkaar; elk verschil moet 0 zijn","Excel: de bestandsnaam is opdrachtgever, kenmerk, waardepeildatum en titel. Bij Rapportgegevens vul je de grondslag en de oppervlaktedefinitie in voor het blad Herkomst","Data: een lege vorige waarde in de bron betekent geen vorige taxatie. Alleen als de bron geen kolom met vorige waarden heeft, rekent de tool die terug uit de Δ-kolom","Data: foutwaarden zoals #N/A tellen als leeg en staan op het blad Herkomst; emoji en andere bijzondere tekens worden goed gelezen"]},{"nr":"1.8","datum":"2026-10-16","nieuw":["Excel: het portefeuilleoverzicht ziet eruit als het Savills-sjabloon: titel en gegevens bovenaan met het logo rechtsboven, het gele label OBJECTEN, de groepen met huidig · vorig · Δ en het totaal, zonder rasterlijnen en met een kop die blijft staan als je scrolt","Excel: meteen klaar om af te drukken, op A4 of A3 liggend: op elk blad hele groepen kolommen, met de kop, het dossier en het adres, het logo en een paginanummer","Excel: de bladen VHE's, Waardebrug en Gevoeligheid hebben dezelfde opmaak; bij de VHE's staat nu ook een totaal"]},{"nr":"1.7","datum":"2026-10-15","nieuw":["Data: ‘Snel rapport’. Zodra je data hebt geladen, maak je meteen een PDF: kies de opdrachtgever, de inhoud (de basis met kerncijfers of een profiel), het sjabloon en de taal, en klik op ‘Maak PDF’. Daarna sta je in Rapport en kun je alles nog aanpassen","Data: het blok laat zien wat er in het rapport komt, en wat wegvalt omdat de data het niet heeft (bijvoorbeeld backtesting zonder vorige taxatie). Staat er een filter, zijn objecten uitgezet of zijn er aandachtspunten in de controle, dan staat dat erbij, met een knop om het op te lossen","Data: met data geladen is het vak om bestanden te laden kleiner, zodat het snel rapport en de controle bovenaan staan","Rapport: in het objectenoverzicht en de backtesting staat het label OBJECTEN (PROPERTIES) netjes in het midden van zijn balk, en zijn de kolommen breed genoeg voor hun kop en hun cijfers, zodat er niets meer wordt afgekapt (zoals ‘Eenheden’, ‘dec 2026’ of een lange plaatsnaam)"]},{"nr":"1.6","datum":"2026-10-14","nieuw":["Rapport: zes sjablonen. Naast Klassiek nu vier sjablonen naar de Savills Brand Guidelines: Savills geel en Savills navy (met een omslag op de kubusachtergrond), Dashboard (compact, zoals de PowerBI-rapporten) en Research (als een publicatie, met één accentkleur die je kiest). Modern is vernieuwd","Rapport: in de nieuwe sjablonen Gotham voor tekst en koppen (Montserrat als Gotham niet op de computer staat), Barlow voor cijfers en tabellen, en grafieken en kaarten in de kleuren van het sjabloon","Rapport: bij een sjabloon met een omslag staan titel, opdrachtgever en datums op de omslag (bij navy en Research ook de drie belangrijkste cijfers); het blad erna heet Kerncijfers","Rapport: een lange inhoudsopgave op het voorblad van Modern staat in twee kolommen, zodat het voorblad op één blad past","Het logo staat overal in de officiële logokleuren, een eigen geel en rood alleen voor het logo: in alle sjablonen, ook Klassiek, en in de tool zelf. De gele accenten blijven Savills-geel"]},{"nr":"1.5","datum":"2026-10-13","nieuw":["Rapport: de inhoudsopgave is klikbaar, in het voorbeeld én in de PDF. Met ‘Pagina per object’ linken ook de adressen in het objectenoverzicht, de ligging, de backtesting en de opmerkingen naar de pagina van dat object","Rapport: nieuw onderdeel ‘Toelichting’, je eigen tekst na het voorblad. Een lege regel begint een nieuwe alinea, een regel met - wordt een opsomming","Objectvenster: schrijf per object een ‘Toelichting voor het rapport’. Die komt op de pagina van dat object en bij Opmerkingen, en wordt bij elke toets bewaard; in de objectentabel staat een tekstwolkje bij het adres","Rapport: de opmerkingen uit de data (Remarks en kadaster) komen alleen nog in het rapport als je ‘Ook opmerkingen uit de data’ aanzet, want ze zijn vaak intern bedoeld. Bij de profielen Volledig en Juridisch staat dat aan","Rapport: staan er nog rapportgegevens (opdrachtgever, kenmerk, toelichting) van andere data, dan vraagt de studio of ze nog kloppen, met ‘Leegmaken’ of ‘Houden’","Wat je verandert, wordt ook bewaard als je het tabblad of Chrome meteen sluit of naar een ander programma gaat"]},{"nr":"1.4","datum":"2026-10-13","nieuw":["Rapport: kies bij ‘Ligging op de kaart’ een detailkaart per plaats: alleen voor drukke plaatsen, voor elke plaats vanaf 5, 3 of 2 objecten, of geen. Zo ziet de lezer van de PDF ook kleinere steden van dichtbij, met de wijken en dezelfde nummers","Rapport: elke plaats die op de landkaart een bol is, heeft nu een eigen detailkaart (eerst alleen de zes grootste); de toelichting staat direct onder de landkaart","Rapport: detailkaarten gebruiken de ruimte op het blad beter en passen ook in het sjabloon Modern met grote tekst"]},{"nr":"1.3","datum":"2026-10-13","nieuw":["Kaart: kies meer plaatsen of provincies tegelijk met Ctrl-klik (op een Mac ⌘-klik), in de verdeling of op een bol. De lijst toont hun objecten met de samen-cijfers; de totalen en het rapport blijven over de hele selectie gaan","Kaart: wat buiten je keuze valt, wordt lichter, en een plaats in de verdeling aanwijzen laat zijn objecten oplichten. Gekozen of gefilterde plaatsen vallen eerder uit elkaar in losse objecten","Kaart: de hele verdeling is uit te klappen, de rijen werken ook met het toetsenbord, en bij een stad als Rotterdam staat de plaatsnaam er nu ook","Rapport: het voorbeeld wordt in stukjes opgemaakt, zodat de tool blijft reageren en grote rapporten veel sneller klaar zijn; na een wijziging blijft het voorbeeld op dezelfde plek staan","Afdrukken wacht tot het voorbeeld met je laatste keuzes helemaal klaar is","Profielen: het kruisje om een eigen profiel te verwijderen is altijd te zien; hetzelfde profiel nog eens inlezen werkt het bij in plaats van het dubbel te zetten","Adressen opzoeken bij PDOK geeft het op als er na 12 seconden geen antwoord is; nieuwe data laden zet de kaart weer op heel Nederland"]},{"nr":"1.2","datum":"2026-10-13","nieuw":["Inlezen robuuster: een totaalregel, een herhaalde kopregel of lege regels uit een sjabloon tellen niet meer als object; de controle laat zien wat er is overgeslagen","De query mag ook als gewoon bereik op een tabblad staan, ook als tblVHE wel een Excel-tabel is","CSV in Nederlandse en Engelse notatie (1.234,5 of 1,234.5) en zoals Excel hem in Nederland opslaat; datums ook als 31 december 2026","Meer kolomnamen herkend, ook varianten voor de vorige taxatie (_PY, vorig, previous) en voor het verschil (Δ, delta); een Δ-kolom als bedrag wordt goed omgerekend","Twee bestanden met verschillende objecten worden samengevoegd; twee versies van dezelfde query niet (de controle zegt welke is gebruikt)","Grafieken per groep tonen de 12 grootste groepen; nieuwe objecten zijn een lichte staaf, zodat staaf, streep en verschil over dezelfde objecten gaan","Snel met grote portefeuilles: bij duizenden VHE's staan de bestanden ingeklapt"]},{"nr":"1.1","datum":"2026-10-13","nieuw":["Overzicht aanpassen: kies zelf welke kerncijfers (bijvoorbeeld NAR, MV/VPV, DCF-rendementen) en welke grafieken je ziet; de kerncijfers gelden ook voor het voorblad","Kaart: een drukke plaats is op heel Nederland één bol met het aantal en de verdeling; klik erop en je zoomt in op de stad","Stadskaart met wijken en stadsdelen, en een verdeling per plaats in het zijpaneel om een stad te openen","Rapport: een detailkaart per stad met veel objecten, met dezelfde nummers als de lijst","Voorbeeld met 100 objecten, waarvan 30 in Amsterdam"]},{"nr":"1.0","datum":"2026-10-12","nieuw":["Waardebrug: het verschil met de vorige taxatie gesplitst in huur, rendement en nieuwe objecten, op het overzicht, per object en in het rapport","Gevoeligheid: wat de marktwaarde ongeveer doet bij een ander rendement of een andere huur, ook als rapportonderdeel","Werkt zonder internet: de Excel-lezer en de lettertypes van het rapport zitten nu in het bestand","Versienummer en dit venster, met de bronnen en licenties"]}];
 const VERSIE = VERSIES[0] || { nr: "dev", datum: "", nieuw: [] };
 let S = null;
-const UI = { stap: "data", pop: null, ruw: "obj", zoek: { obj: "", vhe: "", ruw: "" }, dicht: new Set(), vheAllesDicht: false };
+const UI = { stap: "data", pop: null, ruw: "obj", vbDeel: "obj", zoek: { obj: "", vhe: "", ruw: "" }, dicht: new Set(), vheAllesDicht: false };
 
 function laadS() {
   let bewaard = {};
@@ -1972,7 +1953,7 @@ function standaardS() {
     ovDim: "Portfolio", ovRend: "GY_NV_TRI",
     vheWeergave: "vhe", vheTypes: [],
     // datascherm: query-bestanden (q) of losse rekenmodellen (m), en Snel rapport uitgeklapt
-    dataRoute: "q", snelOpen: false,
+    snelOpen: false,
   };
 }
 
@@ -2398,11 +2379,6 @@ function sessieBron(soort) {
   return SESSIE.files.has(s) ? { sleutel: s, file: SESSIE.files.get(s), kandidaten: SESSIE.kandidaten.get(s) || [] } : null;
 }
 
-/* Een vraag die op antwoord wacht: een bestand dat je op het ene vak liet
-   vallen, bevat ook de andere tabel, en in dat andere vak staat al een ander
-   bestand. { soort, data } */
-let VRAAG = null;
-
 /* Sleutels om te zien of twee tabellen dezelfde objecten (of VHE's) bevatten. */
 function rijSleutels(k) {
   const idx = koppel(k.soort, k.kolommen);
@@ -2438,27 +2414,28 @@ function dataUitKandidaat(k) {
 }
 const SOORTNAAM = { obj: "objecten", vhe: "VHE's" };
 
-/* Bestanden inlezen. Wat erin staat, bepaalt in welk vak het komt (tabelnaam en
-   kolommen), niet waar je het liet vallen. Met opties:
-   - doel: het vak waarop je het bestand liet vallen of waar je op ‘Bestand kiezen’
-     klikte. Bevat het bestand ook de andere tabel en staat in het andere vak al een
-     ander bestand, dan vraagt de tool eerst of dat vak ook vervangen moet worden.
-   - alleen: alleen dit vak vullen (‘Ander bestand, alleen voor …’). */
+/* Bestanden inlezen. De tool zoekt zelf uit wat erin staat: losse rekenmodellen
+   (een tabblad Overview, geen querytabel) gaan eerst naar hun venster; in de
+   andere bestanden zoekt hij de objecten (tblQuery) en de VHE's (tblVHE), op
+   tabelnaam en kolommen. Wat hij vindt, vervangt dat deel; wat er niet in staat,
+   blijft staan (behalve voorbeelddata). Met opties:
+   - alleen: alleen dit deel vullen (‘Ander bestand, alleen voor …’, ‘VHE's toevoegen’);
+   - map: de naam van de map, als je een map koos of losliet. */
+const isTabelBestand = (f) => /\.(xlsx|xlsm|xlsb|xls|csv|tsv|txt)$/i.test(f.name || "");
 async function leesBestanden(files, opties = {}) {
-  const doel = opties.doel || null, alleen = opties.alleen || null;
-  // Kwamen beide vakken uit één bestand (of uit dezelfde modellen)? Dan horen ze bij elkaar en vervangt een
-  // nieuw bestand met beide tabellen ze allebei, zonder te vragen.
-  const eenheid = !!gedeeldeBron();
-  // Losse rekenmodellen (een tabblad Overview, geen querytabel): eerst bekijken in een eigen venster.
-  // De tijdelijke bestanden van Excel (~$…) tellen nergens mee.
+  const alleen = opties.alleen || null, map = opties.map || "";
+  // De tijdelijke bestanden van Excel (~$…) tellen nergens mee; uit een map alleen de werkboeken en CSV's.
+  const lock = files.filter(isLock).length;
+  files = files.filter((f) => !isLock(f) && (!map || isTabelBestand(f)));
+  if (!files.length) {
+    if (lock || map) melding(lock ? "Alleen tijdelijke Excel-bestanden (~$…): sluit het werkboek in Excel en probeer het opnieuw" : `Geen werkboeken gevonden in ${map}`, "mis");
+    else melding("");
+    return;
+  }
   const modellen = [], rest = [];
-  const los = S.dataRoute === "m";
-  for (const f of files) { if (isLock(f)) continue; if (!alleen && await lijktRekenmodel(f, modelInst(), los)) modellen.push(f); else rest.push(f); }
-  if (modellen.length) { melding(""); openModellen(modellen); if (!rest.length) return; }
-  files = rest;
-  if (!files.length) return;
+  for (const f of files) { if (!alleen && await lijktRekenmodel(f, modelInst())) modellen.push(f); else rest.push(f); }
   const perSoort = { obj: [], vhe: [] }, fouten = [], beveiligd = [];
-  for (const f of files) {
+  for (const f of rest) {
     try {
       const kand = await leesBestand(f);
       onthoudBestand(f, kand);
@@ -2468,17 +2445,18 @@ async function leesBestanden(files, opties = {}) {
         iets = true;
         perSoort[k.soort].push(k);
       }
-      if (!iets) fouten.push(f.name);
+      // Een werkboek met macro's zonder querytabel is waarschijnlijk een rekenmodel waarvan het
+      // tabblad anders heet: in het venster zie je dat en pas je de naam aan.
+      if (!iets && !alleen && /\.(xlsm|xlsb)$/i.test(f.name)) modellen.push(f);
+      else if (!iets) fouten.push(f.name);
     } catch (e) {
       console.error(e);
       if (e && e.message === "geen-lezer") { melding("De Excel-lezer ontbreekt in deze versie van de tool. Sla de tabel op als CSV of gebruik de volledige versie.", "mis"); return; }
       if (e && /password|encrypt|wachtwoord|cfb/i.test(String(e.message))) beveiligd.push(f.name); else fouten.push(f.name);
     }
   }
+  if (modellen.length) { melding(""); openModellen(modellen, map); }
   const delen = [], let_op = [];
-  // een nieuw bestand beantwoordt een open vraag
-  VRAAG = null;
-  const beide = perSoort.obj.length > 0 && perSoort.vhe.length > 0;
   for (const soort of ["obj", "vhe"]) {
     const lijst = perSoort[soort];
     if (!lijst.length) continue;
@@ -2504,46 +2482,34 @@ async function leesBestanden(files, opties = {}) {
         let_op.push(`${soort === "obj" ? "Objecten" : "VHE's"} stonden in meer bestanden met grotendeels dezelfde regels; gebruikt: ${k.bestand}`);
       }
     }
-    const nieuw = dataUitKandidaat(k);
-    // Liet je het bestand op het andere vak vallen, en staat in dit vak al een
-    // ander bestand? Dan eerst vragen (voorbeelddata mag zonder vragen weg).
-    const oud = DATA[soort];
-    if (doel && soort !== doel && beide && oud && !oud.voorbeeld && !eenheid && oud.bestand !== nieuw.bestand) { VRAAG = { soort, data: nieuw }; continue; }
-    DATA[soort] = nieuw;
+    // wat in het bestand staat, vervangt dat deel
+    DATA[soort] = dataUitKandidaat(k);
     delen.push(soort);
   }
-  // Voorbeelddata in het andere vak past niet bij echte data: die gaat weg.
+  // Voorbeelddata in het andere deel past niet bij echte data: die gaat weg.
   let vbWeg = false;
-  if (delen.length) for (const s of ["obj", "vhe"]) if (!delen.includes(s) && DATA[s] && DATA[s].voorbeeld && !(VRAAG && VRAAG.soort === s)) { DATA[s] = null; vbWeg = true; }
-  // Het bestand had niet de tabel van het vak waarop je het liet vallen.
-  const elders = doel && !perSoort[doel].length && delen.length ? delen[0] : null;
-  if (delen.length) S.dataRoute = "q";
+  if (delen.length) for (const s of ["obj", "vhe"]) if (!delen.includes(s) && DATA[s] && DATA[s].voorbeeld) { DATA[s] = null; vbWeg = true; }
+  // het andere deel, als dat uit een ander bestand bleef staan
+  const bleef = delen.length === 1 ? ["obj", "vhe"].find((s) => s !== delen[0] && DATA[s]) || null : null;
   // de melding pas na het inlezen: totaal- en kopregels tellen dan niet mee
   if (delen.length) await naNieuweData(() => {
     const geladen = delen.map((x) => (x === "obj" ? meervoud(OBJ.length, "object", "objecten") : meervoud(VHE.length, "VHE", "VHE's"))).join(" en ") + " geladen";
-    if (elders) return `In ${DATA[elders].bestand} staan alleen ${SOORTNAAM[elders]}: die staan nu in het vak ${elders === "obj" ? "Objecten" : "VHE's"}`;
-    if (VRAAG) return `${geladen}. Het bestand bevat ook ${SOORTNAAM[VRAAG.soort]}: kies of je die ook wilt gebruiken`;
-    return geladen + (vbWeg ? "; de voorbeelddata is weggehaald" : "");
+    const namen = uniek(delen.flatMap((s) => (DATA[s].bronnen || []).map((b) => b.bestand)));
+    const uit = namen.length === 1 ? ` uit ${namen[0]}` : namen.length > 1 ? ` uit ${namen.length} bestanden` : "";
+    const b = bleef && DATA[bleef];
+    const rest = b ? `; de ${SOORTNAAM[bleef]} ${b.modellen ? "uit de rekenmodellen" : `uit ${b.bestand}`} blijven staan` : "";
+    return geladen + uit + rest + (vbWeg ? "; de voorbeelddata is weggehaald" : "");
   });
   const mis = [];
   if (beveiligd.length) mis.push(`${beveiligd.join(", ")} ${beveiligd.length === 1 ? "is" : "zijn"} beveiligd met een wachtwoord. Sla een kopie op zonder wachtwoord en laad die.`);
   if (fouten.length) mis.push(alleen
-    ? `Geen ${alleen === "obj" ? "objectentabel (tblQuery)" : "VHE-tabel (tblVHE)"} gevonden in ${fouten.join(", ")}. Het vak ${alleen === "obj" ? "Objecten" : "VHE's"} is niet veranderd.`
+    ? `Geen ${alleen === "obj" ? "objectentabel (tblQuery)" : "VHE-tabel (tblVHE)"} gevonden in ${fouten.join(", ")}. De ${SOORTNAAM[alleen]} zijn niet veranderd.`
     : `Geen objecten- of VHE-tabel gevonden in ${fouten.join(", ")}. Staan tblQuery of tblVHE erin, met de kolomnamen in de eerste regel?`);
   if (mis.length) melding(mis.join(" "), "mis");
   else if (let_op.length) melding(let_op.join(" · "), "mis");
 }
 
-/* Een open vraag beantwoorden: ook het andere vak vervangen, of laten staan. */
-async function beantwoordVraag(ja) {
-  const v = VRAAG; VRAAG = null;
-  if (!v) return;
-  if (!ja) { if (UI.stap === "data") tekenData(); return; }
-  DATA[v.soort] = v.data;
-  await naNieuweData(() => `${v.soort === "obj" ? meervoud(OBJ.length, "object", "objecten") : meervoud(VHE.length, "VHE", "VHE's")} geladen uit ${v.data.bestand}`);
-}
-
-/* Een andere tabel uit hetzelfde bestand in een vak zetten: een van de tabellen
+/* Een andere tabel uit hetzelfde bestand in een deel zetten: een van de tabellen
    die de tool vond (blad en tabel), of wat er op een tabblad staat (alleen blad).
    Het bestand wordt opnieuw gelezen; dat kan alleen in dezelfde sessie. */
 async function kiesUitBestand(soort, blad, tabel = null) {
@@ -2569,13 +2535,12 @@ async function kiesUitBestand(soort, blad, tabel = null) {
   if (!k || !k.rijen.length) { melding(`Op tabblad ${blad} staat geen tabel met kolomnamen`, "mis"); return; }
   if (Object.keys(koppel(soort, k.kolommen)).length < 2) { melding(`Op tabblad ${blad} lijkt geen tabel met ${wat} te staan: de tool herkent bijna geen kolommen`, "mis"); return; }
   k.soort = soort;
-  VRAAG = null;
   DATA[soort] = dataUitKandidaat(k);
   await naNieuweData(`${wat === "objecten" ? "Objecten" : "VHE's"} uit tabblad ${blad}${k.tabel ? ` (tabel ${k.tabel})` : ""}`);
 }
 
-/* Komen beide vakken uit dezelfde bron? Dan staat er op het datascherm één balk
-   boven de vakken. Soorten: één bestand, losse rekenmodellen of de voorbeelddata. */
+/* Komen de objecten en de VHE's uit dezelfde bron? Dan noemt het datascherm die
+   bron één keer, met de tabbladen. Soorten: één bestand, losse rekenmodellen of de voorbeelddata. */
 function gedeeldeBron() {
   const a = DATA.obj, b = DATA.vhe;
   if (!a || !b) return null;
@@ -5551,9 +5516,9 @@ async function leesModellen(files, inst, voortgang) {
 
 /* Is dit een rekenmodel? Een tabblad met de gekozen naam (Overview) en geen
    querytabel (tblQuery, tblVHE). Snel: alleen de werkboekonderdelen. Met los
-   (op het datascherm staat ‘Losse rekenmodellen’) telt elk werkboek zonder
-   querytabel als model: heet het tabblad anders, dan zie je dat in het venster
-   en kun je de naam daar aanpassen. */
+   telt elk werkboek zonder querytabel als model. Een werkboek met macro's
+   zonder tabblad Overview en zonder querytabel stuurt het datascherm ook naar
+   het venster: heet het tabblad anders, dan pas je de naam daar aan. */
 async function lijktRekenmodel(file, inst = modelInst(), los = false) {
   if (isLock(file) || !/\.(xlsm|xlsx|xlsb)$/i.test(file.name)) return false;
   try {
@@ -5629,7 +5594,7 @@ function modellenNaarData(lijst, inst, mapNaam = "") {
 
 /* ---------------- het venster ---------------- */
 const MOD = { files: [], res: [], bezig: false, v: null, tab: "bestanden", map: "", tijd: 0 };
-function openModellen(files = null) {
+function openModellen(files = null, map = "") {
   if (MOD.v) MOD.v.sluit();
   const inst = modelInst();
   MOD.res = []; MOD.tab = "bestanden";
@@ -5683,11 +5648,10 @@ function openModellen(files = null) {
     const d = modellenNaarData(MOD.res, modelInst(), MOD.map);
     if (!d) return;
     DATA = { obj: d.obj, vhe: d.vhe };
-    VRAAG = null; S.dataRoute = "m";
     v.sluit();
     await naNieuweData(() => `${meervoud(OBJ.length, "object", "objecten")}${VHE.length ? ` en ${meervoud(VHE.length, "VHE", "VHE's")}` : ""} uit ${meervoud(d.obj.modellen.n, "rekenmodel", "rekenmodellen")} geladen`);
   });
-  if (files && files.length) leesEnToon(files); else tekenModellen();
+  if (files && files.length) leesEnToon(files, map || undefined); else tekenModellen();
 }
 async function leesEnToon(files, mapNaam) {
   const lock = files.filter(isLock).length;
@@ -5797,192 +5761,200 @@ function tekenModellen() {
 
 /* =====================================================================
    Scherm 1 · Data
-   Twee vakken, elk voor één tabel: objecten (tblQuery) en VHE's (tblVHE),
-   met ertussen de koppeling op dossiernummer. Wat er in een bestand staat,
-   bepaalt in welk vak het komt; een bestand met beide tabellen vult beide
-   vakken, en dan staat er één balk met het bestand en zijn tabbladen boven.
-   Losse rekenmodellen vullen dezelfde twee vakken. Daaronder de controle,
-   Snel rapport en de ruwe data.
+   Eén vak. Sleep of kies je bestanden en de tool zoekt zelf uit wat erin
+   staat: een query-bestand met tblQuery en tblVHE (samen in één bestand of
+   in twee), of losse rekenmodellen (één .xlsm per object, met het tabblad
+   Overview). Na het inlezen staat in hetzelfde vak waar alles vandaan kwam:
+   het bestand met zijn tabbladen, de objecten en de VHE's elk met hun bron en
+   kerngetallen, de koppeling ertussen en de eerste regels. Daaronder de
+   controle, Snel rapport en de ruwe data.
    ===================================================================== */
-const VAK = {
-  obj: { titel: "Objecten", code: "tblQuery", id: "#slotObj", ikoon: () => IK.gebouw(19),
-    uitleg: "Eén regel per object (dossier): waarde, huur, rendement en de vorige taxatie." },
-  vhe: { titel: "VHE's", code: "tblVHE", id: "#slotVhe", ikoon: () => IK.lagen(19),
-    uitleg: "Eén regel per verhuurbare eenheid, op dossiernummer gekoppeld aan het object." },
+const DEEL = {
+  obj: { titel: "Objecten", code: "tblQuery", wat: "objecten", ikoon: () => IK.gebouw(18) },
+  vhe: { titel: "VHE's", code: "tblVHE", wat: "VHE's", ikoon: () => IK.lagen(18) },
 };
-const dataRoute = () => (S.dataRoute === "m" ? "m" : "q");
 const fmtGrootte = (b) => (!b ? "" : b < 1024 * 1024 ? `${Math.max(1, Math.round(b / 1024)).toLocaleString("nl-NL")} kB` : `${(b / 1024 / 1024).toLocaleString("nl-NL", { maximumFractionDigits: 1 })} MB`);
 const getalNl = (x) => (typeof x === "number" ? x.toLocaleString("nl-NL", { maximumFractionDigits: 0 }) : x === null || x === undefined || x === "" ? "·" : esc(x));
+const telNl = (n) => n.toLocaleString("nl-NL");
 /* Waar de VHE's uit de modellen kwamen: ‘A35:D209’ als alle modellen het vaste blok hadden. */
 const vheBlokKort = (d) => {
   const m = d && d.modellen;
   return m && m.kopRijen && m.kopRijen.length === 1 && m.blokEind ? `A${m.kopRijen[0] + 1}:${kolLetter(VHE_KOLOMMEN)}${m.blokEind}` : `kolom A tot en met ${kolLetter(VHE_KOLOMMEN)}`;
 };
+/* Hetzelfde vóór het inlezen, uit de instellingen: ‘A35:D209’ of ‘de kolommen A tot en met D’. */
+const vheBlokStd = (inst = modelInst()) => (vasteRegels(inst) && +inst.vheTot > +inst.vheRij
+  ? `A${+inst.vheRij + 1}:${kolLetter(VHE_KOLOMMEN)}${+inst.vheTot}` : `de kolommen A tot en met ${kolLetter(VHE_KOLOMMEN)}`);
 const statusStip = (soort, ok) => `<span class="sstip ${ok ? "ok" : "let"}" title="${ok ? "In orde" : "Zie de controle"}">${ok ? IK.vink(9) : "!"}</span>`;
+const deelOk = (soort) => (soort === "obj" ? KOP.obj.MV_Total !== undefined : KOP.vhe.Bestand !== undefined && KOP.vhe.Value !== undefined);
 
-/* Query-bestanden of losse rekenmodellen: alleen de uitleg en de knoppen
-   veranderen; wat je loslaat, herkent de tool altijd zelf. */
-function routeHtml(iets) {
-  const r = dataRoute(), blad = esc(modelInst().blad);
-  const knop = (k, ik, t, s) => `<button class="${r === k ? "aan" : ""}" data-route="${k}" aria-pressed="${r === k}"><span class="rsi">${ik}</span><span class="rsx"><span class="rst">${t}</span><span class="rss">${s}</span></span></button>`;
-  const uitleg = iets ? "" : r === "q"
-    ? `Met losse rekenmodellen vult de tool dezelfde twee vakken: regel 1 en 2 van het tabblad <b>${blad}</b> worden het object, de kolommen A tot en met D (${esc(vheRegelsTekst())}) de VHE's.`
-    : `Eén bestand per object. De tool opent alleen het tabblad <b>${blad}</b>: regel 1 en 2 worden het object, de kolommen A tot en met D (${esc(vheRegelsTekst())}) de VHE's. Je ziet eerst wat hij vond.`;
-  return `<div class="routeseg" role="group" aria-label="Waar komt de data vandaan">${knop("q", bladIkoon(22), "Query-bestanden", "tblQuery en tblVHE")}${knop("m", mapIkoon(22), "Losse rekenmodellen", "één .xlsm per object")}</div>`
-    + (uitleg ? `<div class="routeuitleg">${IK.info(14)}<span>${uitleg}</span></div>` : "");
+/* ---------------- leeg: één sleepvlak ---------------- */
+function vakLeegHtml() {
+  const blad = esc(modelInst().blad);
+  const fmt = [".xlsx", ".xlsm", ".xls", ".csv"].map((x) => `<span>${x}</span>`).join("");
+  const hints = [
+    [IK.lagen(15), "Query-bestand", "tblQuery en tblVHE, samen in één bestand of in twee. De VHE's worden op dossiernummer aan de objecten gekoppeld."],
+    [IK.map(15), "Rekenmodellen", `Eén .xlsm per object, of een hele map. Van het tabblad ${blad} worden regel 1 en 2 het object en ${esc(vheBlokStd())} de VHE's. Je ziet eerst wat de tool vond.`],
+    [IK.slot(15), "Alles blijft in deze browser", "De bestanden worden hier gelezen en niet verstuurd. Alleen als je op de kaart kiest voor PDOK, gaan er adressen naar het Kadaster."],
+  ];
+  return `<div class="vakdrop" data-kies role="button" tabindex="0" aria-label="Bestanden kiezen, of sleep ze hierheen">
+      <div class="sd gewoon">${bladIkoon(56)}<b>Sleep je bestanden hierheen</b>
+        <span class="sub">Het query-bestand, twee losse query's of de rekenmodellen. De tool kijkt zelf wat erin staat en zet de objecten en de VHE's op hun plek.</span>
+        <div class="fmt">${fmt}</div>
+        <div class="knoppen"><button class="k vol" data-kies>Bestanden kiezen</button><button class="k stil" data-kiesmap>Map kiezen</button></div></div>
+      <div class="sd alsdoel"><span class="pijlop">${IK.neer(24)}</span><b>Loslaten om te lezen</b><span class="sub">De tool kijkt in alle tabbladen en zet elke tabel op zijn plek.</span></div>
+    </div>
+    <div class="vakhints">${hints.map(([i, a, b]) => `<div class="vakhint"><span class="ti">${i}</span><span><span class="tt">${a}</span><span class="ts">${b}</span></span></div>`).join("")}</div>`;
 }
 
-function vakKop(soort, vol) {
-  const V = VAK[soort];
-  const acties = vol ? `<div class="sknoppen"><button class="ikoonknop" data-vakmenu="${soort}" title="Andere tabel of ander bestand" aria-label="${V.titel}: andere tabel of ander bestand" aria-haspopup="true">${IK.wissel(15)}</button>
-      <button class="ikoonknop" data-wis="${soort}" title="Alleen de ${soort === "obj" ? "objecten" : "VHE's"} weghalen" aria-label="${V.titel} weghalen">${IK.prul(15)}</button></div>` : "";
-  return `<div class="vakkop"><span class="sikoon">${V.ikoon()}</span><div class="vtekst"><h2>${V.titel} <code>${V.code}</code></h2><div class="sonder">${V.uitleg}</div></div>${acties}</div>`;
-}
-
-/* Een leeg vak is een sleepvlak. Tijdens het slepen zie je welk vak het doel is
-   (‘loslaten’) en dat het andere vak meedoet als de tabel in hetzelfde bestand staat. */
-function vakLeegHtml(soort) {
-  const r = dataRoute(), blad = esc(modelInst().blad);
-  const sleep = r === "m" ? "Sleep de rekenmodellen hierheen" : soort === "obj" ? "Sleep het portefeuilleoverzicht hierheen" : "Sleep het VHE-overzicht hierheen";
-  const sub = r === "m" ? (soort === "obj" ? `van elk model regel 1 en 2 van het tabblad ${blad}` : `van elk model de kolommen A tot en met D, ${esc(vheRegelsTekst())}`)
-    : soort === "obj" ? "of een bestand waarin beide tabellen staan" : "de tool koppelt elke VHE op dossiernummer";
-  const fmt = (r === "m" ? [".xlsm", ".xlsx", ".xlsb"] : [".xlsx", ".xlsm", ".xls", ".csv"]).map((x) => `<span>${x}</span>`).join("");
-  const knoppen = r === "m" ? `<button class="k" data-kiesmodel>Rekenmodellen kiezen</button><button class="k stil" data-kiesmap>Map kiezen</button>`
-    : `<button class="k" data-kies="${soort}">Bestand kiezen</button>`;
-  const meeT = r === "m" ? "Hetzelfde model vult ook dit vak" : `Staat ${VAK[soort].code} in hetzelfde bestand?`;
-  const meeS = r === "m" ? (soort === "obj" ? `Regel 1 en 2 van ${blad} worden het object.` : `De kolommen A tot en met D, ${esc(vheRegelsTekst())}, worden de VHE's.`)
-    : "Dan komt hij vanzelf hier. Je hoeft het bestand maar één keer te slepen.";
-  const doelS = r === "m" ? "Je ziet eerst wat de tool in de modellen vond." : `De tool kijkt in alle tabbladen en zet ${VAK.obj.code} en ${VAK.vhe.code} elk in het eigen vak.`;
-  return `${vakKop(soort, false)}
-    <div class="slotdrop" data-kies="${soort}">
-      <div class="sd gewoon">${bladIkoon(52)}<b>${sleep}</b><span class="sub">${sub}</span><div class="fmt">${fmt}</div><div class="knoppen">${knoppen}</div></div>
-      <div class="sd alsdoel"><span class="pijlop">${IK.neer(24)}</span><b>Loslaten om te lezen</b><span class="sub">${doelS}</span></div>
-      <div class="sd alsmee">${bladIkoon(52)}<b>${meeT}</b><span class="sub">${meeS}</span></div>
-    </div>`;
-}
-
-/* Waar de tabel vandaan komt: het bestand (als de vakken uit verschillende
-   bestanden komen) of alleen het tabblad (als de balk erboven het bestand al noemt). */
-function vakBronHtml(soort, g) {
-  const d = DATA[soort], ok = soort === "obj" ? KOP.obj.MV_Total !== undefined : KOP.vhe.Bestand !== undefined && KOP.vhe.Value !== undefined;
-  const tabel = d.tabel ? `tabel ${esc(d.tabel)}` : "bereik met kolomkoppen";
-  if (g) {
-    let t;
-    if (g.soort === "modellen") t = soort === "obj" ? `<b>regel 1 en 2</b> van het tabblad ${esc(d.blad)} · uit ${meervoud(d.modellen.n, "rekenmodel", "rekenmodellen")}`
-      : `<b>${vheBlokKort(d)}</b> van het tabblad ${esc(d.blad)} · uit ${meervoud(d.modellen.n, "rekenmodel", "rekenmodellen")}${d.modellen.kopRijen && d.modellen.kopRijen.length > 1 ? ` · kopregel op regel ${d.modellen.kopRijen.join(", ")}` : ""}`;
-    else if (g.soort === "voorbeeld") t = `<b>${esc(d.tabel)}</b> · voorbeelddata, fictief`;
-    else t = `${d.blad ? `<b>tabblad ${esc(d.blad)}</b> · ` : ""}${tabel} · uit hetzelfde bestand`;
-    return `<div class="slotbronregel"><span class="tabik">${IK.tabel(15)}</span><span class="sbt">${t}</span>${statusStip(soort, ok)}</div>`;
+/* ---------------- gevuld: waar komt het vandaan ----------------
+   Eén werkboek voor beide (bestand), één werkboek met één tabel (eenbestand),
+   meer bestanden (bestanden), losse rekenmodellen of de voorbeelddata. */
+function bronOverzicht() {
+  const g = gedeeldeBron();
+  if (g) return g;
+  const delen = ["obj", "vhe"].filter((s) => DATA[s]);
+  if (!delen.length) return null;
+  if (delen.some((s) => DATA[s].voorbeeld)) return { soort: "voorbeeld" };
+  if (delen.every((s) => DATA[s].modellen)) return { soort: "modellen" };
+  const bronnen = delen.flatMap((s) => (DATA[s].bronnen && DATA[s].bronnen.length ? DATA[s].bronnen : [{ bestand: DATA[s].bestand }]));
+  const namen = uniek(bronnen.map((b) => b.bestand));
+  if (namen.length === 1) {
+    const b = bronnen[0];
+    return { soort: "eenbestand", bron: b, bladen: b.bladen && b.bladen.length ? b.bladen : uniek(delen.map((s) => DATA[s].blad).filter(Boolean)) };
   }
-  const b = (d.bronnen || [])[0] || {};
-  const meta = d.modellen ? [`tabblad ${esc(d.blad)}`, soort === "obj" ? "regel 1 en 2" : vheBlokKort(d)]
-    : d.voorbeeld ? ["voorbeelddata, fictief", tabel]
-    : [d.blad ? `tabblad ${esc(d.blad)}` : "", d.samengevoegd > 1 ? `${d.samengevoegd} bestanden samengevoegd` : tabel, d.samengevoegd > 1 ? "" : fmtGrootte(b.grootte)];
-  return `<div class="slotbron">${d.modellen ? mapIkoon(30) : bladIkoon(30)}<div class="sbt"><span class="nm" title="${esc(d.bestand)}">${esc(d.voorbeeld ? d.naam : d.bestand)}</span><span class="mt">${meta.filter(Boolean).join(" · ")}</span></div>${statusStip(soort, ok)}</div>`;
+  return { soort: "bestanden", namen };
 }
 
-function vakCijfersHtml(soort) {
+/* De tabbladen van het werkboek, zoals in Excel: de gebruikte in groen. */
+function bladenHtml(bladen, gebruikt) {
+  const nee = bladen.filter((x) => !gebruikt.has(x)), toon = new Set(nee.slice(0, 3));
+  const wie = (x) => ["obj", "vhe"].filter((s) => DATA[s] && DATA[s].blad === x).map((s) => DEEL[s].wat).join(" en ");
+  return bladen.filter((x) => gebruikt.has(x) || toon.has(x)).map((x) => gebruikt.has(x)
+      ? `<span class="bronblad ja" title="Gebruikt: ${esc(wie(x))}">${IK.vink(10)}${esc(x)}</span>`
+      : `<span class="bronblad" title="Niet gebruikt">${esc(x)}</span>`).join("")
+    + (nee.length > 3 ? `<span class="bronblad" title="${esc(nee.slice(3).join(", "))}">+${nee.length - 3}</span>` : "")
+    + (nee.length ? `<span class="bronniet">niet gebruikt</span>` : "");
+}
+
+function vakKopHtml(h) {
+  const O = DATA.obj, V = DATA.vhe, d = O || V;
+  let ik, nm, mt, bladen = "", knop;
+  const ander = `<button class="k stil" data-bronander>${IK.wissel(14)} Ander bestand</button>`;
+  if (h.soort === "bestand" || h.soort === "eenbestand") {
+    const b = h.bron || {};
+    ik = bladIkoon(34); nm = esc(b.bestand || d.bestand);
+    const wat = O && V ? "objecten en VHE's gevonden" : `alleen ${O ? "objecten" : "VHE's"} gevonden`;
+    mt = ["Eén bestand", fmtGrootte(b.grootte), wat].filter(Boolean).join(" · ");
+    const gebruikt = new Set([O && O.blad, V && V.blad].filter(Boolean));
+    if (h.bladen && h.bladen.length && gebruikt.size) bladen = bladenHtml(h.bladen, gebruikt);
+    knop = ander;
+  } else if (h.soort === "bestanden") {
+    ik = `<span class="tweeblad">${bladIkoon(30)}${bladIkoon(30)}</span>`; nm = `${telNl(h.namen.length)} bestanden`;
+    mt = h.namen.map(esc).join(" · ");
+    knop = ander;
+  } else if (h.soort === "modellen") {
+    const ov = ((O && O.modellen && O.modellen.overgeslagen) || []).length;
+    ik = mapIkoon(34); nm = esc(d.bestand);
+    mt = [`tabblad ${esc(d.blad)}`, V ? meervoud(VHE.length, "VHE", "VHE's") : "", ov ? `${meervoud(ov, "bestand", "bestanden")} niet gelezen` : ""].filter(Boolean).join(" · ");
+    bladen = `<span class="bronblad ja">${IK.vink(10)}${esc(d.blad)}</span><span class="bronniet">de andere tabbladen blijven dicht</span>`;
+    knop = `<button class="k stil" data-bronmodellen>${IK.wissel(14)} Opnieuw kiezen</button>`;
+  } else {
+    ik = `<span class="bronvb">${IK.gebouw(18)}</span>`; nm = esc(d.naam || "Voorbeelddata");
+    mt = "Voorbeelddata, fictief · om de tool te leren kennen";
+    knop = `<button class="k stil" data-bronander>Eigen bestand kiezen</button>`;
+  }
+  return `<div class="vakkop"><span class="vkik">${ik}</span><div class="vkt"><span class="nm" title="${nm}">${nm}</span><span class="mt">${mt}</span></div>
+      <div class="vkacties">${knop}<button class="ikoonknop" data-bronwis title="Alles weghalen" aria-label="Alles weghalen">${IK.prul(15)}</button></div></div>
+    ${bladen ? `<div class="vakbladen">${bladen}</div>` : `<div class="vakscheid"></div>`}`;
+}
+
+/* Waar een deel vandaan komt, in één regel. */
+function deelBronHtml(soort, h) {
+  const d = DATA[soort], tabel = d.tabel ? `tabel ${esc(d.tabel)}` : "bereik met kolomkoppen";
+  if (d.modellen) return soort === "obj"
+    ? `<b>regel 1 en 2</b> van het tabblad ${esc(d.blad)} · uit ${meervoud(d.modellen.n, "rekenmodel", "rekenmodellen")}`
+    : `<b>${vheBlokKort(d)}</b> van het tabblad ${esc(d.blad)} · uit ${meervoud(d.modellen.n, "rekenmodel", "rekenmodellen")}${d.modellen.kopRijen && d.modellen.kopRijen.length > 1 ? ` · kopregel op regel ${d.modellen.kopRijen.join(", ")}` : ""}`;
+  if (d.voorbeeld) return `<b>${esc(d.tabel)}</b> · voorbeelddata, fictief`;
+  const plek = `${d.blad ? `<b>tabblad ${esc(d.blad)}</b> · ` : ""}${tabel}`;
+  if (h.soort === "bestanden") {
+    if (d.samengevoegd > 1) return `<b>${telNl(d.samengevoegd)} bestanden samengevoegd</b> · ${esc(d.bestand)}`;
+    const b = (d.bronnen || [])[0] || {};
+    return `<span class="dbest">${bladIkoon(14)}<b title="${esc(d.bestand)}">${esc(d.bestand)}</b></span> · ${plek}${b.grootte ? ` · ${fmtGrootte(b.grootte)}` : ""}`;
+  }
+  return plek;
+}
+
+function deelCijfersHtml(soort) {
   const d = DATA[soort];
   const c = (g, l, klein = "") => `<div><span class="cg">${g}${klein ? `<small>/${klein}</small>` : ""}</span><span class="cl">${l}</span></div>`;
   if (soort === "obj") {
     const herkend = new Set(Object.values(KOP.obj)).size, nKol = d.kolommen.length - (d.bronKolom !== undefined ? 1 : 0);
-    return `<div class="slotcijfers">${c(OBJ.length.toLocaleString("nl-NL"), OBJ.length === 1 ? "object" : "objecten")}${c(herkend.toLocaleString("nl-NL"), "kolommen herkend", nKol.toLocaleString("nl-NL"))}${
-      BT.beschikbaar ? c(BT.n.toLocaleString("nl-NL"), "met vorige taxatie") : c("–", "geen vorige taxatie")}</div>`;
+    return c(telNl(OBJ.length), OBJ.length === 1 ? "object" : "objecten") + c(telNl(herkend), "kolommen herkend", telNl(nKol))
+      + (BT.beschikbaar ? c(telNl(BT.n), "met vorige taxatie") : c("–", "geen vorige taxatie"));
   }
   const herkend = new Set(Object.values(KOP.vhe)).size;
-  const midden = DATA.obj ? c(OBJ.filter((o) => o.vhes.length).length.toLocaleString("nl-NL"), "objecten met VHE's") : c(BESTANDEN.length.toLocaleString("nl-NL"), BESTANDEN.length === 1 ? "bestand" : "bestanden");
-  return `<div class="slotcijfers">${c(VHE.length.toLocaleString("nl-NL"), "VHE's")}${midden}${c(herkend.toLocaleString("nl-NL"), "kolommen herkend", d.kolommen.length.toLocaleString("nl-NL"))}</div>`;
+  const midden = DATA.obj ? c(telNl(OBJ.filter((o) => o.vhes.length).length), "objecten met VHE's") : c(telNl(BESTANDEN.length), BESTANDEN.length === 1 ? "bestand" : "bestanden");
+  return c(telNl(VHE.length), "VHE's") + midden + c(telNl(herkend), "kolommen herkend", telNl(d.kolommen.length));
 }
 
-/* De eerste regels, zoals in een Excel-tabel. */
-function vakVoorbeeldHtml(soort) {
-  if (soort === "obj") {
-    const rij = (o) => `<tr><td>${esc(o.v.FileNumber || "·")}</td><td>${esc(o.v.Address || "·")}</td><td>${esc(o.v.City || "·")}</td><td>${esc(o.v.PropertyType || "·")}</td><td class="g">${getalNl(o.v.MV_Total)}</td></tr>`;
-    return `<table class="slottab"><thead><tr><th style="width:17%">Dossier</th><th style="width:31%">Adres</th><th style="width:18%">Plaats</th><th style="width:16%">Type</th><th class="g" style="width:18%">Marktwaarde</th></tr></thead>
-      <tbody>${OBJ.slice(0, 3).map(rij).join("")}</tbody></table>`;
+function deelHtml(soort, h) {
+  const D = DEEL[soort], d = DATA[soort];
+  if (!d) {
+    const t = soort === "obj"
+      ? `Geen objectentabel gevonden. De tool maakt de objecten uit de VHE's${OBJ.length ? ` (${meervoud(OBJ.length, "object", "objecten")})` : ""}.`
+      : "Geen VHE's gevonden. Sleep een bestand met tblVHE in het vak, of kies het hier.";
+    return `<div class="vakdeel leeg" data-deel="${soort}"><span class="dikoon">${D.ikoon()}</span>
+      <div class="dtekst"><div class="dtitel">${D.titel} <code>${D.code}</code></div><div class="dbron">${t}</div></div>
+      <div class="dknoppen"><button class="k stil" data-kies="${soort}">${soort === "obj" ? "Objecten toevoegen" : "VHE's toevoegen"}</button></div></div>`;
   }
-  const rij = (u) => `<tr><td>${esc(u.bestand || "·")}</td><td>${esc(u.address || "·")}</td><td>${esc(u.type || "·")}</td><td class="g">${getalNl(u.waarde)}</td></tr>`;
-  return `<table class="slottab"><thead><tr><th style="width:36%">Bestand</th><th style="width:30%">VHE</th><th style="width:17%">Type</th><th class="g" style="width:17%">Waarde</th></tr></thead>
-    <tbody>${VHE.slice(0, 3).map(rij).join("")}</tbody></table>`;
+  return `<div class="vakdeel" data-deel="${soort}"><span class="dikoon">${D.ikoon()}</span>
+      <div class="dtekst"><div class="dtitel">${D.titel} <code>${D.code}</code>${statusStip(soort, deelOk(soort))}</div><div class="dbron">${deelBronHtml(soort, h)}</div></div>
+      <div class="dcijfers">${deelCijfersHtml(soort)}</div>
+      <div class="dknoppen"><button class="ikoonknop" data-vakmenu="${soort}" title="Andere tabel of ander bestand" aria-label="${D.titel}: andere tabel of ander bestand" aria-haspopup="true">${IK.wissel(15)}</button>
+        <button class="ikoonknop" data-wis="${soort}" title="Alleen de ${D.wat} weghalen" aria-label="${D.titel} weghalen">${IK.prul(15)}</button></div></div>`;
 }
 
-function vakVolHtml(soort, g) {
-  const n = soort === "obj" ? OBJ.length : VHE.length, rest = Math.max(0, n - 3);
-  return `${vakKop(soort, true)}${vakBronHtml(soort, g)}${vakCijfersHtml(soort)}${n ? vakVoorbeeldHtml(soort) : ""}
-    <div class="slotmeer"><span>${rest ? `en nog ${meervoud(rest, "regel", "regels")}` : ""}</span><button class="lnk" data-ruwnaar="${soort}">Alle kolommen bekijken</button></div>
-    <div class="sleeplaag" aria-hidden="true"><span class="pijlop">${IK.neer(22)}</span><b>Loslaten om te vervangen</b><span>Staan er ook ${soort === "obj" ? "VHE's" : "objecten"} in, dan ${g
-      ? "vervangt de tool die ook." : DATA[soort === "obj" ? "vhe" : "obj"] ? "vraagt de tool eerst of het andere vak ook vervangen moet worden." : "komen die in het andere vak."}</span></div>`;
-}
-
-/* De koppeling tussen de vakken. */
-function tekenBrug() {
-  const el = $("#slotBrug"), model = DATA.obj ? !!DATA.obj.modellen : !DATA.vhe && dataRoute() === "m";
-  const bo = `<div class="bo">${model ? "per model" : "FileNumber<br>⇄ Bestand"}</div>`;
+/* De koppeling tussen de objecten en de VHE's. */
+function koppelRegelHtml() {
+  const model = (DATA.obj && DATA.obj.modellen) || (DATA.vhe && DATA.vhe.modellen);
   if (DATA.obj && DATA.vhe) {
     const n = BESTANDEN.filter((b) => b.obj).length, m = BESTANDEN.length, alles = n === m;
-    el.className = `slotbrug vol${alles ? "" : " let"}`;
-    el.innerHTML = `${bo}<button class="ring" data-ctrlnaar title="Naar de controle" aria-label="Koppeling: ${n} van ${m} gekoppeld; naar de controle">${alles ? IK.vink(18) : "!"}</button>
-      <div class="bt"><b>${n.toLocaleString("nl-NL")} van ${m.toLocaleString("nl-NL")}</b>${model ? "gekoppeld per rekenmodel" : "gekoppeld op dossiernummer"}${alles ? "" : `; ${(m - n).toLocaleString("nl-NL")} niet`}</div>`;
-    return;
+    return `<div class="vakkoppel vol${alles ? "" : " let"}"><span class="klijn"><button class="kring" data-ctrlnaar title="Naar de controle" aria-label="Koppeling: ${n} van ${m} gekoppeld; naar de controle">${alles ? IK.vink(11) : "!"}</button></span>
+      <span class="ktekst"><b>${telNl(n)} van ${telNl(m)}</b> ${model ? "gekoppeld per rekenmodel" : "gekoppeld op dossiernummer"}${alles ? "" : `; ${telNl(m - n)} niet · <button class="lnk" data-ctrlnaar>naar de controle</button>`}</span></div>`;
   }
-  el.className = "slotbrug";
-  el.innerHTML = `${bo}<span class="ring">${IK.schakel(20)}</span><div class="bt"><b>Koppeling</b>${DATA.vhe && !DATA.obj ? "zonder tblQuery maakt de tool de objecten uit de VHE's"
-    : model ? "elk model vult beide vakken; de VHE's horen bij het object uit hetzelfde model" : "op dossiernummer, zodra beide vakken gevuld zijn"}</div>`;
+  return `<div class="vakkoppel"><span class="klijn"><span class="kring">${IK.schakel(13)}</span></span>
+    <span class="ktekst">${DATA.vhe ? "Zonder objectentabel komen de objecten uit de VHE's" : "De VHE's worden op dossiernummer gekoppeld, zodra ze er zijn"}</span></div>`;
 }
 
-/* Eén balk boven de vakken als ze uit dezelfde bron komen, met de tabbladen. */
-function bronBalkHtml(g) {
-  const O = DATA.obj, V = DATA.vhe;
-  let ik, nm, mt, bladen = "", acties = "", links, rechts;
-  if (g.soort === "bestand") {
-    const b = g.bron;
-    ik = bladIkoon(34); nm = esc(b.bestand);
-    mt = ["Eén bestand", fmtGrootte(b.grootte), "beide tabellen gevonden"].filter(Boolean).join(" · ");
-    const gebruikt = new Set([O.blad, V.blad].filter(Boolean)), nee = g.bladen.filter((x) => !gebruikt.has(x)), toon = new Set(nee.slice(0, 3));
-    bladen = g.bladen.filter((x) => gebruikt.has(x) || toon.has(x)).map((x) => gebruikt.has(x)
-      ? `<span class="bronblad ja" title="Gebruikt: ${x === O.blad ? "objecten" : ""}${x === O.blad && x === V.blad ? " en " : ""}${x === V.blad ? "VHE's" : ""}">${IK.vink(10)}${esc(x)}</span>`
-      : `<span class="bronblad" title="Niet gebruikt">${esc(x)}</span>`).join("")
-      + (nee.length > 3 ? `<span class="bronblad" title="${esc(nee.slice(3).join(", "))}">+${nee.length - 3}</span>` : "")
-      + (nee.length ? `<span class="bronniet">niet gebruikt</span>` : "");
-    acties = `<button class="k stil" data-bronander>${IK.wissel(14)} Ander bestand</button>`;
-    const waar = (d) => `${d.blad ? `tabblad ${esc(d.blad)} · ` : ""}<code>${esc(d.tabel || "bereik")}</code>`;
-    links = waar(O); rechts = waar(V);
-  } else if (g.soort === "modellen") {
-    const ov = (O.modellen.overgeslagen || []).length;
-    ik = mapIkoon(34); nm = esc(O.bestand);
-    mt = [`tabblad ${esc(O.blad)}`, meervoud(VHE.length, "VHE", "VHE's"), ov ? `${meervoud(ov, "bestand", "bestanden")} niet gelezen` : ""].filter(Boolean).join(" · ");
-    bladen = `<span class="bronblad ja">${IK.vink(10)}${esc(O.blad)}</span><span class="bronniet">de andere tabbladen blijven dicht</span>`;
-    acties = `<button class="k stil" data-bronmodellen>${IK.wissel(14)} Opnieuw kiezen</button>`;
-    links = `regel 1 en 2 · <code>${esc(O.blad)}</code>`; rechts = `${vheBlokKort(V)} · <code>${esc(O.blad)}</code>`;
-  } else {
-    ik = `<span class="bronvb">${IK.gebouw(18)}</span>`; nm = esc(O.naam || "Voorbeelddata");
-    mt = `Voorbeelddata · ${meervoud(OBJ.length, "object", "objecten")} en ${meervoud(VHE.length, "VHE", "VHE's")}, om de tool te leren kennen`;
-    links = `<code>${esc(O.tabel)}</code>`; rechts = `<code>${esc(V.tabel)}</code>`;
+/* De eerste regels van een van de twee tabellen, zoals in Excel. */
+function voorbeeldTabelHtml(soort) {
+  if (soort === "obj") {
+    const vorig = BT.beschikbaar;
+    const rij = (o) => `<tr><td>${esc(o.v.FileNumber || "·")}</td><td>${esc(o.v.Address || "·")}</td><td class="n2">${esc(o.v.City || "·")}</td><td class="n3">${esc(o.v.PropertyType || "·")}</td>
+      <td class="g">${getalNl(o.v.MV_Total)}</td>${vorig ? `<td class="g n2">${getalNl(o.p.MV_Total)}</td>` : ""}</tr>`;
+    return `<table class="slottab"><thead><tr><th style="width:14%">Dossier</th><th style="width:26%">Adres</th><th class="n2" style="width:15%">Plaats</th><th class="n3" style="width:15%">Type</th>
+      <th class="g" style="width:15%">Marktwaarde</th>${vorig ? `<th class="g n2" style="width:15%">Vorige taxatie</th>` : ""}</tr></thead><tbody>${OBJ.slice(0, 3).map(rij).join("")}</tbody></table>`;
   }
-  return `<section class="databalk">${ik}<div class="dbt"><span class="nm">${nm}</span><span class="mt">${mt}</span></div>${bladen ? `<div class="bronbladen">${bladen}</div>` : ""}
-      <div class="dbacties">${acties}<button class="ikoonknop" data-bronwis title="Alles weghalen" aria-label="Alles weghalen">${IK.prul(15)}</button></div></section>
-    <div class="dataverdeel" aria-hidden="true"><div class="v"><span>${links}</span></div><div></div><div class="v"><span>${rechts}</span></div></div>`;
+  const rij = (u) => `<tr><td>${esc(u.bestand || "·")}</td><td>${esc(u.address || "·")}</td><td class="n3">${esc(u.type || "·")}</td><td class="g n2">${getalNl(u.vpv)}</td><td class="g">${getalNl(u.waarde)}</td></tr>`;
+  return `<table class="slottab"><thead><tr><th style="width:30%">Bestand</th><th style="width:28%">VHE</th><th class="n3" style="width:14%">Type</th><th class="g n2" style="width:14%">Leegwaarde</th><th class="g" style="width:14%">Waarde</th></tr></thead>
+    <tbody>${VHE.slice(0, 3).map(rij).join("")}</tbody></table>`;
+}
+function voorbeeldHtml() {
+  const s = DATA[UI.vbDeel] ? UI.vbDeel : DATA.obj ? "obj" : "vhe";
+  const n = s === "obj" ? OBJ.length : VHE.length, rest = Math.max(0, n - 3);
+  const keuze = DATA.obj && DATA.vhe
+    ? `<span class="segment klein" role="group" aria-label="Eerste regels van">${["obj", "vhe"].map((x) => `<button data-vb="${x}" class="${x === s ? "aan" : ""}" aria-pressed="${x === s}">${DEEL[x].titel}</button>`).join("")}</span>`
+    : `<span class="vbwat">${DEEL[s].titel}</span>`;
+  return `<div class="vakvoorbeeld"><div class="vbkop"><span class="vbl">Eerste regels</span>${keuze}<button class="lnk" data-ruwnaar="${s}">Alle kolommen bekijken</button></div>
+    ${n ? voorbeeldTabelHtml(s) : ""}${rest ? `<div class="vbvoet">en nog ${meervoud(rest, "regel", "regels")}</div>` : ""}</div>`;
 }
 
-/* De vraag of ook het andere vak vervangen moet worden. */
-function vraagHtml() {
-  const v = VRAAG; if (!v) return "";
-  const d = v.data, nu = DATA[v.soort];
-  return `<span class="dvik">?</span><div class="dvt"><b>${esc(d.bestand)} bevat ook ${SOORTNAAM[v.soort]}</b>
-      (${d.tabel ? `tabel ${esc(d.tabel)}` : "een bereik"}${d.blad ? ` op tabblad ${esc(d.blad)}` : ""}, ${meervoud(d.rijen.length, "regel", "regels")}).
-      In het vak ${VAK[v.soort].titel} staat nu ${nu ? esc(nu.voorbeeld ? "de voorbeelddata" : nu.bestand) : "niets"}. Ook vervangen?</div>
-    <div class="dvk"><button class="k stil" data-vraag="nee">Laat staan</button><button class="k vol" data-vraag="ja">Ook vervangen</button></div>`;
-}
-
-function tipsHtml() {
-  const t = dataRoute() === "m"
-    ? [[IK.map(15), "Eén model of een hele map", "Kies de bestanden of de map. Je ziet eerst wat de tool vond, voordat het in de tool komt."],
-      [IK.tabel(15), `Alleen het tabblad ${esc(modelInst().blad)}`, "De rest van het model blijft dicht, ook als het zwaar is."],
-      [IK.slot(15), "Alles blijft in deze browser", "De bestanden worden hier gelezen en niet verstuurd. Alleen als je op de kaart kiest voor PDOK, gaan er adressen naar het Kadaster."]]
-    : [[IK.lagen(15), "Eén bestand met beide tabellen", "Sleep het op een van de twee vakken. De tool zet tblQuery en tblVHE elk in het eigen vak."],
-      [IK.tabel(15), "Kolommen met een andere naam", "Wat de tool niet herkent, koppel je zelf met Kolommen koppelen."],
-      [IK.slot(15), "Alles blijft in deze browser", "De bestanden worden hier gelezen en niet verstuurd. Alleen als je op de kaart kiest voor PDOK, gaan er adressen naar het Kadaster."]];
-  return t.map(([i, a, b]) => `<div class="datatip"><span class="ti">${i}</span><span><span class="tt">${a}</span><span class="ts">${b}</span></span></div>`).join("");
+function vakVolHtml(h) {
+  return `${vakKopHtml(h)}
+    <div class="vakdelen">${deelHtml("obj", h)}${koppelRegelHtml()}${deelHtml("vhe", h)}</div>
+    ${voorbeeldHtml()}
+    <div class="sleeplaag" aria-hidden="true"><span class="pijlop">${IK.neer(22)}</span><b>Loslaten om te lezen</b>
+      <span>Wat in het bestand staat, komt op zijn plek: met objecten en VHE's vervangt het alles, met één van de twee alleen dat deel.</span></div>`;
 }
 
 /* De controle: de tellers en de aandachtspunten; ‘Alles tonen’ geeft de hele lijst. */
@@ -6018,24 +5990,12 @@ function tekenControle() {
 
 function tekenData() {
   const iets = !!(DATA.obj || DATA.vhe);
-  const g = gedeeldeBron();
-  $("#dataRoute").innerHTML = routeHtml(iets);
-  const balk = $("#dataBron");
-  balk.innerHTML = g ? bronBalkHtml(g) : "";
-  balk.classList.toggle("verborgen", !g);
-  const vr = $("#dataVraag");
-  vr.innerHTML = vraagHtml();
-  vr.classList.toggle("verborgen", !VRAAG);
-  for (const soort of ["obj", "vhe"]) {
-    const el = $(VAK[soort].id);
-    el.innerHTML = DATA[soort] ? vakVolHtml(soort, g) : vakLeegHtml(soort);
-    el.classList.toggle("vol", !!DATA[soort]);
-    el.classList.toggle("model", dataRoute() === "m");
-  }
-  tekenBrug();
-  const tips = $("#dataTips");
-  tips.innerHTML = iets ? "" : tipsHtml();
-  tips.classList.toggle("verborgen", iets);
+  const h = iets ? bronOverzicht() : null;
+  const vak = $("#dataVak");
+  vak.innerHTML = iets ? vakVolHtml(h) : vakLeegHtml();
+  vak.classList.toggle("vol", iets);
+  vak.classList.toggle("leeg", !iets);
+  vak.setAttribute("aria-label", iets ? "Geladen data" : "Bestanden kiezen of slepen");
   $("#dataOnder").classList.toggle("verborgen", !iets);
   if (iets) tekenControle();
   tekenSnelRapport();
@@ -6054,26 +6014,27 @@ function tekenData() {
   const delen = [];
   if (DATA.obj) delen.push(`<b>${meervoud(OBJ.length, "object", "objecten")}</b>`);
   if (DATA.vhe) delen.push(`<b>${meervoud(VHE.length, "VHE", "VHE's")}</b>`);
-  const herkomst = !g ? (DATA.obj && DATA.vhe && DATA.obj.bestand !== DATA.vhe.bestand ? " uit twee bestanden" : "") : g.soort === "bestand" ? " uit één bestand" : g.soort === "modellen" ? ` uit ${meervoud(DATA.obj.modellen.n, "rekenmodel", "rekenmodellen")}` : " (voorbeelddata)";
+  const herkomst = !h ? "" : h.soort === "bestand" || h.soort === "eenbestand" ? " uit één bestand" : h.soort === "bestanden" ? ` uit ${telNl(h.namen.length)} bestanden`
+    : h.soort === "modellen" ? ` uit ${meervoud(DATA.obj ? DATA.obj.modellen.n : DATA.vhe.modellen.n, "rekenmodel", "rekenmodellen")}` : " (voorbeelddata)";
   $("#dataSamen").innerHTML = delen.length ? delen.join(" en ") + " geladen" + herkomst : "Nog geen data geladen. Probeer de voorbeelddata om te zien wat de tool doet.";
 }
 
-/* Het menu van een vak: een andere tabel uit hetzelfde bestand, een tabblad
-   aanwijzen, of een ander bestand alleen voor dit vak. */
+/* Het menu van een deel: een andere tabel uit hetzelfde bestand, een tabblad
+   aanwijzen, of een ander bestand alleen voor dit deel. */
 function vakMenuHtml(soort, kand, stap = "hoofd") {
-  const V = VAK[soort], d = DATA[soort], sb = sessieBron(soort), wat = soort === "obj" ? "objecten" : "VHE's";
+  const D = DEEL[soort], d = DATA[soort], sb = sessieBron(soort), wat = D.wat;
   if (stap === "bladen") {
     const bladen = (d.bronnen && d.bronnen[0] && d.bronnen[0].bladen) || [];
     return `<div class="vakmenu"><div class="popkop">Tabblad kiezen</div>${bladen.map((b) => `<button class="popkeuze${b === d.blad ? " aan" : ""}" data-vmblad="${esc(b)}">${IK.tabel(14)}<span class="vmt">${esc(b)}</span>${b === d.blad ? `<span class="bij">nu gebruikt</span>` : ""}</button>`).join("")}
       <div class="popvoet"><button class="mini" data-vmterug>Terug</button><span class="hint" style="margin:0">De tool zoekt op het tabblad de regel met de kolomnamen.</span></div></div>`;
   }
   let h = "";
-  if (kand.length) h += `<div class="popkop">${V.titel} uit dit bestand</div>` + kand.map((k, i) => `<button class="popkeuze${k.blad === d.blad && k.tabel === d.tabel ? " aan" : ""}" data-vmkand="${i}">
-      <span class="vmt"><b>${esc(k.tabel || "bereik")}</b> · tabblad ${esc(k.blad)}${k.volledig ? "" : `<span class="vms">lijkt op een samenvatting, niet op losse ${soort === "obj" ? "objecten" : "VHE's"}</span>`}</span><span class="bij">${meervoud(k.n, "regel", "regels")}</span></button>`).join("");
-  h += `<div class="popkop">${kand.length ? "Of" : V.titel}</div>`;
+  if (kand.length) h += `<div class="popkop">${D.titel} uit dit bestand</div>` + kand.map((k, i) => `<button class="popkeuze${k.blad === d.blad && k.tabel === d.tabel ? " aan" : ""}" data-vmkand="${i}">
+      <span class="vmt"><b>${esc(k.tabel || "bereik")}</b> · tabblad ${esc(k.blad)}${k.volledig ? "" : `<span class="vms">lijkt op een samenvatting, niet op losse ${wat}</span>`}</span><span class="bij">${meervoud(k.n, "regel", "regels")}</span></button>`).join("");
+  h += `<div class="popkop">${kand.length ? "Of" : D.titel}</div>`;
   if (sb && !sb.file.name.match(/\.(csv|tsv|txt)$/i)) h += `<button class="popkeuze" data-vmbladen>${IK.tabel(14)}<span class="vmt">Een tabblad aanwijzen…<span class="vms">als de ${wat} niet als Excel-tabel in het bestand staan</span></span></button>`;
   if (d.modellen) h += `<button class="popkeuze" data-vmmodellen>${IK.map(14)}<span class="vmt">Rekenmodellen opnieuw kiezen…</span></button>`;
-  h += `<button class="popkeuze" data-vmander>${bladIkoon(16)}<span class="vmt">Ander bestand, alleen voor de ${wat}…${DATA[soort === "obj" ? "vhe" : "obj"] ? `<span class="vms">het andere vak blijft staan</span>` : ""}</span></button>`;
+  h += `<button class="popkeuze" data-vmander>${bladIkoon(16)}<span class="vmt">Ander bestand, alleen voor de ${wat}…${DATA[soort === "obj" ? "vhe" : "obj"] ? `<span class="vms">de ${soort === "obj" ? "VHE's blijven" : "objecten blijven"} staan</span>` : ""}</span></button>`;
   h += `<button class="popkeuze" data-vmkoppel>${IK.wissel(14)}<span class="vmt">Kolommen koppelen…</span></button>`;
   if (!sb && !d.modellen && !d.voorbeeld) h += `<div class="vmnoot">Een ander tabblad uit hetzelfde bestand kiezen kan nadat je het bestand opnieuw hebt gekozen.</div>`;
   return `<div class="vakmenu">${h}</div>`;
@@ -6160,23 +6121,47 @@ function openKoppelen(soort) {
 }
 
 /* ---------------- bediening ---------------- */
-/* Voor welk vak een bestandskeuze is: het vak waarop je klikte (doel) en of
-   alleen dat vak gevuld mag worden (alleen). */
-let KIES = { doel: null, alleen: null };
-/* Slepen: undefined is niet aan het slepen, null ergens op het scherm, of het vak. */
-let SLEEP;
-function kiesBestand(doel = null, alleen = null) { KIES = { doel, alleen }; const inp = $("#bestandKies"); inp.value = ""; inp.click(); }
-function kiesModellen(map = false) { const inp = $(map ? "#mapKies" : "#modelKies"); inp.value = ""; inp.click(); }
-function zetSleep(doel) {
-  if (doel === SLEEP) return;
-  SLEEP = doel;
-  $("#s-data").classList.toggle("sleept", doel !== undefined);
-  for (const soort of ["obj", "vhe"]) {
-    const el = $(VAK[soort].id);
-    // boven een vak: dat vak is het doel en een leeg ander vak doet mee; ergens anders: elk leeg vak
-    el.classList.toggle("doel", doel === soort || (doel === null && !DATA[soort]));
-    el.classList.toggle("mee", !!doel && doel !== soort && !DATA[soort]);
+/* Een bestandskeuze voor één deel (‘Ander bestand, alleen voor …’, ‘VHE's toevoegen’). */
+let KIES = { alleen: null };
+let SLEEP = false;
+function kiesBestand(alleen = null) { KIES = { alleen }; const inp = $("#bestandKies"); inp.value = ""; inp.click(); }
+function kiesMap() { const inp = $("#mapKies"); inp.value = ""; inp.click(); }
+function zetSleep(aan) {
+  aan = !!aan;
+  if (aan === SLEEP) return;
+  SLEEP = aan;
+  $("#dataVak").classList.toggle("doel", aan);
+}
+/* Wat er werd losgelaten: bestanden, of een map met alles erin (ook submappen).
+   De onderdelen moeten worden opgevraagd tijdens het loslaten zelf; daarna
+   leest de tool de map in alle rust. Geeft { files, map }. */
+function bestandenUitSleep(dt) {
+  const los = [...((dt && dt.files) || [])];
+  const items = [...((dt && dt.items) || [])].filter((i) => i.kind === "file");
+  const delen = items.map((i) => ({ entry: i.webkitGetAsEntry ? i.webkitGetAsEntry() : null, file: i.getAsFile ? i.getAsFile() : null }));
+  if (!delen.some((x) => x.entry && x.entry.isDirectory)) return Promise.resolve({ files: los, map: "" });
+  return leesMappen(delen);
+}
+async function leesMappen(delen) {
+  const uit = []; let map = "";
+  const lijst = (dir) => new Promise((klaar) => {
+    const r = dir.createReader(), alles = [];
+    const stap = () => r.readEntries((x) => { if (!x.length) return klaar(alles); alles.push(...x); stap(); }, () => klaar(alles));
+    stap();
+  });
+  const alsFile = (fe) => new Promise((klaar) => fe.file((f) => klaar(f), () => klaar(null)));
+  const loop = async (e, pad, diepte) => {
+    if (uit.length >= 5000) return;
+    if (e.isFile) {
+      const f = await alsFile(e);
+      if (f) { try { Object.defineProperty(f, "webkitRelativePath", { value: pad + e.name, configurable: true }); } catch { /* alleen de naam */ } uit.push(f); }
+    } else if (e.isDirectory && diepte < 6) for (const x of await lijst(e)) await loop(x, `${pad}${e.name}/`, diepte + 1);
+  };
+  for (const d of delen) {
+    if (d.entry && d.entry.isDirectory) { if (!map) map = d.entry.name; await loop(d.entry, "", 0); }
+    else if (d.file) uit.push(d.file);
   }
+  return { files: uit, map };
 }
 function openVakMenu(knop, soort) {
   const sb = sessieBron(soort), kand = sb ? sb.kandidaten.filter((k) => k.soort === soort) : [];
@@ -6186,7 +6171,7 @@ function openVakMenu(knop, soort) {
     if (t.hasAttribute("data-vmbladen")) { $("#pop").innerHTML = vakMenuHtml(soort, kand, "bladen"); plaatsPop(); return; }
     if (t.hasAttribute("data-vmterug")) { $("#pop").innerHTML = vakMenuHtml(soort, kand); plaatsPop(); return; }
     if (t.dataset.vmblad !== undefined) { const b = t.dataset.vmblad; sluitPop(); await kiesUitBestand(soort, b); return; }
-    if (t.hasAttribute("data-vmander")) { sluitPop(); kiesBestand(soort, soort); return; }
+    if (t.hasAttribute("data-vmander")) { sluitPop(); kiesBestand(soort); return; }
     if (t.hasAttribute("data-vmmodellen")) { sluitPop(); openModellen(); return; }
     if (t.hasAttribute("data-vmkoppel")) { sluitPop(); openKoppelen(soort); }
   });
@@ -6203,50 +6188,54 @@ function koppelDataScherm() {
   koppelSnelRapport();
   $("#bestandKies").addEventListener("change", async (e) => {
     const f = [...e.target.files]; e.target.value = "";
-    const o = KIES; KIES = { doel: null, alleen: null };
+    const o = KIES; KIES = { alleen: null };
     if (f.length) { melding("Bezig met lezen…"); await leesBestanden(f, o); }
   });
-  // venster gesloten zonder bestand: de keuze voor een vak vervalt
-  $("#bestandKies").addEventListener("cancel", () => { KIES = { doel: null, alleen: null }; });
-  // losse rekenmodellen: eigen venster, bestanden of een hele map
-  const metModellen = (files, map) => { if (!files.length) return; if (MOD.v) leesEnToon(files, map); else { openModellen(); leesEnToon(files, map); } };
-  $("#modelKies").addEventListener("change", (e) => { const f = [...e.target.files]; e.target.value = ""; metModellen(f); });
-  $("#mapKies").addEventListener("change", (e) => {
+  // venster gesloten zonder bestand: de keuze voor een deel vervalt
+  $("#bestandKies").addEventListener("cancel", () => { KIES = { alleen: null }; });
+  // een map: in het venster van de rekenmodellen alleen modellen, op het datascherm alles wat erin staat
+  const mapVan = (f) => { const p = (f[0] && f[0].webkitRelativePath) || ""; return p.includes("/") ? p.split("/")[0] : ""; };
+  $("#mapKies").addEventListener("change", async (e) => {
     const f = [...e.target.files]; e.target.value = "";
-    const p = (f[0] && f[0].webkitRelativePath) || "";
-    metModellen(f, p.includes("/") ? p.split("/")[0] : "");
+    if (!f.length) return;
+    if (MOD.v) { leesEnToon(f, mapVan(f)); return; }
+    melding("Bezig met lezen…"); await leesBestanden(f, { map: mapVan(f) });
   });
-  // Een bestand mag je overal loslaten (anders opent de browser het en ben je
-  // de tool kwijt). Op het datascherm licht het vak op waar het heen gaat.
+  // losse rekenmodellen vanuit het venster
+  $("#modelKies").addEventListener("change", (e) => {
+    const f = [...e.target.files]; e.target.value = "";
+    if (!f.length) return;
+    if (MOD.v) leesEnToon(f); else openModellen(f);
+  });
+  // Een bestand of map mag je overal loslaten (anders opent de browser het en ben
+  // je de tool kwijt). Op het datascherm licht het vak op.
   const metBestand = (e) => [...((e.dataTransfer && e.dataTransfer.types) || [])].includes("Files");
-  const vakOnder = (e) => { const v = e.target && e.target.closest ? e.target.closest("#slotObj, #slotVhe") : null; return v ? (v.id === "slotObj" ? "obj" : "vhe") : null; };
-  document.addEventListener("dragover", (e) => { if (!metBestand(e)) return; e.preventDefault(); if (UI.stap === "data") zetSleep(vakOnder(e)); });
-  document.addEventListener("dragleave", (e) => { if (!e.relatedTarget) zetSleep(undefined); });
+  document.addEventListener("dragover", (e) => { if (!metBestand(e)) return; e.preventDefault(); if (UI.stap === "data") zetSleep(true); });
+  document.addEventListener("dragleave", (e) => { if (!e.relatedTarget) zetSleep(false); });
   document.addEventListener("drop", async (e) => {
     if (!metBestand(e)) return;
     e.preventDefault();
-    const doel = UI.stap === "data" ? vakOnder(e) : null;
-    zetSleep(undefined);
-    const f = [...(e.dataTransfer?.files || [])];
-    if (f.length) { melding("Bezig met lezen…"); await leesBestanden(f, { doel }); }
+    zetSleep(false);
+    const { files, map } = await bestandenUitSleep(e.dataTransfer);
+    if (files.length) { melding("Bezig met lezen…"); await leesBestanden(files, { map }); }
+  });
+  $("#s-data").addEventListener("keydown", (e) => {
+    if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".vakdrop")) { e.preventDefault(); kiesBestand(); }
   });
   $("#s-data").addEventListener("click", async (e) => {
     const t = e.target;
-    const r = t.closest("[data-route]");
-    if (r) { S.dataRoute = r.dataset.route; bewaar(); tekenData(); return; }
-    if (t.closest("[data-kiesmap]")) { kiesModellen(true); return; }
-    if (t.closest("[data-kiesmodel]")) { kiesModellen(false); return; }
+    if (t.closest("[data-kiesmap]")) { kiesMap(); return; }
     const k = t.closest("[data-kies]");
-    if (k) { if (dataRoute() === "m") kiesModellen(false); else kiesBestand(k.dataset.kies || null); return; }
+    if (k) { kiesBestand(k.dataset.kies || null); return; }
     const vm = t.closest("[data-vakmenu]");
     if (vm) { openVakMenu(vm, vm.dataset.vakmenu); return; }
     const w = t.closest("[data-wis]");
-    if (w) { const s = w.dataset.wis; DATA[s] = null; VRAAG = null; await naNieuweData(s === "obj" ? "Objecten weggehaald" : "VHE's weggehaald"); return; }
-    if (t.closest("[data-bronander]")) { if (dataRoute() === "m") openModellen(); else kiesBestand(null); return; }
+    if (w) { const s = w.dataset.wis; DATA[s] = null; await naNieuweData(s === "obj" ? "Objecten weggehaald" : "VHE's weggehaald"); return; }
+    if (t.closest("[data-bronander]")) { kiesBestand(); return; }
     if (t.closest("[data-bronmodellen]")) { openModellen(); return; }
-    if (t.closest("[data-bronwis]")) { DATA = { obj: null, vhe: null }; VRAAG = null; await naNieuweData("Data weggehaald"); return; }
-    const vr = t.closest("[data-vraag]");
-    if (vr) { await beantwoordVraag(vr.dataset.vraag === "ja"); return; }
+    if (t.closest("[data-bronwis]")) { DATA = { obj: null, vhe: null }; await naNieuweData("Data weggehaald"); return; }
+    const vb = t.closest("[data-vb]");
+    if (vb) { UI.vbDeel = vb.dataset.vb; const el = $("#dataVak .vakvoorbeeld"); if (el) el.outerHTML = voorbeeldHtml(); return; }
     const rn = t.closest("[data-ruwnaar]");
     if (rn) { naarRuw(rn.dataset.ruwnaar); return; }
     if (t.closest("[data-ctrlnaar]")) { $("#checkPaneel").scrollIntoView({ behavior: "smooth", block: "start" }); return; }
@@ -6266,7 +6255,6 @@ function koppelDataScherm() {
   $("#knopKoppelen").addEventListener("click", () => openKoppelen());
   $("#knopVoorbeeld").addEventListener("click", async () => {
     if ((DATA.obj || DATA.vhe) && !(await bevestig("Voorbeelddata laden?", "De geladen data wordt vervangen door de voorbeeldportefeuille (fictief).", "Voorbeeld laden"))) return;
-    VRAAG = null;
     await laadVoorbeeld();
   });
   let t = null;
@@ -6275,7 +6263,7 @@ function koppelDataScherm() {
   $("#knopOpnieuw").addEventListener("click", async () => {
     if (!(DATA.obj || DATA.vhe)) { naar("data"); return; }
     if (!(await bevestig("Data wissen?", "De geladen objecten en VHE's worden uit deze browser verwijderd. Je profielen en instellingen blijven bewaard.", "Wissen"))) return;
-    DATA = { obj: null, vhe: null }; VRAAG = null;
+    DATA = { obj: null, vhe: null };
     await naNieuweData("Data gewist");
     naar("data");
   });
