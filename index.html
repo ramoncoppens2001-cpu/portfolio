@@ -492,6 +492,29 @@ details.uitklap[open] summary::before{transform:rotate(90deg)}
 .cnog{font-size:12px;color:var(--zacht);padding:2px 2px 0}
 .cgoed{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--xl-d);background:var(--xl-l);border-radius:10px;padding:9px 12px}
 .datacheck{padding-top:0}
+/* bezig: het scherm grijs, met een klein venster en de voortgang. Het komt pas na
+   een kort moment in beeld; de draaier en de balk bewegen ook als de tool rekent. */
+.bezig{position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;padding:20px;cursor:progress;
+  background:rgba(37,39,58,.32);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);animation:bzin .2s ease .3s both}
+.bezig.weg{animation:bzuit .16s ease both;pointer-events:none}
+@keyframes bzin{from{opacity:0}to{opacity:1}}
+@keyframes bzuit{from{opacity:1}to{opacity:0}}
+.bzdoos{background:var(--wit);border-radius:18px;width:min(440px,100%);padding:20px 22px 14px;box-shadow:var(--schaduw-op);cursor:default}
+.bzdoos:focus{outline:none}
+.bzkop{display:flex;gap:14px;align-items:flex-start}
+.bzdraai{width:28px;height:28px;border-radius:50%;border:3px solid var(--xl-t);border-top-color:var(--xl);flex:0 0 auto;margin-top:1px;animation:bzdraai .8s linear infinite}
+@keyframes bzdraai{to{transform:rotate(360deg)}}
+.bzt{min-width:0;flex:1}
+.bztitel{display:block;font-size:16px;font-weight:600;letter-spacing:-.015em;line-height:1.3}
+.bztekst{display:block;font-size:12.5px;color:var(--zacht);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:1.45em}
+.bzbalk{position:relative;height:8px;border-radius:99px;background:#E7EEEA;overflow:hidden;margin:16px 0 10px}
+.bzbalk i{display:block;height:100%;width:0;border-radius:99px;background:var(--xl);transition:width .3s ease}
+.bzbalk.onbepaald i{width:32%;transition:none;animation:bzschuif 1.15s ease-in-out infinite}
+@keyframes bzschuif{from{transform:translateX(-105%)}to{transform:translateX(320%)}}
+.bzvoet{display:flex;align-items:center;gap:12px;min-height:30px}
+.bznoot{font-size:12px;color:var(--flauw);flex:1;min-width:0;line-height:1.4}
+.bzstop{margin-left:auto;flex:0 0 auto}
+@media(prefers-reduced-motion:reduce){.bzdraai{animation-duration:2.4s}.bzbalk.onbepaald i{animation-duration:2.8s}}
 /* het menu van een vak */
 .vakmenu{width:380px;max-width:calc(100vw - 30px)}
 .vakmenu .popkeuze{align-items:flex-start}
@@ -1091,6 +1114,7 @@ body.kaartsleep .tip{display:none!important}
 .mdbalk i{display:block;height:100%;background:var(--navy);transition:width .2s}
 .mdchips{display:flex;flex-wrap:wrap;gap:6px}
 .mdchips .feit{background:var(--vlak);border-radius:var(--r-pil)}
+.mdchips .feit.let{background:var(--let-t);color:#8A3E00}
 .mdtabel td.r,.mdtabel th.r{text-align:right;font-variant-numeric:tabular-nums}
 .mdtabel td{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mdtabel td.mdopm{white-space:normal;max-width:380px;font-size:12px;color:var(--zacht)}
@@ -1372,7 +1396,7 @@ function tekenLogos() {
 const OPSLAG = "pfTool";
 const LS_INST = OPSLAG + "_v1";
 /* Versie: de bovenste regel van src/versies.json (de bouwstap zet de lijst hier). */
-const VERSIES = [{"nr":"1.15","datum":"2026-10-27","nieuw":["Data: één vak in plaats van twee. Sleep je bestanden erin of klik op Bestanden kiezen: het query-bestand (tblQuery en tblVHE, samen in één bestand of in twee), losse rekenmodellen of een hele map. De tool zoekt zelf uit wat de objecten zijn en wat de VHE's; de keuze tussen query-bestanden en losse rekenmodellen is weg","Data: na het inlezen staat in hetzelfde vak waar alles vandaan kwam: het bestand met zijn tabbladen (de gebruikte in groen), daaronder de objecten en de VHE's met hun tabblad of bestand, de kerngetallen en de koppeling ertussen, en de eerste regels als Excel-tabel, te wisselen tussen objecten en VHE's","Data: wat je later in het vak sleept, komt op zijn plek. Met objecten en VHE's vervangt het alles; met één van de twee alleen dat deel, en de melding zegt wat bleef staan. De vraag of het andere vak ook vervangen moet worden is daarmee weg. Per deel kies je nog steeds een andere tabel, een tabblad of een ander bestand, en een leeg deel vul je met bijvoorbeeld VHE's toevoegen","Data: een map met rekenmodellen kun je ook slepen, met submappen; tijdelijke Excel-bestanden en andere bestanden (zoals pdf's) slaat de tool over. Een werkboek met macro's zonder tabblad Overview en zonder querytabel gaat naar het venster van de rekenmodellen, waar je de naam van het tabblad aanpast"]},{"nr":"1.14","datum":"2026-10-25","nieuw":["Rekenmodellen: de VHE's staan op een vaste plek, zoals in het sjabloon: de kopregel op regel 34 van het tabblad Overview (Type, Address, VPV en FV of MV) en de VHE's op regel 35 tot en met 209. Meestal zijn er maar een paar gevuld; de lege regels tellen niet mee, ook niet een lege regel tussen twee VHE's (die noemt de tool bij de opmerkingen). Een regel met alleen een type, zonder adres of waarde, is ook leeg. Wat onder regel 209 staat, hoort er niet bij","Rekenmodellen: de waarde per VHE heet per klant FV (fair value) of MV (marktwaarde). De tool herkent beide als de waarde per VHE en zet ze in één kolom, ook als de ene klant FV gebruikt en de andere MV. In regel 1 herkent de tool FV en FV_Total ook als marktwaarde","Rekenmodellen: staat er op regel 34 geen kopregel (een ouder of ander sjabloon), dan zoekt de tool de kopregel zelf in de kolommen A tot en met D en leest tot de eerste lege regel; dat staat bij de opmerkingen van dat model. Is het blok tot en met regel 209 helemaal vol, dan meldt de tool dat ook","Rekenmodellen: in het venster kies je bij VHE-blok tussen Vaste regels (de kopregel en tot en met welke regel, standaard 34 en 209) en Zelf zoeken. Een keuze die in 1.12 of 1.13 is bewaard, gaat terug naar 34 tot en met 209. Op het datascherm staat bij het vak VHE's waar ze vandaan komen, bijvoorbeeld A35:D209 van het tabblad Overview"]},{"nr":"1.13","datum":"2026-10-23","nieuw":["Data: een nieuw datascherm met twee vakken, elk voor één tabel: Objecten (tblQuery) en VHE's (tblVHE). Elk leeg vak is een sleepvlak; tijdens het slepen licht het vak op waar het bestand heen gaat. Tussen de vakken staat de koppeling op dossiernummer, met hoeveel er gekoppeld zijn","Data: een bestand met beide tabellen, elk op een eigen tabblad, sleep je op een van de twee vakken. De tool kijkt in alle tabbladen en vult beide vakken. Boven de vakken staat dan één balk met het bestand en zijn tabbladen: de gebruikte in groen, de andere grijs. Een lijntje laat zien welk tabblad in welk vak zit","Data: per vak een menu. Daarin kies je een andere tabel uit hetzelfde bestand, wijs je een tabblad aan (als de tabel er niet als Excel-tabel in staat), kies je een ander bestand alleen voor dat vak of koppel je kolommen. Het andere vak blijft dan staan. Weghalen kan per vak of in de balk voor het hele bestand","Data: staat er in het andere vak al een ander bestand, dan vraagt de tool eerst of dat vak ook vervangen moet worden. Kwamen beide vakken uit één bestand, dan vervangt een nieuwe versie van dat bestand ze allebei, zonder vraag. Laat je een bestand op het verkeerde vak vallen, dan komt het toch in het goede vak en zegt de tool dat. Voorbeelddata in het andere vak gaat weg zodra er echte data komt","Data: kies boven de vakken tussen query-bestanden en losse rekenmodellen. Met rekenmodellen vullen dezelfde twee vakken zich: regel 1 en 2 van het tabblad Overview worden het object, de kolommen A tot en met D de VHE's. Je ziet de modellen eerst in het venster, zoals in 1.12","Data: per vak de kerngetallen en de eerste drie regels als Excel-tabel. De controle staat compact onder de vakken, met de aandachtspunten; Alles tonen geeft de hele lijst. Snel rapport staat ernaast als kaart met de vier keuzes en Maak PDF; Aanpassen klapt hem uit"]},{"nr":"1.12","datum":"2026-10-23","nieuw":["Data: losse rekenmodellen (.xlsm) inlezen, één bestand per object. De tool opent van elk model alleen het tabblad Overview: regel 1 de kolomnamen, regel 2 de waarden, en daaronder in de kolommen A tot en met D de VHE's met een kopregel, tot de eerste lege regel. De rest van het model blijft dicht, zodat ook zware modellen snel gaan (een model van 1,7 MB in ongeveer 25 ms)","Data: de knop Rekenmodellen… opent een venster waarin je bestanden of een hele map kiest en eerst bekijkt wat de tool leest: per bestand (dossier, adres, marktwaarde, aantal kolommen en VHE's, opmerkingen), per kolom (herkend als welk veld, in hoeveel modellen gevuld, eerste waarde) en de VHE's. Sleep je modellen op het datascherm, dan herkent de tool ze aan het tabblad Overview en opent hetzelfde venster","Data: de naam van het tabblad en de regel van de VHE-kop zijn in te stellen; standaard zoekt de tool de kopregel zelf. Tijdelijke Excel-bestanden (~$…) en bestanden zonder het tabblad worden overgeslagen en genoemd. Formules zonder berekende waarde en foutwaarden zoals #N/A staan als opmerking bij het bestand","Data: Inlezen in de tool zet de modellen om naar dezelfde tabellen als tblQuery en tblVHE, met vooraan de kolom Bronbestand; de VHE's horen bij het object uit hetzelfde model. Op het blad Herkomst van de Excel-export staat elk model met zijn vingerafdruk (SHA-256)"]},{"nr":"1.11","datum":"2026-10-20","nieuw":["Rapport: acht extra grafieken, die je in de rapportstudio kiest met aanvinkbare tegels. Elke tegel toont een schets van de grafiek en in welk onderdeel hij komt; kan hij niet (onderdeel uit, gegevens ontbreken), dan staat erbij waarom","Samenvatting: aandachtspunten (grootste stijging en daling, 10% of meer verschil, leegstand, nieuwe objecten, bandbreedte van het rendement), de huuropbouw per groep (contracthuur, derving door leegstand en markthuur), de marktwaarde per m² tegenover het rendement, de spreiding per groep (marktwaarde / leegwaarde, anders het rendement) en de concentratie van de waarde","Backtesting: de bijdrage aan het verschil per groep, gesplitst in huur en rendement zoals de waardebrug, en de verdeling van de waardeontwikkeling over de objecten","Pagina per object: de plek van het object in de portefeuille, per kenmerk de verdeling over alle objecten met dit object als stip","Standaard staan de aandachtspunten, de huuropbouw, de bijdrage per groep en de plek in de portefeuille aan; het profiel Volledig zet alle acht aan. Een eigen profiel onthoudt de keuze","De grafieken werken in alle tien sjablonen, in het Nederlands en het Engels, liggend en staand; zonder vorige taxatie vallen de bijdrage en de verdeling weg"]},{"nr":"1.10","datum":"2026-10-20","nieuw":["Rapport: vier nieuwe sjablonen, gemaakt voor staand: Bijlage, Factsheet, Magazine en Compact. Kies je er een terwijl de richting op liggend staat, dan zet de tool hem op staand; liggend kan daarna nog steeds","Bijlage: voor naast het getekende taxatierapport. Een titelblad met de gegevens, de status en de inhoud; genummerde hoofdstukken met het nummer in de kantlijn; een lopende kop op elk blad en onderaan dat het getekende rapport voorgaat. Hoofdstukken lopen door op hetzelfde blad, de waardebrug staat als tabel, een objectpagina heeft de gegevens in de kantlijn","Factsheet: een navy band met de kop op elk blad, op het voorblad met de drie hoofdcijfers. Het voorblad toont de waarde per groep, de kaart in de kleuren van de groepen, het rendement en de waardeontwikkeling; de samenvatting een tegel per groep met de grootste objecten. Twee objecten per pagina","Magazine: de kaart als omslag, de marktwaarde als één groot getal en een paar zinnen die de tool uit de cijfers maakt (wat de huur bijdroeg en wat het rendement kostte, welke groep het meest steeg). Bij Ligging: waar de waarde zit, met de tien grootste objecten. Eén object per pagina","Compact: zoveel mogelijk op een pagina. Kerncijfers met het aantal objecten in elk verschil, de aansluiting met de Excel-export, en een objectenlijst als een grootboek: een lijn na elke vijf objecten, het totaal onderaan en bovenaan elk volgend blad een transportregel met de som tot dan toe. Vier objecten per pagina","Objectpagina's in de nieuwe sjablonen: een kaartje van de omgeving met de andere objecten uit de portefeuille in de buurt, in plaats van een foto"]},{"nr":"1.9","datum":"2026-10-16","nieuw":["Excel: naast het opgemaakte overzicht een datablad met tblQuery als Excel-tabel: één regel per object, één kolom per veld, veldnamen en waarden zoals in de bron. Om in te lezen, te filteren en draaitabellen te maken. Met VHE's staat tblVHE er op dezelfde manier bij","Excel: geen samengevoegde cellen meer; koppen staan gecentreerd over de selectie. Totalen zijn formules die meefilteren (SUBTOTAAL), gewogen gemiddelden zijn SOMPRODUCT met dezelfde gewichten als de tool. Nieuwe objecten zijn gemarkeerd en Δ staat in %, %-punt of basispunten, met de definitie onder de tabel","Excel: het blad Herkomst met de bronbestanden (datum en vingerafdruk), de toolversie, het profiel, filters en uitgezette objecten, waardepeildatum, grondslag, valuta, oppervlakte en per kolom de bron; het getekende rapport gaat voor. Het blad Controle zet aantallen en sommen per portefeuille als formules naast elkaar; elk verschil moet 0 zijn","Excel: de bestandsnaam is opdrachtgever, kenmerk, waardepeildatum en titel. Bij Rapportgegevens vul je de grondslag en de oppervlaktedefinitie in voor het blad Herkomst","Data: een lege vorige waarde in de bron betekent geen vorige taxatie. Alleen als de bron geen kolom met vorige waarden heeft, rekent de tool die terug uit de Δ-kolom","Data: foutwaarden zoals #N/A tellen als leeg en staan op het blad Herkomst; emoji en andere bijzondere tekens worden goed gelezen"]},{"nr":"1.8","datum":"2026-10-16","nieuw":["Excel: het portefeuilleoverzicht ziet eruit als het Savills-sjabloon: titel en gegevens bovenaan met het logo rechtsboven, het gele label OBJECTEN, de groepen met huidig · vorig · Δ en het totaal, zonder rasterlijnen en met een kop die blijft staan als je scrolt","Excel: meteen klaar om af te drukken, op A4 of A3 liggend: op elk blad hele groepen kolommen, met de kop, het dossier en het adres, het logo en een paginanummer","Excel: de bladen VHE's, Waardebrug en Gevoeligheid hebben dezelfde opmaak; bij de VHE's staat nu ook een totaal"]},{"nr":"1.7","datum":"2026-10-15","nieuw":["Data: ‘Snel rapport’. Zodra je data hebt geladen, maak je meteen een PDF: kies de opdrachtgever, de inhoud (de basis met kerncijfers of een profiel), het sjabloon en de taal, en klik op ‘Maak PDF’. Daarna sta je in Rapport en kun je alles nog aanpassen","Data: het blok laat zien wat er in het rapport komt, en wat wegvalt omdat de data het niet heeft (bijvoorbeeld backtesting zonder vorige taxatie). Staat er een filter, zijn objecten uitgezet of zijn er aandachtspunten in de controle, dan staat dat erbij, met een knop om het op te lossen","Data: met data geladen is het vak om bestanden te laden kleiner, zodat het snel rapport en de controle bovenaan staan","Rapport: in het objectenoverzicht en de backtesting staat het label OBJECTEN (PROPERTIES) netjes in het midden van zijn balk, en zijn de kolommen breed genoeg voor hun kop en hun cijfers, zodat er niets meer wordt afgekapt (zoals ‘Eenheden’, ‘dec 2026’ of een lange plaatsnaam)"]},{"nr":"1.6","datum":"2026-10-14","nieuw":["Rapport: zes sjablonen. Naast Klassiek nu vier sjablonen naar de Savills Brand Guidelines: Savills geel en Savills navy (met een omslag op de kubusachtergrond), Dashboard (compact, zoals de PowerBI-rapporten) en Research (als een publicatie, met één accentkleur die je kiest). Modern is vernieuwd","Rapport: in de nieuwe sjablonen Gotham voor tekst en koppen (Montserrat als Gotham niet op de computer staat), Barlow voor cijfers en tabellen, en grafieken en kaarten in de kleuren van het sjabloon","Rapport: bij een sjabloon met een omslag staan titel, opdrachtgever en datums op de omslag (bij navy en Research ook de drie belangrijkste cijfers); het blad erna heet Kerncijfers","Rapport: een lange inhoudsopgave op het voorblad van Modern staat in twee kolommen, zodat het voorblad op één blad past","Het logo staat overal in de officiële logokleuren, een eigen geel en rood alleen voor het logo: in alle sjablonen, ook Klassiek, en in de tool zelf. De gele accenten blijven Savills-geel"]},{"nr":"1.5","datum":"2026-10-13","nieuw":["Rapport: de inhoudsopgave is klikbaar, in het voorbeeld én in de PDF. Met ‘Pagina per object’ linken ook de adressen in het objectenoverzicht, de ligging, de backtesting en de opmerkingen naar de pagina van dat object","Rapport: nieuw onderdeel ‘Toelichting’, je eigen tekst na het voorblad. Een lege regel begint een nieuwe alinea, een regel met - wordt een opsomming","Objectvenster: schrijf per object een ‘Toelichting voor het rapport’. Die komt op de pagina van dat object en bij Opmerkingen, en wordt bij elke toets bewaard; in de objectentabel staat een tekstwolkje bij het adres","Rapport: de opmerkingen uit de data (Remarks en kadaster) komen alleen nog in het rapport als je ‘Ook opmerkingen uit de data’ aanzet, want ze zijn vaak intern bedoeld. Bij de profielen Volledig en Juridisch staat dat aan","Rapport: staan er nog rapportgegevens (opdrachtgever, kenmerk, toelichting) van andere data, dan vraagt de studio of ze nog kloppen, met ‘Leegmaken’ of ‘Houden’","Wat je verandert, wordt ook bewaard als je het tabblad of Chrome meteen sluit of naar een ander programma gaat"]},{"nr":"1.4","datum":"2026-10-13","nieuw":["Rapport: kies bij ‘Ligging op de kaart’ een detailkaart per plaats: alleen voor drukke plaatsen, voor elke plaats vanaf 5, 3 of 2 objecten, of geen. Zo ziet de lezer van de PDF ook kleinere steden van dichtbij, met de wijken en dezelfde nummers","Rapport: elke plaats die op de landkaart een bol is, heeft nu een eigen detailkaart (eerst alleen de zes grootste); de toelichting staat direct onder de landkaart","Rapport: detailkaarten gebruiken de ruimte op het blad beter en passen ook in het sjabloon Modern met grote tekst"]},{"nr":"1.3","datum":"2026-10-13","nieuw":["Kaart: kies meer plaatsen of provincies tegelijk met Ctrl-klik (op een Mac ⌘-klik), in de verdeling of op een bol. De lijst toont hun objecten met de samen-cijfers; de totalen en het rapport blijven over de hele selectie gaan","Kaart: wat buiten je keuze valt, wordt lichter, en een plaats in de verdeling aanwijzen laat zijn objecten oplichten. Gekozen of gefilterde plaatsen vallen eerder uit elkaar in losse objecten","Kaart: de hele verdeling is uit te klappen, de rijen werken ook met het toetsenbord, en bij een stad als Rotterdam staat de plaatsnaam er nu ook","Rapport: het voorbeeld wordt in stukjes opgemaakt, zodat de tool blijft reageren en grote rapporten veel sneller klaar zijn; na een wijziging blijft het voorbeeld op dezelfde plek staan","Afdrukken wacht tot het voorbeeld met je laatste keuzes helemaal klaar is","Profielen: het kruisje om een eigen profiel te verwijderen is altijd te zien; hetzelfde profiel nog eens inlezen werkt het bij in plaats van het dubbel te zetten","Adressen opzoeken bij PDOK geeft het op als er na 12 seconden geen antwoord is; nieuwe data laden zet de kaart weer op heel Nederland"]},{"nr":"1.2","datum":"2026-10-13","nieuw":["Inlezen robuuster: een totaalregel, een herhaalde kopregel of lege regels uit een sjabloon tellen niet meer als object; de controle laat zien wat er is overgeslagen","De query mag ook als gewoon bereik op een tabblad staan, ook als tblVHE wel een Excel-tabel is","CSV in Nederlandse en Engelse notatie (1.234,5 of 1,234.5) en zoals Excel hem in Nederland opslaat; datums ook als 31 december 2026","Meer kolomnamen herkend, ook varianten voor de vorige taxatie (_PY, vorig, previous) en voor het verschil (Δ, delta); een Δ-kolom als bedrag wordt goed omgerekend","Twee bestanden met verschillende objecten worden samengevoegd; twee versies van dezelfde query niet (de controle zegt welke is gebruikt)","Grafieken per groep tonen de 12 grootste groepen; nieuwe objecten zijn een lichte staaf, zodat staaf, streep en verschil over dezelfde objecten gaan","Snel met grote portefeuilles: bij duizenden VHE's staan de bestanden ingeklapt"]},{"nr":"1.1","datum":"2026-10-13","nieuw":["Overzicht aanpassen: kies zelf welke kerncijfers (bijvoorbeeld NAR, MV/VPV, DCF-rendementen) en welke grafieken je ziet; de kerncijfers gelden ook voor het voorblad","Kaart: een drukke plaats is op heel Nederland één bol met het aantal en de verdeling; klik erop en je zoomt in op de stad","Stadskaart met wijken en stadsdelen, en een verdeling per plaats in het zijpaneel om een stad te openen","Rapport: een detailkaart per stad met veel objecten, met dezelfde nummers als de lijst","Voorbeeld met 100 objecten, waarvan 30 in Amsterdam"]},{"nr":"1.0","datum":"2026-10-12","nieuw":["Waardebrug: het verschil met de vorige taxatie gesplitst in huur, rendement en nieuwe objecten, op het overzicht, per object en in het rapport","Gevoeligheid: wat de marktwaarde ongeveer doet bij een ander rendement of een andere huur, ook als rapportonderdeel","Werkt zonder internet: de Excel-lezer en de lettertypes van het rapport zitten nu in het bestand","Versienummer en dit venster, met de bronnen en licenties"]}];
+const VERSIES = [{"nr":"1.16","datum":"2026-10-28","nieuw":["Data: tijdens het inlezen wordt het scherm grijs, met een klein venster dat zegt wat de tool doet: eerst Bestanden bekijken, dan Rekenmodellen lezen (of Bestand lezen bij een query), en tot slot Inlezen in de tool. Je ziet welk bestand nu gelezen wordt, een balk die oploopt, hoeveel er al gelezen zijn en, na een paar bestanden, hoe lang het nog ongeveer duurt","Data: bij meer bestanden kun je stoppen (de knop Stoppen of Esc). De tool maakt de modellen af waar hij al mee bezig was en laat in het venster zien wat er gelezen is, met ‘Gestopt: 2 van 6 bestanden gelezen’; je kunt die dan toch inlezen. Bij query-bestanden verandert er na stoppen niets","Data: rekenmodellen worden eerst gelezen en daarna pas in het venster getoond, zodat je niet naar een leeg venster kijkt. Er worden twee modellen tegelijk gelezen. Snel werk (korter dan een paar tienden van een seconde) geeft geen grijs scherm, zodat het niet flitst. Een bestand dat je loslaat terwijl de tool bezig is, telt niet mee","Controle: staan woningen en commercieel bij een object op 0 terwijl er wel een totaal is, dan meldt de tool dat nu als ‘Geen verdeling woningen/commercieel’, ter informatie: de totalen kloppen, alleen een verdeling per soort telt die objecten niet mee. Telt een ingevulde verdeling echt niet op, dan blijft dat een aandachtspunt, nu met de bedragen en het verschil. Bij een object met parkeerplaatsen noemt de tool een lager bedrag als waarschijnlijk het parkeren, dat in de query geen eigen kolom heeft"]},{"nr":"1.15","datum":"2026-10-27","nieuw":["Data: één vak in plaats van twee. Sleep je bestanden erin of klik op Bestanden kiezen: het query-bestand (tblQuery en tblVHE, samen in één bestand of in twee), losse rekenmodellen of een hele map. De tool zoekt zelf uit wat de objecten zijn en wat de VHE's; de keuze tussen query-bestanden en losse rekenmodellen is weg","Data: na het inlezen staat in hetzelfde vak waar alles vandaan kwam: het bestand met zijn tabbladen (de gebruikte in groen), daaronder de objecten en de VHE's met hun tabblad of bestand, de kerngetallen en de koppeling ertussen, en de eerste regels als Excel-tabel, te wisselen tussen objecten en VHE's","Data: wat je later in het vak sleept, komt op zijn plek. Met objecten en VHE's vervangt het alles; met één van de twee alleen dat deel, en de melding zegt wat bleef staan. De vraag of het andere vak ook vervangen moet worden is daarmee weg. Per deel kies je nog steeds een andere tabel, een tabblad of een ander bestand, en een leeg deel vul je met bijvoorbeeld VHE's toevoegen","Data: een map met rekenmodellen kun je ook slepen, met submappen; tijdelijke Excel-bestanden en andere bestanden (zoals pdf's) slaat de tool over. Een werkboek met macro's zonder tabblad Overview en zonder querytabel gaat naar het venster van de rekenmodellen, waar je de naam van het tabblad aanpast"]},{"nr":"1.14","datum":"2026-10-25","nieuw":["Rekenmodellen: de VHE's staan op een vaste plek, zoals in het sjabloon: de kopregel op regel 34 van het tabblad Overview (Type, Address, VPV en FV of MV) en de VHE's op regel 35 tot en met 209. Meestal zijn er maar een paar gevuld; de lege regels tellen niet mee, ook niet een lege regel tussen twee VHE's (die noemt de tool bij de opmerkingen). Een regel met alleen een type, zonder adres of waarde, is ook leeg. Wat onder regel 209 staat, hoort er niet bij","Rekenmodellen: de waarde per VHE heet per klant FV (fair value) of MV (marktwaarde). De tool herkent beide als de waarde per VHE en zet ze in één kolom, ook als de ene klant FV gebruikt en de andere MV. In regel 1 herkent de tool FV en FV_Total ook als marktwaarde","Rekenmodellen: staat er op regel 34 geen kopregel (een ouder of ander sjabloon), dan zoekt de tool de kopregel zelf in de kolommen A tot en met D en leest tot de eerste lege regel; dat staat bij de opmerkingen van dat model. Is het blok tot en met regel 209 helemaal vol, dan meldt de tool dat ook","Rekenmodellen: in het venster kies je bij VHE-blok tussen Vaste regels (de kopregel en tot en met welke regel, standaard 34 en 209) en Zelf zoeken. Een keuze die in 1.12 of 1.13 is bewaard, gaat terug naar 34 tot en met 209. Op het datascherm staat bij het vak VHE's waar ze vandaan komen, bijvoorbeeld A35:D209 van het tabblad Overview"]},{"nr":"1.13","datum":"2026-10-23","nieuw":["Data: een nieuw datascherm met twee vakken, elk voor één tabel: Objecten (tblQuery) en VHE's (tblVHE). Elk leeg vak is een sleepvlak; tijdens het slepen licht het vak op waar het bestand heen gaat. Tussen de vakken staat de koppeling op dossiernummer, met hoeveel er gekoppeld zijn","Data: een bestand met beide tabellen, elk op een eigen tabblad, sleep je op een van de twee vakken. De tool kijkt in alle tabbladen en vult beide vakken. Boven de vakken staat dan één balk met het bestand en zijn tabbladen: de gebruikte in groen, de andere grijs. Een lijntje laat zien welk tabblad in welk vak zit","Data: per vak een menu. Daarin kies je een andere tabel uit hetzelfde bestand, wijs je een tabblad aan (als de tabel er niet als Excel-tabel in staat), kies je een ander bestand alleen voor dat vak of koppel je kolommen. Het andere vak blijft dan staan. Weghalen kan per vak of in de balk voor het hele bestand","Data: staat er in het andere vak al een ander bestand, dan vraagt de tool eerst of dat vak ook vervangen moet worden. Kwamen beide vakken uit één bestand, dan vervangt een nieuwe versie van dat bestand ze allebei, zonder vraag. Laat je een bestand op het verkeerde vak vallen, dan komt het toch in het goede vak en zegt de tool dat. Voorbeelddata in het andere vak gaat weg zodra er echte data komt","Data: kies boven de vakken tussen query-bestanden en losse rekenmodellen. Met rekenmodellen vullen dezelfde twee vakken zich: regel 1 en 2 van het tabblad Overview worden het object, de kolommen A tot en met D de VHE's. Je ziet de modellen eerst in het venster, zoals in 1.12","Data: per vak de kerngetallen en de eerste drie regels als Excel-tabel. De controle staat compact onder de vakken, met de aandachtspunten; Alles tonen geeft de hele lijst. Snel rapport staat ernaast als kaart met de vier keuzes en Maak PDF; Aanpassen klapt hem uit"]},{"nr":"1.12","datum":"2026-10-23","nieuw":["Data: losse rekenmodellen (.xlsm) inlezen, één bestand per object. De tool opent van elk model alleen het tabblad Overview: regel 1 de kolomnamen, regel 2 de waarden, en daaronder in de kolommen A tot en met D de VHE's met een kopregel, tot de eerste lege regel. De rest van het model blijft dicht, zodat ook zware modellen snel gaan (een model van 1,7 MB in ongeveer 25 ms)","Data: de knop Rekenmodellen… opent een venster waarin je bestanden of een hele map kiest en eerst bekijkt wat de tool leest: per bestand (dossier, adres, marktwaarde, aantal kolommen en VHE's, opmerkingen), per kolom (herkend als welk veld, in hoeveel modellen gevuld, eerste waarde) en de VHE's. Sleep je modellen op het datascherm, dan herkent de tool ze aan het tabblad Overview en opent hetzelfde venster","Data: de naam van het tabblad en de regel van de VHE-kop zijn in te stellen; standaard zoekt de tool de kopregel zelf. Tijdelijke Excel-bestanden (~$…) en bestanden zonder het tabblad worden overgeslagen en genoemd. Formules zonder berekende waarde en foutwaarden zoals #N/A staan als opmerking bij het bestand","Data: Inlezen in de tool zet de modellen om naar dezelfde tabellen als tblQuery en tblVHE, met vooraan de kolom Bronbestand; de VHE's horen bij het object uit hetzelfde model. Op het blad Herkomst van de Excel-export staat elk model met zijn vingerafdruk (SHA-256)"]},{"nr":"1.11","datum":"2026-10-20","nieuw":["Rapport: acht extra grafieken, die je in de rapportstudio kiest met aanvinkbare tegels. Elke tegel toont een schets van de grafiek en in welk onderdeel hij komt; kan hij niet (onderdeel uit, gegevens ontbreken), dan staat erbij waarom","Samenvatting: aandachtspunten (grootste stijging en daling, 10% of meer verschil, leegstand, nieuwe objecten, bandbreedte van het rendement), de huuropbouw per groep (contracthuur, derving door leegstand en markthuur), de marktwaarde per m² tegenover het rendement, de spreiding per groep (marktwaarde / leegwaarde, anders het rendement) en de concentratie van de waarde","Backtesting: de bijdrage aan het verschil per groep, gesplitst in huur en rendement zoals de waardebrug, en de verdeling van de waardeontwikkeling over de objecten","Pagina per object: de plek van het object in de portefeuille, per kenmerk de verdeling over alle objecten met dit object als stip","Standaard staan de aandachtspunten, de huuropbouw, de bijdrage per groep en de plek in de portefeuille aan; het profiel Volledig zet alle acht aan. Een eigen profiel onthoudt de keuze","De grafieken werken in alle tien sjablonen, in het Nederlands en het Engels, liggend en staand; zonder vorige taxatie vallen de bijdrage en de verdeling weg"]},{"nr":"1.10","datum":"2026-10-20","nieuw":["Rapport: vier nieuwe sjablonen, gemaakt voor staand: Bijlage, Factsheet, Magazine en Compact. Kies je er een terwijl de richting op liggend staat, dan zet de tool hem op staand; liggend kan daarna nog steeds","Bijlage: voor naast het getekende taxatierapport. Een titelblad met de gegevens, de status en de inhoud; genummerde hoofdstukken met het nummer in de kantlijn; een lopende kop op elk blad en onderaan dat het getekende rapport voorgaat. Hoofdstukken lopen door op hetzelfde blad, de waardebrug staat als tabel, een objectpagina heeft de gegevens in de kantlijn","Factsheet: een navy band met de kop op elk blad, op het voorblad met de drie hoofdcijfers. Het voorblad toont de waarde per groep, de kaart in de kleuren van de groepen, het rendement en de waardeontwikkeling; de samenvatting een tegel per groep met de grootste objecten. Twee objecten per pagina","Magazine: de kaart als omslag, de marktwaarde als één groot getal en een paar zinnen die de tool uit de cijfers maakt (wat de huur bijdroeg en wat het rendement kostte, welke groep het meest steeg). Bij Ligging: waar de waarde zit, met de tien grootste objecten. Eén object per pagina","Compact: zoveel mogelijk op een pagina. Kerncijfers met het aantal objecten in elk verschil, de aansluiting met de Excel-export, en een objectenlijst als een grootboek: een lijn na elke vijf objecten, het totaal onderaan en bovenaan elk volgend blad een transportregel met de som tot dan toe. Vier objecten per pagina","Objectpagina's in de nieuwe sjablonen: een kaartje van de omgeving met de andere objecten uit de portefeuille in de buurt, in plaats van een foto"]},{"nr":"1.9","datum":"2026-10-16","nieuw":["Excel: naast het opgemaakte overzicht een datablad met tblQuery als Excel-tabel: één regel per object, één kolom per veld, veldnamen en waarden zoals in de bron. Om in te lezen, te filteren en draaitabellen te maken. Met VHE's staat tblVHE er op dezelfde manier bij","Excel: geen samengevoegde cellen meer; koppen staan gecentreerd over de selectie. Totalen zijn formules die meefilteren (SUBTOTAAL), gewogen gemiddelden zijn SOMPRODUCT met dezelfde gewichten als de tool. Nieuwe objecten zijn gemarkeerd en Δ staat in %, %-punt of basispunten, met de definitie onder de tabel","Excel: het blad Herkomst met de bronbestanden (datum en vingerafdruk), de toolversie, het profiel, filters en uitgezette objecten, waardepeildatum, grondslag, valuta, oppervlakte en per kolom de bron; het getekende rapport gaat voor. Het blad Controle zet aantallen en sommen per portefeuille als formules naast elkaar; elk verschil moet 0 zijn","Excel: de bestandsnaam is opdrachtgever, kenmerk, waardepeildatum en titel. Bij Rapportgegevens vul je de grondslag en de oppervlaktedefinitie in voor het blad Herkomst","Data: een lege vorige waarde in de bron betekent geen vorige taxatie. Alleen als de bron geen kolom met vorige waarden heeft, rekent de tool die terug uit de Δ-kolom","Data: foutwaarden zoals #N/A tellen als leeg en staan op het blad Herkomst; emoji en andere bijzondere tekens worden goed gelezen"]},{"nr":"1.8","datum":"2026-10-16","nieuw":["Excel: het portefeuilleoverzicht ziet eruit als het Savills-sjabloon: titel en gegevens bovenaan met het logo rechtsboven, het gele label OBJECTEN, de groepen met huidig · vorig · Δ en het totaal, zonder rasterlijnen en met een kop die blijft staan als je scrolt","Excel: meteen klaar om af te drukken, op A4 of A3 liggend: op elk blad hele groepen kolommen, met de kop, het dossier en het adres, het logo en een paginanummer","Excel: de bladen VHE's, Waardebrug en Gevoeligheid hebben dezelfde opmaak; bij de VHE's staat nu ook een totaal"]},{"nr":"1.7","datum":"2026-10-15","nieuw":["Data: ‘Snel rapport’. Zodra je data hebt geladen, maak je meteen een PDF: kies de opdrachtgever, de inhoud (de basis met kerncijfers of een profiel), het sjabloon en de taal, en klik op ‘Maak PDF’. Daarna sta je in Rapport en kun je alles nog aanpassen","Data: het blok laat zien wat er in het rapport komt, en wat wegvalt omdat de data het niet heeft (bijvoorbeeld backtesting zonder vorige taxatie). Staat er een filter, zijn objecten uitgezet of zijn er aandachtspunten in de controle, dan staat dat erbij, met een knop om het op te lossen","Data: met data geladen is het vak om bestanden te laden kleiner, zodat het snel rapport en de controle bovenaan staan","Rapport: in het objectenoverzicht en de backtesting staat het label OBJECTEN (PROPERTIES) netjes in het midden van zijn balk, en zijn de kolommen breed genoeg voor hun kop en hun cijfers, zodat er niets meer wordt afgekapt (zoals ‘Eenheden’, ‘dec 2026’ of een lange plaatsnaam)"]},{"nr":"1.6","datum":"2026-10-14","nieuw":["Rapport: zes sjablonen. Naast Klassiek nu vier sjablonen naar de Savills Brand Guidelines: Savills geel en Savills navy (met een omslag op de kubusachtergrond), Dashboard (compact, zoals de PowerBI-rapporten) en Research (als een publicatie, met één accentkleur die je kiest). Modern is vernieuwd","Rapport: in de nieuwe sjablonen Gotham voor tekst en koppen (Montserrat als Gotham niet op de computer staat), Barlow voor cijfers en tabellen, en grafieken en kaarten in de kleuren van het sjabloon","Rapport: bij een sjabloon met een omslag staan titel, opdrachtgever en datums op de omslag (bij navy en Research ook de drie belangrijkste cijfers); het blad erna heet Kerncijfers","Rapport: een lange inhoudsopgave op het voorblad van Modern staat in twee kolommen, zodat het voorblad op één blad past","Het logo staat overal in de officiële logokleuren, een eigen geel en rood alleen voor het logo: in alle sjablonen, ook Klassiek, en in de tool zelf. De gele accenten blijven Savills-geel"]},{"nr":"1.5","datum":"2026-10-13","nieuw":["Rapport: de inhoudsopgave is klikbaar, in het voorbeeld én in de PDF. Met ‘Pagina per object’ linken ook de adressen in het objectenoverzicht, de ligging, de backtesting en de opmerkingen naar de pagina van dat object","Rapport: nieuw onderdeel ‘Toelichting’, je eigen tekst na het voorblad. Een lege regel begint een nieuwe alinea, een regel met - wordt een opsomming","Objectvenster: schrijf per object een ‘Toelichting voor het rapport’. Die komt op de pagina van dat object en bij Opmerkingen, en wordt bij elke toets bewaard; in de objectentabel staat een tekstwolkje bij het adres","Rapport: de opmerkingen uit de data (Remarks en kadaster) komen alleen nog in het rapport als je ‘Ook opmerkingen uit de data’ aanzet, want ze zijn vaak intern bedoeld. Bij de profielen Volledig en Juridisch staat dat aan","Rapport: staan er nog rapportgegevens (opdrachtgever, kenmerk, toelichting) van andere data, dan vraagt de studio of ze nog kloppen, met ‘Leegmaken’ of ‘Houden’","Wat je verandert, wordt ook bewaard als je het tabblad of Chrome meteen sluit of naar een ander programma gaat"]},{"nr":"1.4","datum":"2026-10-13","nieuw":["Rapport: kies bij ‘Ligging op de kaart’ een detailkaart per plaats: alleen voor drukke plaatsen, voor elke plaats vanaf 5, 3 of 2 objecten, of geen. Zo ziet de lezer van de PDF ook kleinere steden van dichtbij, met de wijken en dezelfde nummers","Rapport: elke plaats die op de landkaart een bol is, heeft nu een eigen detailkaart (eerst alleen de zes grootste); de toelichting staat direct onder de landkaart","Rapport: detailkaarten gebruiken de ruimte op het blad beter en passen ook in het sjabloon Modern met grote tekst"]},{"nr":"1.3","datum":"2026-10-13","nieuw":["Kaart: kies meer plaatsen of provincies tegelijk met Ctrl-klik (op een Mac ⌘-klik), in de verdeling of op een bol. De lijst toont hun objecten met de samen-cijfers; de totalen en het rapport blijven over de hele selectie gaan","Kaart: wat buiten je keuze valt, wordt lichter, en een plaats in de verdeling aanwijzen laat zijn objecten oplichten. Gekozen of gefilterde plaatsen vallen eerder uit elkaar in losse objecten","Kaart: de hele verdeling is uit te klappen, de rijen werken ook met het toetsenbord, en bij een stad als Rotterdam staat de plaatsnaam er nu ook","Rapport: het voorbeeld wordt in stukjes opgemaakt, zodat de tool blijft reageren en grote rapporten veel sneller klaar zijn; na een wijziging blijft het voorbeeld op dezelfde plek staan","Afdrukken wacht tot het voorbeeld met je laatste keuzes helemaal klaar is","Profielen: het kruisje om een eigen profiel te verwijderen is altijd te zien; hetzelfde profiel nog eens inlezen werkt het bij in plaats van het dubbel te zetten","Adressen opzoeken bij PDOK geeft het op als er na 12 seconden geen antwoord is; nieuwe data laden zet de kaart weer op heel Nederland"]},{"nr":"1.2","datum":"2026-10-13","nieuw":["Inlezen robuuster: een totaalregel, een herhaalde kopregel of lege regels uit een sjabloon tellen niet meer als object; de controle laat zien wat er is overgeslagen","De query mag ook als gewoon bereik op een tabblad staan, ook als tblVHE wel een Excel-tabel is","CSV in Nederlandse en Engelse notatie (1.234,5 of 1,234.5) en zoals Excel hem in Nederland opslaat; datums ook als 31 december 2026","Meer kolomnamen herkend, ook varianten voor de vorige taxatie (_PY, vorig, previous) en voor het verschil (Δ, delta); een Δ-kolom als bedrag wordt goed omgerekend","Twee bestanden met verschillende objecten worden samengevoegd; twee versies van dezelfde query niet (de controle zegt welke is gebruikt)","Grafieken per groep tonen de 12 grootste groepen; nieuwe objecten zijn een lichte staaf, zodat staaf, streep en verschil over dezelfde objecten gaan","Snel met grote portefeuilles: bij duizenden VHE's staan de bestanden ingeklapt"]},{"nr":"1.1","datum":"2026-10-13","nieuw":["Overzicht aanpassen: kies zelf welke kerncijfers (bijvoorbeeld NAR, MV/VPV, DCF-rendementen) en welke grafieken je ziet; de kerncijfers gelden ook voor het voorblad","Kaart: een drukke plaats is op heel Nederland één bol met het aantal en de verdeling; klik erop en je zoomt in op de stad","Stadskaart met wijken en stadsdelen, en een verdeling per plaats in het zijpaneel om een stad te openen","Rapport: een detailkaart per stad met veel objecten, met dezelfde nummers als de lijst","Voorbeeld met 100 objecten, waarvan 30 in Amsterdam"]},{"nr":"1.0","datum":"2026-10-12","nieuw":["Waardebrug: het verschil met de vorige taxatie gesplitst in huur, rendement en nieuwe objecten, op het overzicht, per object en in het rapport","Gevoeligheid: wat de marktwaarde ongeveer doet bij een ander rendement of een andere huur, ook als rapportonderdeel","Werkt zonder internet: de Excel-lezer en de lettertypes van het rapport zitten nu in het bestand","Versienummer en dit venster, met de bronnen en licenties"]}];
 const VERSIE = VERSIES[0] || { nr: "dev", datum: "", nieuw: [] };
 let S = null;
 const UI = { stap: "data", pop: null, ruw: "obj", vbDeel: "obj", zoek: { obj: "", vhe: "", ruw: "" }, dicht: new Set(), vheAllesDicht: false };
@@ -1477,6 +1501,93 @@ document.addEventListener("click", (e) => {
 $("#knopMerk").addEventListener("click", () => naar(OBJ.length ? "overzicht" : "data"));
 $("#knopOver").addEventListener("click", () => openOver());
 $("#knopOver").title = `Over deze tool · versie ${VERSIE.nr}`;
+
+/* ---------------- bezig ----------------
+   Bij werk dat even duurt (bestanden en rekenmodellen inlezen) wordt het scherm
+   grijs, met een klein venster: wat de tool doet, welk bestand, hoe ver hij is en
+   hoe lang het nog ongeveer duurt. Het venster komt pas na 0,3 seconde, zodat het
+   bij snel werk niet flitst, en verdwijnt zacht.
+   Bezig mag genest worden (bestanden bekijken en daarna de modellen lezen): het
+   verdwijnt pas als het laatste werk klaar is. Met Stoppen (of Esc) breekt het
+   werk af tussen twee bestanden; wie bezig is, kijkt naar BEZIG.stop. */
+const BEZIG = { diepte: 0, el: null, t0: 0, stop: false };
+/* Even wachten tot de browser het scherm heeft bijgewerkt, vóór zwaar rekenwerk. */
+const verf = () => new Promise((klaar) => requestAnimationFrame(() => setTimeout(klaar, 0)));
+function bezigStart(titel, stap = {}) {
+  BEZIG.diepte++;
+  if (BEZIG.diepte === 1) {
+    BEZIG.t0 = performance.now(); BEZIG.stop = false;
+    const v = document.createElement("div");
+    v.className = "bezig";
+    v.innerHTML = `<div class="bzdoos" role="dialog" aria-modal="true" aria-busy="true" aria-labelledby="bzTitel">
+        <div class="bzkop"><span class="bzdraai" aria-hidden="true"></span><div class="bzt"><b class="bztitel" id="bzTitel"></b><span class="bztekst" aria-live="polite"></span></div></div>
+        <div class="bzbalk onbepaald" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-labelledby="bzTitel"><i></i></div>
+        <div class="bzvoet"><span class="bznoot"></span><button class="k stil bzstop" hidden>Stoppen</button></div></div>`;
+    $("#vensters").appendChild(v);
+    // de rest van het scherm doet even niet mee, ook niet met het toetsenbord
+    BEZIG.focus = document.activeElement;
+    bezigInert(true, v);
+    v.querySelector(".bzdoos").setAttribute("tabindex", "-1");
+    v.querySelector(".bzdoos").focus({ preventScroll: true });
+    const stop = v.querySelector(".bzstop");
+    stop.addEventListener("click", () => {
+      if (BEZIG.stop) return;
+      BEZIG.stop = true; stop.disabled = true; stop.textContent = "Bezig met stoppen…";
+    });
+    BEZIG.el = v;
+  }
+  bezigStap({ titel, ...stap });
+}
+/* De stand bijwerken: titel, tekst (bijvoorbeeld ‘3 van 6 · bestand’), voortgang k van n
+   (zonder n een balk die heen en weer gaat), een noot eronder en of Stoppen kan. */
+function bezigStap({ titel, tekst, k, n, noot, stoppen } = {}) {
+  const v = BEZIG.el; if (!v) return;
+  if (titel !== undefined) v.querySelector(".bztitel").textContent = titel;
+  if (tekst !== undefined) v.querySelector(".bztekst").textContent = tekst;
+  if (noot !== undefined) v.querySelector(".bznoot").textContent = noot;
+  if (stoppen !== undefined) v.querySelector(".bzstop").hidden = !stoppen;
+  const balk = v.querySelector(".bzbalk");
+  if (n) {
+    const p = Math.max(0, Math.min(100, ((k || 0) / n) * 100));
+    balk.classList.remove("onbepaald"); balk.firstElementChild.style.width = `${p.toFixed(1)}%`;
+    balk.setAttribute("aria-valuenow", String(Math.round(p)));
+  } else if (titel !== undefined || k === null) {
+    balk.classList.add("onbepaald"); balk.firstElementChild.style.width = ""; balk.removeAttribute("aria-valuenow");
+  }
+}
+async function bezigKlaar() {
+  if (!BEZIG.diepte) return;
+  if (--BEZIG.diepte) return;
+  const v = BEZIG.el; BEZIG.el = null;
+  if (!v) return;
+  bezigInert(false, v);
+  const f = BEZIG.focus; BEZIG.focus = null;
+  if (f && f.isConnected && f.focus) f.focus({ preventScroll: true });
+  // nog niet (helemaal) te zien geweest: meteen weg; anders zacht uitfaden (het scherm is meteen weer te gebruiken)
+  if (performance.now() - BEZIG.t0 < 500) { v.remove(); return; }
+  v.classList.add("weg");
+  setTimeout(() => v.remove(), 200);
+}
+/* Alles behalve het bezig-venster even uitschakelen (inert), of weer aanzetten. */
+function bezigInert(aan, v) {
+  for (const el of [...document.body.children, ...$("#vensters").children]) {
+    if (el === v || el.id === "vensters" || el.tagName === "SCRIPT") continue;
+    if (aan) el.inert = true; else el.inert = false;
+  }
+}
+/* ‘nog ongeveer 12 s’, als er genoeg gedaan is om het te schatten. */
+function nogOngeveer(t0, k, n) {
+  const t = (performance.now() - t0) / 1000;
+  if (!k || k >= n || t < 1.5) return "";
+  const rest = (t / k) * (n - k);
+  return rest < 55 ? `nog ongeveer ${Math.max(1, Math.round(rest / 5) * 5 || Math.round(rest))} s` : `nog ongeveer ${Math.max(1, Math.round(rest / 60))} min`;
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape" || !BEZIG.el) return;
+  e.stopImmediatePropagation();
+  const s = BEZIG.el.querySelector(".bzstop");
+  if (s && !s.hidden) s.click();
+}, true);
 
 /* ---------------- venster (modaal) ---------------- */
 function openVenster(html, { klasse = "", bijSluiten } = {}) {
@@ -2432,10 +2543,35 @@ async function leesBestanden(files, opties = {}) {
     else melding("");
     return;
   }
+  // Het scherm wordt grijs, met wat de tool doet en hoe ver hij is. Stoppen kan tussen twee bestanden.
+  const meer = files.length > 1;
+  bezigStart(meer ? "Bestanden bekijken" : "Bestand lezen", { tekst: meer ? `${files.length} bestanden` : files[0].name, stoppen: meer, noot: "" });
+  try { await leesBestandenNu(files, alleen, map); }
+  finally { await bezigKlaar(); }
+}
+async function leesBestandenNu(files, alleen, map) {
+  const gestopt = () => { if (!BEZIG.stop) return false; melding("Inlezen gestopt: er is niets veranderd", "mis"); return true; };
+  // 1. Wat is het: een rekenmodel (snel: alleen de onderdelen van het werkboek) of iets anders?
   const modellen = [], rest = [];
-  for (const f of files) { if (!alleen && await lijktRekenmodel(f, modelInst())) modellen.push(f); else rest.push(f); }
+  for (let i = 0; i < files.length; i++) {
+    if (gestopt()) return;
+    const f = files[i];
+    if (files.length > 1) bezigStap({ tekst: f.name, k: i, n: files.length, noot: `${i} van ${files.length} bekeken` });
+    if (!alleen && await lijktRekenmodel(f, modelInst())) modellen.push(f); else rest.push(f);
+  }
+  // 2. In de andere bestanden de tabellen zoeken. Het lezen van een werkboek gaat in één keer;
+  //    de draaier en de balk bewegen dan door.
   const perSoort = { obj: [], vhe: [] }, fouten = [], beveiligd = [];
-  for (const f of rest) {
+  const t0 = performance.now();
+  for (let i = 0; i < rest.length; i++) {
+    if (gestopt()) return;
+    const f = rest[i], groot = f.size > 4 * 1024 * 1024;
+    const noot = rest.length > 1 ? `${i} van ${rest.length} gelezen${nogOngeveer(t0, i, rest.length) ? ` · ${nogOngeveer(t0, i, rest.length)}` : groot ? " · een groot bestand kan even duren" : ""}`
+      : `${fmtGrootte(f.size)}${groot ? " · een groot bestand kan even duren" : ""}`;
+    bezigStap(rest.length > 1 ? { titel: "Tabellen zoeken", tekst: f.name, k: i, n: rest.length, noot }
+      : { titel: "Bestand lezen", tekst: f.name, k: null, noot });
+    // eerst het venster tekenen: een werkboek lezen gaat in één keer
+    if (f.size > 512 * 1024) await verf();
     try {
       const kand = await leesBestand(f);
       onthoudBestand(f, kand);
@@ -2455,7 +2591,12 @@ async function leesBestanden(files, opties = {}) {
       if (e && /password|encrypt|wachtwoord|cfb/i.test(String(e.message))) beveiligd.push(f.name); else fouten.push(f.name);
     }
   }
-  if (modellen.length) { melding(""); openModellen(modellen, map); }
+  // 3. De rekenmodellen: eerst lezen en bekijken in hun eigen venster.
+  if (modellen.length) {
+    melding("");
+    await openModellen(modellen, map);
+    if (BEZIG.stop) return;
+  }
   const delen = [], let_op = [];
   for (const soort of ["obj", "vhe"]) {
     const lijst = perSoort[soort];
@@ -2492,6 +2633,7 @@ async function leesBestanden(files, opties = {}) {
   // het andere deel, als dat uit een ander bestand bleef staan
   const bleef = delen.length === 1 ? ["obj", "vhe"].find((s) => s !== delen[0] && DATA[s]) || null : null;
   // de melding pas na het inlezen: totaal- en kopregels tellen dan niet mee
+  if (delen.length) { bezigStap({ titel: "Inlezen in de tool", tekst: "Objecten en VHE's opbouwen", k: null, stoppen: false, noot: "" }); await verf(); }
   if (delen.length) await naNieuweData(() => {
     const geladen = delen.map((x) => (x === "obj" ? meervoud(OBJ.length, "object", "objecten") : meervoud(VHE.length, "VHE", "VHE's"))).join(" en ") + " geladen";
     const namen = uniek(delen.flatMap((s) => (DATA[s].bronnen || []).map((b) => b.bestand)));
@@ -2515,7 +2657,11 @@ async function leesBestanden(files, opties = {}) {
 async function kiesUitBestand(soort, blad, tabel = null) {
   const sb = sessieBron(soort);
   if (!sb) { melding("Kies het bestand opnieuw om een ander tabblad te gebruiken", "mis"); return; }
-  melding("Bezig met lezen…");
+  bezigStart("Tabblad lezen", { tekst: `${blad}${tabel ? ` · ${tabel}` : ""} uit ${sb.file.name}`, noot: fmtGrootte(sb.file.size) });
+  try { await verf(); await kiesUitBestandNu(sb, soort, blad, tabel); }
+  finally { await bezigKlaar(); }
+}
+async function kiesUitBestandNu(sb, soort, blad, tabel) {
   let k = null;
   try {
     const w = await openWerkboek(sb.file);
@@ -2943,15 +3089,29 @@ function controles() {
       const m = BT.maanden;
       c.push({ s: "info", t: `Vorige taxatie: ${BT.vdatums.map(([x, k]) => `${fmtDatum(x)} (${k})`).join(" · ")}${m ? ` · gemiddeld ${Math.round(m.gem)} maanden ertussen${Math.round(m.max) !== Math.round(m.min) ? ` (${Math.round(m.min)} tot ${Math.round(m.max)})` : ""}` : ""}` });
     }
-    const somFout = [];
-    for (const m of ["MV", "TRI", "RI", "MR"]) for (const o of OBJ) {
+    // Het totaal tegen woningen + commercieel (MV, TRI, RI en MR). Drie gevallen:
+    // - beide op 0 of leeg, terwijl er wel een totaal is: de verdeling is niet ingevuld. Het
+    //   totaal klopt; alleen een verdeling per soort telt dat object niet mee (geen fout);
+    // - samen lager dan het totaal bij een object met parkeerplaatsen: het verschil is dan
+    //   meestal het parkeren, dat in de query geen eigen kolom heeft;
+    // - anders telt de verdeling echt niet op tot het totaal: kijk naar de query of het model.
+    const zonderVerdeling = new Map(), somFout = [], parkeren = [];
+    for (const o of OBJ) for (const m of ["MV", "TRI", "RI", "MR"]) {
       const t = o.v[m + "_Total"], r = o.v[m + "_Resi"], k = o.v[m + "_Comm"];
       if (typeof t !== "number" || (typeof r !== "number" && typeof k !== "number")) continue;
       const s = (r || 0) + (k || 0);
-      if (Math.abs(s - t) > Math.max(1, Math.abs(t) * 0.005)) somFout.push(`${esc(objNaam(o))}: ${m} totaal ${fmt(t, "euro")}, woningen + commercieel ${fmt(s, "euro")}`);
+      if (Math.abs(s - t) <= Math.max(1, Math.abs(t) * 0.005)) continue;
+      if (!r && !k) { if (!zonderVerdeling.has(o)) zonderVerdeling.set(o, []); zonderVerdeling.get(o).push(m); continue; }
+      const regel = `${esc(objNaam(o))}: ${m} totaal ${fmt(t, "euro")}, woningen ${fmt(r || 0, "euro")} + commercieel ${fmt(k || 0, "euro")} = ${fmt(s, "euro")} (verschil ${fmt(t - s, "euro")})`;
+      if (s < t && o.v.Units_Parking > 0) parkeren.push(regel); else somFout.push(regel);
     }
-    if (somFout.length) c.push({ s: "let", t: `Totaal is niet gelijk aan woningen + commercieel bij ${meervoud(somFout.length, "waarde", "waarden")}`, d: somFout });
-    else if (OBJ.some((o) => typeof o.v.MV_Resi === "number")) c.push({ s: "ok", t: "Totalen sluiten aan op woningen + commercieel (MV, TRI, RI, MR)" });
+    if (somFout.length) c.push({ s: "let", t: `Totaal is niet gelijk aan woningen + commercieel bij ${meervoud(somFout.length, "waarde", "waarden")}: de verdeling telt niet op tot het totaal`, d: somFout });
+    if (parkeren.length) c.push({ s: "info", t: `Totaal hoger dan woningen + commercieel bij ${meervoud(parkeren.length, "waarde", "waarden")} van objecten met parkeerplaatsen. Het verschil is waarschijnlijk het parkeren, dat in de query geen eigen kolom heeft`, d: parkeren });
+    if (zonderVerdeling.size) c.push({ s: "info", t: `Geen verdeling woningen/commercieel bij ${meervoud(zonderVerdeling.size, "object", "objecten")}: alleen het totaal is ingevuld, woningen en commercieel staan op 0. De totalen kloppen; alleen een verdeling per soort telt ${zonderVerdeling.size === 1 ? "dit object" : "deze objecten"} niet mee`,
+      d: [...zonderVerdeling].map(([o, ms]) => `${esc(objNaam(o))}: ${ms.join(", ")}`) });
+    const metVerdeling = OBJ.some((o) => ["MV", "TRI", "RI", "MR"].some((m) => o.v[m + "_Resi"] || o.v[m + "_Comm"]));
+    if (!somFout.length && !parkeren.length && metVerdeling)
+      c.push({ s: "ok", t: `Totalen sluiten aan op woningen + commercieel (MV, TRI, RI, MR)${zonderVerdeling.size ? ", waar de verdeling is ingevuld" : ""}` });
   }
   if (DATA.vhe) {
     c.push({ s: "ok", t: `<b>${meervoud(VHE.length, "VHE", "VHE's")}</b> in ${meervoud(BESTANDEN.length, "bestand", "bestanden")} uit ${bronTekst(DATA.vhe)}` });
@@ -5498,20 +5658,25 @@ function modelUitwerken(res, inst) {
   return res;
 }
 
-/* Alle modellen, een paar tegelijk, met voortgang. */
+/* Alle modellen, twee tegelijk (terwijl het ene wordt uitgepakt, wordt het volgende al
+   gelezen; met drie ging het niet sneller), met voortgang: { klaar, n, bezig } met het
+   bestand dat nu gelezen wordt. Na Stoppen begint er geen nieuw bestand meer; wat al
+   gelezen is, blijft. */
 async function leesModellen(files, inst, voortgang) {
   const lijst = files.filter((f) => !isLock(f)), uit = new Array(lijst.length);
   let volgende = 0, klaar = 0;
+  const bezig = [];
+  const meld = () => { if (voortgang) voortgang({ klaar, n: lijst.length, bezig: bezig[bezig.length - 1] || "" }); };
   const werker = async () => {
-    while (volgende < lijst.length) {
-      const i = volgende++;
+    while (volgende < lijst.length && !BEZIG.stop) {
+      const i = volgende++, naam = lijst[i].name;
+      bezig.push(naam); meld();
       uit[i] = await leesModel(lijst[i], inst);
-      klaar++;
-      if (voortgang) voortgang(klaar, lijst.length, lijst[i].name);
+      bezig.splice(bezig.indexOf(naam), 1); klaar++; meld();
     }
   };
-  await Promise.all([werker(), werker(), werker()]);
-  return uit;
+  await Promise.all([werker(), werker()]);
+  return uit.filter(Boolean);
 }
 
 /* Is dit een rekenmodel? Een tabblad met de gekozen naam (Overview) en geen
@@ -5594,10 +5759,14 @@ function modellenNaarData(lijst, inst, mapNaam = "") {
 
 /* ---------------- het venster ---------------- */
 const MOD = { files: [], res: [], bezig: false, v: null, tab: "bestanden", map: "", tijd: 0 };
-function openModellen(files = null, map = "") {
+/* Het venster. Met bestanden: eerst lezen (het scherm wordt grijs met de voortgang),
+   dan het venster met wat de tool vond. Zonder bestanden: het venster met wat er het
+   laatst gelezen is, om andere bestanden te kiezen of de instellingen aan te passen. */
+async function openModellen(files = null, map = "") {
   if (MOD.v) MOD.v.sluit();
+  MOD.tab = "bestanden";
+  if (files && files.length) await leesEnToon(files, map || undefined);
   const inst = modelInst();
-  MOD.res = []; MOD.tab = "bestanden";
   const v = openVenster(`<div class="vkop"><h2>Rekenmodellen inlezen</h2>
       <p>Eén bestand per object (.xlsm). De tool opent alleen het tabblad <b>${esc(inst.blad)}</b>: regel 1 de kolomnamen, regel 2 de waarden. In de kolommen A tot en met D staan de VHE's: in het sjabloon de kopregel op regel ${MODEL_STD.vheRij} (Type, Address, VPV en FV of MV) en de VHE's op regel ${MODEL_STD.vheRij + 1} tot en met ${MODEL_STD.vheTot}; lege regels tellen niet mee. De rest van het model blijft dicht, ook als het zwaar is.</p>
       <div class="mdinst">
@@ -5647,11 +5816,15 @@ function openModellen(files = null, map = "") {
   $("#mdInlezen", v.el).addEventListener("click", async () => {
     const d = modellenNaarData(MOD.res, modelInst(), MOD.map);
     if (!d) return;
-    DATA = { obj: d.obj, vhe: d.vhe };
-    v.sluit();
-    await naNieuweData(() => `${meervoud(OBJ.length, "object", "objecten")}${VHE.length ? ` en ${meervoud(VHE.length, "VHE", "VHE's")}` : ""} uit ${meervoud(d.obj.modellen.n, "rekenmodel", "rekenmodellen")} geladen`);
+    bezigStart("Inlezen in de tool", { tekst: `Objecten en VHE's uit ${meervoud(d.obj.modellen.n, "rekenmodel", "rekenmodellen")}`, noot: "" });
+    try {
+      await verf();
+      DATA = { obj: d.obj, vhe: d.vhe };
+      v.sluit();
+      await naNieuweData(() => `${meervoud(OBJ.length, "object", "objecten")}${VHE.length ? ` en ${meervoud(VHE.length, "VHE", "VHE's")}` : ""} uit ${meervoud(d.obj.modellen.n, "rekenmodel", "rekenmodellen")} geladen`);
+    } finally { await bezigKlaar(); }
   });
-  if (files && files.length) leesEnToon(files, map || undefined); else tekenModellen();
+  tekenModellen();
 }
 async function leesEnToon(files, mapNaam) {
   const lock = files.filter(isLock).length;
@@ -5659,14 +5832,26 @@ async function leesEnToon(files, mapNaam) {
   MOD.overig = files.length - MOD.files.length - lock; MOD.lock = lock;
   if (mapNaam !== undefined) MOD.map = mapNaam;
   else { const p = (files[0] && files[0].webkitRelativePath) || ""; MOD.map = p.includes("/") ? p.split("/")[0] : ""; }
-  MOD.res = []; MOD.bezig = true; tekenModellen();
+  MOD.res = []; MOD.bezig = true; MOD.gestopt = null; tekenModellen();
+  // Het scherm wordt grijs met de voortgang: hoeveel modellen gelezen, welk model nu, hoe lang nog.
+  const n = MOD.files.length, blad = modelInst().blad;
+  const noot = (klaar, eta) => `${klaar} van ${n} gelezen · ${eta || `alleen het tabblad ${blad}`}`;
+  bezigStart(n === 1 ? "Rekenmodel lezen" : "Rekenmodellen lezen", n > 1
+    ? { tekst: `Bezig met ${MOD.files[0].name}`, k: 0, n, stoppen: true, noot: noot(0) }
+    : { tekst: n ? MOD.files[0].name : "", k: null, stoppen: false, noot: `Alleen het tabblad ${blad}; de rest van het model blijft dicht` });
   const t0 = performance.now();
-  MOD.res = await leesModellen(MOD.files, modelInst(), (k, n, naam) => {
-    const el = MOD.v && $("#mdVoortgang", MOD.v.el);
-    if (el) el.innerHTML = `<div class="mdbalk"><i style="width:${(k / n * 100).toFixed(1)}%"></i></div><span>${k} van ${n} · ${esc(naam)}</span>`;
-  });
-  MOD.tijd = performance.now() - t0; MOD.bezig = false;
-  tekenModellen();
+  try {
+    MOD.res = await leesModellen(MOD.files, modelInst(), ({ klaar, n, bezig }) => {
+      if (n > 1) bezigStap({ tekst: bezig ? `Bezig met ${bezig}` : "Bijna klaar", k: klaar, n, noot: noot(klaar, nogOngeveer(t0, klaar, n)) });
+      const el = MOD.v && $("#mdVoortgang", MOD.v.el);
+      if (el) el.innerHTML = `<div class="mdbalk"><i style="width:${(klaar / n * 100).toFixed(1)}%"></i></div><span>${klaar} van ${n}${bezig ? ` · ${esc(bezig)}` : ""}</span>`;
+    });
+    if (MOD.res.length < n) MOD.gestopt = { gelezen: MOD.res.length, van: n };
+  } finally {
+    MOD.tijd = performance.now() - t0; MOD.bezig = false;
+    tekenModellen();
+    await bezigKlaar();
+  }
 }
 
 function tekenModellen() {
@@ -5718,6 +5903,7 @@ function tekenModellen() {
   const vRijen = uniek(ok.filter((r) => r.vhe).map((r) => r.vhe.rij));
   const chips = [`${meervoud(ok.length, "model", "modellen")} gelezen${mis.length ? `, ${mis.length} niet` : ""}`, `${(MOD.tijd / 1000).toLocaleString("nl-NL", { maximumFractionDigits: 1 })} s`,
     d ? `${herkend} van ${kolInfo.length} kolommen herkend` : "", `${meervoud(nVhe, "VHE", "VHE's")}${vRijen.length ? ` · kopregel ${vRijen.length === 1 ? `op regel ${vRijen[0]}` : `op regels ${vRijen.sort((a, b) => a - b).join(", ")}`}` : ""}`,
+    MOD.gestopt ? `Gestopt: ${MOD.gestopt.gelezen} van ${MOD.gestopt.van} bestanden gelezen` : "",
     MOD.lock ? `${MOD.lock} tijdelijk${MOD.lock === 1 ? "" : "e"} Excel-bestand${MOD.lock === 1 ? "" : "en"} overgeslagen` : "", MOD.overig ? `${MOD.overig} ander${MOD.overig === 1 ? "" : "e"} bestand${MOD.overig === 1 ? "" : "en"} overgeslagen` : ""].filter(Boolean);
   const tabs = [["bestanden", `Per bestand (${res.length})`], ["kolommen", `Kolommen (${kolInfo.length})`], ["vhe", `VHE's (${nVhe})`]];
   let tabel = "";
@@ -5752,7 +5938,7 @@ function tekenModellen() {
         ${d.vhe.rijen.length > 200 ? `<p class="hint">Eerste 200 van ${d.vhe.rijen.length} VHE's getoond.</p>` : ""}` : ""}`;
     if (!metVhe.length && !vk.length) tabel += `<div class="mdleeg">Geen VHE's gevonden. Controleer de regels van het VHE-blok hierboven, of kies ‘Zelf zoeken’.</div>`;
   }
-  lijf.innerHTML = `<div class="mdchips">${chips.map((c) => `<span class="feit">${esc(c)}</span>`).join("")}</div>
+  lijf.innerHTML = `<div class="mdchips">${chips.map((c) => `<span class="feit${/^Gestopt/.test(c) ? " let" : ""}">${esc(c)}</span>`).join("")}</div>
     <div class="segment" style="margin:10px 0 8px">${tabs.map(([w, l]) => `<button data-mdtab="${w}" class="${MOD.tab === w ? "aan" : ""}">${esc(l)}</button>`).join("")}</div>${tabel}`;
   knop.disabled = !nObj;
   tel.textContent = nObj ? `${meervoud(nObj, "object", "objecten")}${nVhe ? ` en ${meervoud(nVhe, "VHE", "VHE's")}` : ""}${DATA.obj || DATA.vhe ? " · vervangt de geladen data" : ""}` : "Niets om in te lezen";
@@ -6155,10 +6341,11 @@ async function leesMappen(delen) {
     if (e.isFile) {
       const f = await alsFile(e);
       if (f) { try { Object.defineProperty(f, "webkitRelativePath", { value: pad + e.name, configurable: true }); } catch { /* alleen de naam */ } uit.push(f); }
+      if (uit.length % 10 === 0) bezigStap({ titel: "Map openen", tekst: `${map} · ${meervoud(uit.length, "bestand", "bestanden")} gevonden` });
     } else if (e.isDirectory && diepte < 6) for (const x of await lijst(e)) await loop(x, `${pad}${e.name}/`, diepte + 1);
   };
   for (const d of delen) {
-    if (d.entry && d.entry.isDirectory) { if (!map) map = d.entry.name; await loop(d.entry, "", 0); }
+    if (d.entry && d.entry.isDirectory) { if (!map) map = d.entry.name; bezigStap({ titel: "Map openen", tekst: map }); await loop(d.entry, "", 0); }
     else if (d.file) uit.push(d.file);
   }
   return { files: uit, map };
@@ -6189,7 +6376,7 @@ function koppelDataScherm() {
   $("#bestandKies").addEventListener("change", async (e) => {
     const f = [...e.target.files]; e.target.value = "";
     const o = KIES; KIES = { alleen: null };
-    if (f.length) { melding("Bezig met lezen…"); await leesBestanden(f, o); }
+    if (f.length) { await leesBestanden(f, o); }
   });
   // venster gesloten zonder bestand: de keuze voor een deel vervalt
   $("#bestandKies").addEventListener("cancel", () => { KIES = { alleen: null }; });
@@ -6199,7 +6386,7 @@ function koppelDataScherm() {
     const f = [...e.target.files]; e.target.value = "";
     if (!f.length) return;
     if (MOD.v) { leesEnToon(f, mapVan(f)); return; }
-    melding("Bezig met lezen…"); await leesBestanden(f, { map: mapVan(f) });
+    await leesBestanden(f, { map: mapVan(f) });
   });
   // losse rekenmodellen vanuit het venster
   $("#modelKies").addEventListener("change", (e) => {
@@ -6210,14 +6397,21 @@ function koppelDataScherm() {
   // Een bestand of map mag je overal loslaten (anders opent de browser het en ben
   // je de tool kwijt). Op het datascherm licht het vak op.
   const metBestand = (e) => [...((e.dataTransfer && e.dataTransfer.types) || [])].includes("Files");
-  document.addEventListener("dragover", (e) => { if (!metBestand(e)) return; e.preventDefault(); if (UI.stap === "data") zetSleep(true); });
+  // Terwijl de tool bezig is, telt een nieuw bestand niet mee (maar opent de browser het ook niet).
+  document.addEventListener("dragover", (e) => { if (!metBestand(e)) return; e.preventDefault(); if (UI.stap === "data" && !BEZIG.diepte) zetSleep(true); });
   document.addEventListener("dragleave", (e) => { if (!e.relatedTarget) zetSleep(false); });
   document.addEventListener("drop", async (e) => {
     if (!metBestand(e)) return;
     e.preventDefault();
     zetSleep(false);
-    const { files, map } = await bestandenUitSleep(e.dataTransfer);
-    if (files.length) { melding("Bezig met lezen…"); await leesBestanden(files, { map }); }
+    if (BEZIG.diepte) return;
+    // het bezig-venster al tijdens het openen (een map met submappen kan even duren)
+    const sleep = bestandenUitSleep(e.dataTransfer);
+    bezigStart("Bestanden openen", { tekst: "", k: null });
+    try {
+      const { files, map } = await sleep;
+      if (files.length) await leesBestanden(files, { map });
+    } finally { await bezigKlaar(); }
   });
   $("#s-data").addEventListener("keydown", (e) => {
     if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches(".vakdrop")) { e.preventDefault(); kiesBestand(); }
