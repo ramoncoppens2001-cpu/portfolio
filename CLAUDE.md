@@ -9,7 +9,7 @@ Excel-bestand. Alles gebeurt in de browser, zonder internet.
 ## Wat er in deze map staat
 
 ```
-index.html    de tool, met de handleiding erin (huidige versie: 1.25, 18 november 2026)
+index.html    de tool, met de handleiding erin (huidige versie: 1.26, 19 november 2026)
 CLAUDE.md     dit bestand
 ```
 
@@ -156,6 +156,22 @@ CLAUDE.md     dit bestand
   rekent `getalPlek()`, in het rapport `centreerGetallen()`.
 - Afdrukken: Chrome of Edge, ‘Opslaan als PDF’, marges op ‘Geen’.
 
+## De Excel-export
+
+- De knop Excel (`[data-excel]`, op Overzicht en Objecten) opent een keuze (`openExcelKeuze`): **Voor de
+  klant** (`maakExcel({ soort: "klant" })`) of **Met formules en controles** (`maakExcel()`, de standaard).
+- Klantversie (`X.hard`): alleen de opgemaakte bladen, met vaste getallen; geen formules, rekenkolommen,
+  data, herkomst of controle. VHE's, Waardebrug en Gevoeligheid alleen als ze zijn aangevinkt (`S.excel`).
+  Er staat niets in wat de klant niet hoort te zien (geen ‘20 van 100, gefilterd’, geen namen van
+  bronbestanden). Geen verborgen bladen als oplossing: die maakt de klant zo weer zichtbaar.
+- Volledige versie: totalen als formules; de rekenkolommen staan rechts, ingeklapt (`blad.inklappen`);
+  Data, Herkomst en Controle staan achteraan met een grijs tabblad; de bestandsnaam eindigt op
+  ‘(met formules)’. Het blad Controle moet 0 verschillen geven.
+- Geen logo in de bladen (sinds 1.26). De afdrukindeling rekent `xlIndeling`; gaat het overzicht over meer
+  bladen, dan blijven kop (`xlKopblok` met `maxKol`) en noten (`xlRegels`) binnen de vaste kolommen.
+- Verander je iets aan de export: maak beide soorten en open ze in Excel (aantal formules, blad Controle,
+  geen herstelmelding), ook met alle kolommen (dan gaat het overzicht over veel bladen).
+
 ## Logboek
 
 - Regels: `logInfo`, `logOk`, `logLet` en `logFout(categorie, tekst, { sub, b, kern })`.
@@ -205,7 +221,8 @@ De tool laat de wijzigingen zien onder ‘Over deze tool’.
   `OBJ.length === 20`. Blokkeer het netwerk met `ctx.route(re.compile(r"^https?://"), ...)`.
 - Handig in de pagina: `naar("kaart")`, `S.pagina.sjabloon = "geel"`, `S.pagina.taal = "en"`,
   `bouwRapport({ voorbeeld: true })` en dat met `page.set_content(html)` openen en wachten op
-  `window.__klaar === true`; `maakExcel()` geeft `{ data, naam }`; `logKopieTekst(LOGBOEK.regels)` is de
+  `window.__klaar === true`; `maakExcel()` geeft `{ data, naam, bladen, soort }` (met `{ soort: "klant" }`
+  de klantversie); `logKopieTekst(LOGBOEK.regels)` is de
   kopie van het logboek (controleer dat er geen bestandsnamen of bedragen in staan).
 - Bekijk zichtbare wijzigingen echt: schermafbeeldingen op 375 en 1280 px breed, ook van het rapport, en
   in beide talen. Ook in het donkere thema en in de eenvoudige modus
