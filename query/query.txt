@@ -1,0 +1,291 @@
+// tblQuery — één regel per rekenmodel (rij 1 = kolomnamen, rij 2 = waarden van tabblad Overview)
+// Aangepast 25-11-2026:
+//  - een foutmelding (FOUT: …) bevat niet meer het volledige pad, alleen de bestandsnaam
+//  - kies welke bestanden opnieuw gelezen worden: zet in de tabel Paden een kolom ‘Bijwerken’ en vink aan
+//    (x, ja, 1 of een selectievakje). Alleen die bestanden worden geopend; de regels van de andere bestanden
+//    komen uit de tabel die al in de werkmap staat. Een nieuw bestand (nog niet in de tabel) wordt altijd gelezen.
+//    Geen kolom Bijwerken, of niets aangevinkt: alles wordt gelezen. De vorige tabel wordt gezocht op de kolommen
+//    Bronbestand, Laadstatus en Gevulde cellen; hoe die tabel in Excel heet maakt niet uit.
+//  - drie kolommen vooraan: ‘Laatst gewijzigd’ (wanneer het rekenmodel voor het laatst is opgeslagen),
+//    ‘Laatst ingelezen’ (wanneer deze query het voor het laatst heeft gelezen) en ‘Actueel’: OK, of LET OP als het
+//    rekenmodel later is opgeslagen dan ingelezen (vink het dan aan bij Bijwerken). De wijzigdatum komt uit de map
+//    (Folder.Contents), zonder het bestand te openen, en wordt bij elke vernieuwing opnieuw bekeken.
+let
+    Tabblad   = "overview",
+    AantalKol = 111,
+
+    Bron        = Excel.CurrentWorkbook(){[Name = "Paden"]}[Content],
+    Gevuld      = Table.SelectRows(Bron, each [Pad] <> null and Text.Trim(Text.From([Pad])) <> ""),
+    Opgeschoond = Table.TransformColumns(Gevuld, {{"Pad", each Text.Trim(Text.Trim(Text.From(_)), """"), type text}}),
+
+    // ---- welke bestanden opnieuw lezen (kolom Bijwerken in Paden) ----
+    IsAan = (x) =>
+        if x = null then false
+        else if x is logical then x
+        else if x is number then x <> 0
+        else not List.Contains({"", "nee", "no", "n", "0", "onwaar", "false", "-"}, Text.Lower(Text.Trim(Text.From(x)))),
+    HeeftKeuze = List.Contains(Table.ColumnNames(Opgeschoond), "Bijwerken")
+                 and List.AnyTrue(List.Transform(Opgeschoond[Bijwerken], IsAan)),
+    NaamVan    = (pad as text) as text =>
+        Text.BeforeDelimiter(Text.AfterDelimiter(pad, "\", {0, RelativePosition.FromEnd}), ".", {0, RelativePosition.FromEnd}),
+    // de tabel die deze query de vorige keer heeft gemaakt: gezocht op de kolommen, dus de naam van de tabel
+    // in Excel maakt niet uit (bestaat de eerste keer nog niet)
+    Kandidaten = if not HeeftKeuze then #table({"Name", "Content"}, {})
+                 else Table.SelectRows(Excel.CurrentWorkbook(), each [Name] <> "Paden"
+                          and List.ContainsAll((try Table.ColumnNames([Content]) otherwise {}), {"Bronbestand", "Laadstatus", "Gevulde cellen"})),
+    Vorige     = if Table.IsEmpty(Kandidaten) then null else try Table.Buffer(Kandidaten{0}[Content]) otherwise null,
+    VorigeOk   = Vorige <> null and List.Contains(Table.ColumnNames(Vorige), "Bronbestand"),
+    VorigeNamen = if VorigeOk then List.Buffer(List.Distinct(List.Transform(Table.Column(Vorige, "Bronbestand"),
+                      each if _ = null then "" else Text.Lower(Text.Trim(Text.From(_)))))) else {},
+    Lezen      = (r as record) as logical =>
+        not VorigeOk or IsAan(Record.FieldOrDefault(r, "Bijwerken")) or not List.Contains(VorigeNamen, Text.Lower(NaamVan(r[Pad]))),
+    VanVorige  = (naam as text) as table =>
+        Table.SelectRows(Vorige, each Text.Lower(Text.Trim(Text.From(Record.Field(_, "Bronbestand")))) = Text.Lower(naam)),
+
+    // ---- wanneer is elk rekenmodel voor het laatst opgeslagen (uit de mappen, zonder de bestanden te openen) ----
+    Nu        = DateTime.LocalNow(),
+    MapVan    = (pad as text) as text => Text.BeforeDelimiter(pad, "\", {0, RelativePosition.FromEnd}),
+    Mappen    = List.Distinct(List.Transform(Opgeschoond[Pad], MapVan)),
+    MapInhoud = Table.Buffer(Table.Combine(List.Transform(Mappen, (m) =>
+                    try Table.AddColumn(Table.SelectColumns(Folder.Contents(m & "\"), {"Name", "Date modified"}), "Map", each Text.Lower(m))
+                    otherwise #table({"Name", "Date modified", "Map"}, {})))),
+    GewijzigdOp = (pad as text) =>
+        let
+            Rijen = Table.SelectRows(MapInhoud, each [Map] = Text.Lower(MapVan(pad))
+                        and Text.Lower([Name]) = Text.Lower(Text.AfterDelimiter(pad, "\", {0, RelativePosition.FromEnd})))
+        in
+            if Table.IsEmpty(Rijen) then null else Rijen{0}[Date modified],
+    AlsDatum  = (x) => if x = null then null else if x is datetime then x else try DateTime.From(x) otherwise null,
+    ActueelTekst = (gewijzigd, ingelezen) =>
+        if gewijzigd = null then "ONBEKEND: wijzigdatum van het bestand niet gevonden"
+        else if ingelezen = null then "ONBEKEND: nog niet met deze query ingelezen (vink Bijwerken aan)"
+        else if gewijzigd > ingelezen then "LET OP: rekenmodel gewijzigd na het inlezen (vink Bijwerken aan)"
+        else "OK",
+
+    Letter = (n as number) as text =>
+        if n <= 26 then Character.FromNumber(64 + n)
+        else @Letter(Number.IntegerDivide(n - 1, 26)) & Character.FromNumber(65 + Number.Mod(n - 1, 26)),
+
+    UniekeNamen = (koppen as list) as list =>
+        List.Accumulate(List.Positions(koppen), {}, (lijst, i) =>
+            let
+                Ruw   = koppen{i},
+                Tekst = if Ruw = null then "" else Text.Trim(Text.From(Ruw)),
+                Basis = if Tekst = "" then "Kolom " & Letter(i + 1) else Tekst,
+                Naam  = if List.Contains(lijst, Basis) then Basis & " (" & Letter(i + 1) & ")" else Basis
+            in
+                lijst & {Naam}),
+
+    // foutmelding zonder pad (daar kunnen namen van klanten of mappen in staan)
+    ZonderPad = (melding as text, pad as text, naam as text) as text =>
+        let
+            Map = Text.BeforeDelimiter(pad, "\", {0, RelativePosition.FromEnd})
+        in
+            if Map = "" then Text.Replace(melding, pad, naam)
+            else Text.Replace(Text.Replace(melding, pad, naam), Map, "…"),
+
+    HaalRij = (pad as text) as table =>
+        let
+            Werkmap   = Excel.Workbook(File.Contents(pad),
+                            [UseHeaders = false, DelayTypes = true, InferSheetDimensions = true]),
+            Bladen    = Table.SelectRows(Werkmap, each [Kind] = "Sheet"
+                            and Text.Lower(Text.Trim([Item])) = Text.Lower(Tabblad)),
+            Blad      = if Table.IsEmpty(Bladen)
+                            then error "Tabblad '" & Tabblad & "' niet gevonden"
+                            else Bladen{0}[Data],
+            Kolommen  = List.FirstN(Table.ColumnNames(Blad), AantalKol),
+            TweeRijen = Table.FirstN(Table.SelectColumns(Blad, Kolommen), 2),
+            HeeftRij2 = Table.RowCount(TweeRijen) > 1,
+
+            // Eerst fouten in rij 2 TELLEN, daarna pas leegmaken
+            AantalFouten = if HeeftRij2
+                               then List.Count(List.Select(Kolommen, (k) => (try Record.Field(TweeRijen{1}, k))[HasError]))
+                               else 0,
+            ZonderFouten = Table.ReplaceErrorValues(TweeRijen, List.Transform(Kolommen, each {_, null})),
+            Koppen       = Record.ToList(ZonderFouten{0}),
+            Waarden      = if HeeftRij2 then Record.ToList(ZonderFouten{1})
+                           else List.Repeat({null}, List.Count(Kolommen)),
+            AantalGevuld = List.Count(List.Select(Waarden, each _ <> null and Text.Trim(Text.From(_)) <> "")),
+
+            Status =
+                if not HeeftRij2 then "LEEG: rij 2 ontbreekt"
+                else if AantalGevuld = 0 and AantalFouten = 0 then "LEEG: geen opgeslagen waarden (niet herberekend?)"
+                else if AantalFouten > 0 then "LET OP: " & Text.From(AantalFouten) & " foutwaarden (#VERW!/#N/B) leeg gemaakt"
+                else "OK",
+
+            Tabel = #table(UniekeNamen(Koppen), {Waarden}),
+            Extra = Table.AddColumn(Table.AddColumn(Tabel, "Laadstatus", each Status), "Gevulde cellen", each AantalGevuld)
+        in
+            Table.Buffer(Extra),
+
+    PerBestand = List.Transform(Table.ToRecords(Opgeschoond), (r) =>
+        let
+            Naam   = Text.BeforeDelimiter(
+                         Text.AfterDelimiter(r[Pad], "\", {0, RelativePosition.FromEnd}),
+                         ".", {0, RelativePosition.FromEnd}),
+            Poging = try HaalRij(r[Pad]),
+            Data   = if Poging[HasError]
+                         then #table({"Laadstatus"}, {{"FOUT: " & ZonderPad(Poging[Error][Message], r[Pad], Naam)}})
+                         else Poging[Value],
+            Gewijzigd = GewijzigdOp(r[Pad]),
+            Oud       = Table.RemoveColumns(VanVorige(Naam), {"Laatst gewijzigd", "Actueel"}, MissingField.Ignore),
+            Basis     = if Lezen(r) then Table.AddColumn(Table.AddColumn(Data, "Bronbestand", each Naam), "Laatst ingelezen", each Nu)
+                        else if List.Contains(Table.ColumnNames(Oud), "Laatst ingelezen")
+                            then Table.TransformColumns(Oud, {{"Laatst ingelezen", AlsDatum}})
+                        else Table.AddColumn(Oud, "Laatst ingelezen", each null),
+            MetDatum  = Table.AddColumn(Basis, "Laatst gewijzigd", each Gewijzigd)
+        in
+            Table.AddColumn(MetDatum, "Actueel", each ActueelTekst([Laatst gewijzigd], [Laatst ingelezen]))),
+
+    Samen     = Table.Combine(PerBestand),
+    Vooraan   = {"Bronbestand", "Actueel", "Laatst gewijzigd", "Laatst ingelezen", "Laadstatus", "Gevulde cellen"},
+    Geordend  = Table.ReorderColumns(Samen, Vooraan & List.Difference(Table.ColumnNames(Samen), Vooraan)),
+    Resultaat = Table.TransformColumnTypes(Geordend, {{"Laatst gewijzigd", type datetime}, {"Laatst ingelezen", type datetime}, {"Actueel", type text}})
+in
+    Resultaat
+
+
+__________________________________________________________________________________________________________
+
+
+// tblVHE — de verhuurbare eenheden uit tabblad Overview, kolom A–D vanaf regel 35
+// Aangepast 25-11-2026:
+//  - leest regel 35 t/m 209 helemaal en slaat lege regels over; stopt niet meer bij de eerste lege regel
+//    (daardoor vielen bij objecten met meerdere straten de eenheden onder een lege regel weg)
+//  - stopt wel bij een totaalregel (Totaal, Total, Subtotaal, Som …), zoals de tool zelf rekenmodellen leest
+//  - leeg is: niets, 0 of een streepje
+//  - ‘zonder waarde’ kijkt naar Value per VHE: commerciële eenheden hebben geen leegwaarde, dat is geen fout
+//  - meldt regels met een waarde maar zonder adres (die tellen niet mee)
+//  - een foutmelding (FOUT: …) bevat niet meer het volledige pad, alleen de bestandsnaam
+//  - kies welke bestanden opnieuw gelezen worden: zet in de tabel Paden een kolom ‘Bijwerken’ en vink aan
+//    (x, ja, 1 of een selectievakje). Alleen die bestanden worden geopend; de regels van de andere bestanden
+//    komen uit de tabel die al in de werkmap staat. Een nieuw bestand (nog niet in de tabel) wordt altijd gelezen.
+//    Geen kolom Bijwerken, of niets aangevinkt: alles wordt gelezen. De vorige tabel wordt gezocht op de kolommen
+//    Bestand, Laadstatus en Value per VHE; hoe die tabel in Excel heet maakt niet uit.
+let
+    StartRij   = 35,
+    EindRij    = 209,
+    StadRij    = 2,
+    StadKolom  = 5,
+    Kolomnamen = {"Type", "City", "Address", "Vacant Possession Value", "Value per VHE", "Laadstatus"},
+
+    Bron        = Excel.CurrentWorkbook(){[Name = "Paden"]}[Content],
+    Gevuld      = Table.SelectRows(Bron, each [Pad] <> null and Text.Trim(Text.From([Pad])) <> ""),
+    Opgeschoond = Table.TransformColumns(Gevuld, {{"Pad", each Text.Trim(Text.Trim(Text.From(_)), """"), type text}}),
+
+    // ---- welke bestanden opnieuw lezen (kolom Bijwerken in Paden) ----
+    IsAan = (x) =>
+        if x = null then false
+        else if x is logical then x
+        else if x is number then x <> 0
+        else not List.Contains({"", "nee", "no", "n", "0", "onwaar", "false", "-"}, Text.Lower(Text.Trim(Text.From(x)))),
+    HeeftKeuze = List.Contains(Table.ColumnNames(Opgeschoond), "Bijwerken")
+                 and List.AnyTrue(List.Transform(Opgeschoond[Bijwerken], IsAan)),
+    NaamVan    = (pad as text) as text =>
+        Text.BeforeDelimiter(Text.AfterDelimiter(pad, "\", {0, RelativePosition.FromEnd}), ".", {0, RelativePosition.FromEnd}),
+    // de tabel die deze query de vorige keer heeft gemaakt: gezocht op de kolommen, dus de naam van de tabel
+    // in Excel maakt niet uit (bestaat de eerste keer nog niet)
+    Kandidaten = if not HeeftKeuze then #table({"Name", "Content"}, {})
+                 else Table.SelectRows(Excel.CurrentWorkbook(), each [Name] <> "Paden"
+                          and List.ContainsAll((try Table.ColumnNames([Content]) otherwise {}), {"Bestand", "Laadstatus", "Value per VHE"})),
+    Vorige     = if Table.IsEmpty(Kandidaten) then null else try Table.Buffer(Kandidaten{0}[Content]) otherwise null,
+    VorigeOk   = Vorige <> null and List.Contains(Table.ColumnNames(Vorige), "Bestand"),
+    VorigeNamen = if VorigeOk then List.Buffer(List.Distinct(List.Transform(Table.Column(Vorige, "Bestand"),
+                      each if _ = null then "" else Text.Lower(Text.Trim(Text.From(_)))))) else {},
+    Lezen      = (r as record) as logical =>
+        not VorigeOk or IsAan(Record.FieldOrDefault(r, "Bijwerken")) or not List.Contains(VorigeNamen, Text.Lower(NaamVan(r[Pad]))),
+    VanVorige  = (naam as text) as table =>
+        Table.SelectRows(Vorige, each Text.Lower(Text.Trim(Text.From(Record.Field(_, "Bestand")))) = Text.Lower(naam)),
+
+    // leeg zoals in de tool: niets, 0, of alleen een streepje
+    IsLeeg = (x) => x = null or x = 0 or List.Contains({"", "-", "–", "—"}, Text.Trim(Text.From(x))),
+
+    // een totaalregel: het adres begint met totaal, total, subtotaal, som, grand total …
+    IsTotaal = (x) =>
+        let
+            Tekst  = if x = null then "" else Text.Lower(Text.Trim(Text.From(x))),
+            Woord1 = Text.Select(Text.BeforeDelimiter(Tekst & " ", " "), {"a".."z"}),
+            Twee   = Text.Combine(List.FirstN(Text.SplitAny(Tekst, " -:"), 2), " ")
+        in
+            List.Contains({"totaal", "totalen", "total", "totals", "subtotaal", "subtotal", "eindtotaal", "som", "sum"}, Woord1)
+            or List.Contains({"grand total", "portfolio total", "portefeuille totaal", "generaal totaal", "sub total", "sub totaal"}, Twee),
+
+    ZonderPad = (melding as text, pad as text, naam as text) as text =>
+        let
+            Map = Text.BeforeDelimiter(pad, "\", {0, RelativePosition.FromEnd})
+        in
+            if Map = "" then Text.Replace(melding, pad, naam)
+            else Text.Replace(Text.Replace(melding, pad, naam), Map, "…"),
+
+    HaalOverview = (pad as text) as table =>
+        let
+            Werkmap = Excel.Workbook(File.Contents(pad),
+                          [UseHeaders = false, DelayTypes = true, InferSheetDimensions = true]),
+            Bladen  = Table.SelectRows(Werkmap, each [Kind] = "Sheet" and Text.Lower(Text.Trim([Item])) = "overview"),
+            Blad    = if Table.IsEmpty(Bladen) then error "Tabblad 'overview' niet gevonden" else Bladen{0}[Data],
+            Stad    = try Record.Field(Blad{StadRij - 1}, "Column" & Text.From(StadKolom)) otherwise null,
+
+            // regel StartRij t/m EindRij, kolom A–D (ook als het blad minder kolommen heeft)
+            Blok    = Table.FirstN(Table.Skip(Blad, StartRij - 1), EindRij - StartRij + 1),
+            Benoemd = Table.RenameColumns(
+                          Table.SelectColumns(Blok, {"Column1", "Column2", "Column3", "Column4"}, MissingField.UseNull),
+                          {{"Column1", "Address"}, {"Column2", "Type"},
+                           {"Column3", "Vacant Possession Value"}, {"Column4", "Value per VHE"}}),
+
+            // een foutwaarde in adres of type telt als leeg; fouten in de bedragen worden hieronder geteld
+            TekstSchoon0 = Table.ReplaceErrorValues(Benoemd, {{"Address", null}, {"Type", null}}),
+            // alles vanaf de eerste totaalregel hoort er niet bij
+            Posities     = List.PositionOf(List.Transform(TekstSchoon0[Address], IsTotaal), true),
+            TekstSchoon  = if Posities < 0 then TekstSchoon0 else Table.FirstN(TekstSchoon0, Posities),
+            MetAdres    = Table.SelectRows(TekstSchoon, each not IsLeeg([Address])),
+            ZonderAdres = Table.RowCount(Table.SelectRows(TekstSchoon, each IsLeeg([Address])
+                              and (not IsLeeg(try [Value per VHE] otherwise null)
+                                   or not IsLeeg(try [Vacant Possession Value] otherwise null)))),
+
+            Fouten       = Table.RowCount(Table.SelectRows(MetAdres, each
+                               (try [Vacant Possession Value])[HasError] or (try [Value per VHE])[HasError])),
+            // foutwaarden, 0 en streepjes in de bedragen worden leeg (anders geeft het getaltype onderaan een fout)
+            Schoon       = Table.TransformColumns(
+                               Table.ReplaceErrorValues(MetAdres, {{"Vacant Possession Value", null}, {"Value per VHE", null}}),
+                               {{"Vacant Possession Value", each if IsLeeg(_) then null else _},
+                                {"Value per VHE", each if IsLeeg(_) then null else _}}),
+            ZonderWaarde = Table.RowCount(Table.SelectRows(Schoon, each [Value per VHE] = null)),
+            GeenBedrag   = Table.RowCount(Table.SelectRows(Schoon, each [Value per VHE] = null and [Vacant Possession Value] = null)),
+            Aantal       = Table.RowCount(Schoon),
+
+            Status =
+                if Aantal = 0 then "LEEG: geen adressen in A" & Text.From(StartRij) & ":A" & Text.From(EindRij)
+                else if Fouten > 0 then "LET OP: " & Text.From(Fouten) & " rijen met foutwaarden"
+                else if GeenBedrag = Aantal then "LEEG: wel adressen, geen waarden (niet herberekend?)"
+                else if ZonderWaarde > 0 then "LET OP: " & Text.From(ZonderWaarde) & " rijen zonder waarde"
+                else if ZonderAdres > 0 then "LET OP: " & Text.From(ZonderAdres) & " rijen met een waarde maar zonder adres (niet meegenomen)"
+                else "OK",
+
+            Uitkomst = if Aantal = 0
+                then #table(Kolomnamen, {{null, Stad, null, null, null, Status}})
+                else Table.SelectColumns(
+                         Table.AddColumn(Table.AddColumn(Schoon, "City", each Stad), "Laadstatus", each Status),
+                         Kolomnamen)
+        in
+            Uitkomst,
+
+    MetNaam = Table.AddColumn(Opgeschoond, "Bestand", each
+        Text.BeforeDelimiter(Text.AfterDelimiter([Pad], "\", {0, RelativePosition.FromEnd}),
+                             ".", {0, RelativePosition.FromEnd}), type text),
+
+    MetData = Table.AddColumn(MetNaam, "Data", each
+        if not Lezen(_) then Table.SelectColumns(VanVorige([Bestand]), Kolomnamen, MissingField.UseNull)
+        else
+        let p = try HaalOverview([Pad])
+        in  if p[HasError]
+                then #table(Kolomnamen, {{null, null, null, null, null, "FOUT: " & ZonderPad(p[Error][Message], [Pad], [Bestand])}})
+                else p[Value]),
+
+    Uitgevouwen = Table.ExpandTableColumn(Table.SelectColumns(MetData, {"Bestand", "Data"}), "Data", Kolomnamen),
+    Volgorde    = Table.ReorderColumns(Uitgevouwen, {"Bestand", "Laadstatus"} & List.RemoveItems(Kolomnamen, {"Laadstatus"})),
+    Typen       = Table.TransformColumnTypes(Volgorde, {
+                      {"Type", type text}, {"City", type text}, {"Address", type text},
+                      {"Vacant Possession Value", type number}, {"Value per VHE", type number},
+                      {"Laadstatus", type text}})
+in
+    Typen

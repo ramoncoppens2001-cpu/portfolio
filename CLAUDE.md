@@ -9,11 +9,12 @@ Excel-bestand. Alles gebeurt in de browser, zonder internet.
 ## Wat er in deze map staat
 
 ```
-index.html    de tool, met de handleiding erin (huidige versie: 1.26, 19 november 2026)
-CLAUDE.md     dit bestand
+index.html        de tool, met de handleiding erin (huidige versie: 1.32, 25 november 2026)
+CLAUDE.md         dit bestand
+query/query.txt   de twee Power Query's (M) van de gebruiker: tblQuery en tblVHE uit de rekenmodellen in tabel Paden
 ```
 
-- Meer is er niet. De oorspronkelijke bron (`src/`, `vendor/`, `build.py`, `tests/`, `handleiding/`,
+- Verder niets. De oorspronkelijke bron (`src/`, `vendor/`, `build.py`, `tests/`, `handleiding/`,
   `hulpscripts/`) staat **niet** in deze map en ook niet in git. Er is dus geen bouwstap: wijzigingen
   gebeuren rechtstreeks in `index.html`.
 - `index.html` is het bestand dat Netlify toont en het enige dat geleverd wordt.
@@ -100,14 +101,61 @@ CLAUDE.md     dit bestand
   verschillen per object). Toon een verschil in een totaal altijd via `aggrVerschil` (met `verschilAantal`),
   ook in rapport en Excel, en zeg in de tekst welke manier het is (`verschilPerObject()`). De waardebrug
   rekent altijd met totalen. Uitleg bij een totaal op het scherm: `totaalTip(objs, veld)` als `data-tip`.
-- Schermen: `naar("data" | "overzicht" | "kaart" | "objecten" | "vhe" | "rapport")`.
+- Schermen: `naar("data" | "inrichten" | "overzicht" | "kaart" | "objecten" | "vhe" | "rapport")`.
+- Opzet in drie stappen (sinds 1.28): **1 Importeren** (`data`), **2 Inrichten** (`inrichten`), **3 Overzicht**. Zolang
+  `ingericht()` onwaar is (geen data, `S.ovKeuzeGedaan` uit of geen `S.overzicht.soort`) toont `tekenKop()` drie genummerde
+  stappen (`#stappen.opzet`); daarna tabs (Data, Inrichten | Overzicht, Kaart, Objecten, VHE's, Rapport).
+- Inrichten (`tekenInrichten`, `koppelInrichten`, keuzes in `IN` tot je op `#inGa` klikt): de soort vastgoed uit `SOORTEN`
+  (`resi`, `comm`, `mixed`: elk met standaard `tegels` en `kaarten`), voorgesteld door `stelSoortVoor()` (aandeel MV_Comm,
+  anders eenheden, anders PropertyType). Kerncijfers als chips, onderdelen als schakelaars (`IN_GROEPEN`) en per onderdeel
+  onder ‘Zelf samenstellen’. Opgeslagen in `S.overzicht.soort`, `.tegels` (in volgorde; `tegelKeuze` volgt die volgorde zodra
+  er een soort is, ook in Basis) en `.kaarten`. Illustraties: `illustratie()` (uit de Referentie Tool, plus `MIX`).
+- Onderdelen per soort in het overzicht: `verh` (Woningen en commercieel, `tekenVerh`, `mvVerdeling`), `resi` en `comm`
+  (`FOCUS`, `focusKaartHtml`, `tekenFocus`). Nieuwe onderdelen in `OV_NIEUW` staan alleen aan als ze gekozen zijn. De
+  volgorde in het voorbeeld op het inrichtscherm: `OV_VOLGORDE`.
+- WALT: veld `WALT` (groep `lease`, Huurcontracten; soort factor, gewogen naar RI_Total, nog zonder `dlt`: een verschil in
+  jaren zou ook de Excel-formules raken). Kerncijfers erbij: `vpvm2`, `walt`, `aandeel` (eigen tegel zonder veld).
+- Het profiel Kerncijfers volgt de soort (sinds 1.30): `PROFIELEN[0].velden` en `.uitleg` zijn getters op `kernVelden()`
+  (`KERN_SOORT[S.overzicht.soort]`, anders `KERN_STD`). Na Inrichten krijgt `S.kolommen.velden` die kolommen als het profiel
+  `kern` is en `!S.profielGewijzigd`. Kaart: `kaartTipSoort()` in het kaartje, en bij comm eerst NIY_MR als rendement.
+- Soort per object uit het type (sinds 1.31): `soortVanType(PropertyType)` (combinaties als ‘Residential/retail’ = mixed);
+  `stelSoortVoor` weegt dat naar MV (≥ 90% woningen of commercieel, anders mixed) en valt zonder type terug op
+  `stelSoortVoorWaarde` (aandeel MV_Comm, dan eenheden).
+- Heatmap in Objecten (sinds 1.31, per kolom sinds 1.32): `S.kolommen.heatmap` = `{ veld: "d" | "w" }` (oud: een lijst met
+  Δ-velden; lees altijd via `hmKeuze()`). `d` = verandering (`--hm-op`/`--hm-neer`, schaal 90e percentiel van |Δ|), `w` = hoog/laag
+  (`--hm-niveau`, 5e–95e percentiel, ook op de vorige-kolom). `hmSchalen`, `hmStijl(o, f, HM, k.wat)`, `hmKan`/`hmKanW`, pop
+  `heatmapPopHtml` met per kolom Uit · Δ · Hoog/laag. Alleen op het scherm, niet in rapport of Excel. Enter in het zoekveld van
+  Kolommen voegt de best passende kolom toe (eigen naam eerst).
+- Like-for-like (sinds 1.32): `inLfl(o, f)` = beide waarden, `telt(o, f)` en `!samenstellingAnders(o)`. Samenstelling anders =
+  oppervlak (`LFL_MATEN`: Area_Total, anders LFA/UFA/GFA) wijkt meer dan `LFL_MARGE` (1%) af, of Units_Total ≠ Units_Total_Prev
+  als die in de data staat. Alleen als `S.kolommen.lflStrikt === true` (schakelaar ‘Like-for-like · zelfde m²’ `[data-lflknop]` in de
+  balk naast Verschil, standaard **uit**: dan tellen alle objecten met beide taxaties). Aan: zo'n object telt in totalen, niet in
+  verschillen (`aggrDelta`, `gemDelta`, `lflAantal`). Het woord ‘like-for-like’ staat in tool, rapport en Excel alleen als het aan
+  staat; anders ‘van het totaal’ of `lflNaam()` (‘Bestaande objecten’). Label ‘ander opp.’ in Objecten altijd, controle-item met knop, waardebrug-stap `anders` (ook in
+  `brugTabelHtml` en het Excel-blad Waardebrug). Excel: rekenkolom ‘Like-for-like’ (`hLfl`) in het overzicht en kolom `_lfl` in het
+  datablad; de Δ-formules vermenigvuldigen daarmee. Een nieuw LFL-filter: gebruik `inLfl`, nooit zelf `isGetal(o.v[f]) && isGetal(o.p[f])`.
+- Velden die maar bij een deel van de objecten tellen: `VELD[f].alleen(o)` (+ `alleenUitleg`). Nu alleen NIY_MR = `nietWoning`
+  (type niet resi; zonder type: wel commerciële waarde of eenheden). `aggr`, `delta`, `heeftWaarden`, `kolWaarde` houden er
+  rekening mee; Excel schrijft een lege cel en het datablad krijgt `_telt_NIY_MR`. Commercieel in cijfers (`focusSel`) laat
+  woningobjecten weg.
+- VHE-aansluiting (sinds 1.32): `vheAansluiting` boven de VHE-tabel (som VHE-waarden tegen MV van de gekoppelde objecten),
+  `vheAfwijkChip` (‘≠ marktwaarde’) per bestand; de controle noemt niet afgestemde objecten met een verschil onder 1%.
+- Like-for-like is op 25-11-2026 onafhankelijk nagerekend (Python uit de ruwe regels, `.testhulp/lfl.py`, sinds 1.32 met de
+  oppervlakregel en NAR alleen niet-woningen): sommen, gewogen rendementen, leegstand, beide manieren van Verschil, per
+  portefeuille en de waardebrug kloppen tot op de laatste decimaal. In de voorbeelddata is Zwarte Janstraat 62 uitgebreid
+  (228 → 246 m²).
+- Exporteren (`#ovExport`, `openExportKeuze`): rapport, de twee Excel-bestanden (`excelKeuzeHtml`) en de plaatshouder
+  ‘Interactief dashboard (HTML) · binnenkort’. Dat dashboard voor de klant is gepland (los HTML-bestand met kaart en
+  cijfers om door te klikken); nog niet gebouwd.
 - HTML met template strings; data altijd door `esc()`. Getallen via `fmt(waarde, soort, taal)` met soort
   `euro`, `pct`, `m2`, `aantal`, `factor` of `datum`.
 - Meldingen: `melding(tekst, "goed" | "mis")`; een vraag: `await bevestig(titel, uitleg, knop)`.
 - Weergave (`S.weergave`, knop `#knopWeergave` in de kop, `pasWeergaveToe()` zet `data-modus` en `data-thema` op `<html>`):
-  - Modus `eenvoudig` (alleen bekijken; standaard voor wie de tool voor het eerst opent) of `uitgebreid` (alles). Wat bij
+  - Modus `eenvoudig` (op het scherm ‘Basis’; standaard voor wie de tool voor het eerst opent) of `uitgebreid` (‘Alles tonen’).
+    Het rapport kan ook in Basis (via Exporteren); alleen de tab Rapport is `alleen-uitgebreid`. Wat bij
     één modus hoort, krijgt de klasse `alleen-uitgebreid` of `alleen-eenvoudig`; in de code vraag je `eenvoudig()`.
-    Een nieuwe knop voor rapport, instellingen of koppelen: geef hem `alleen-uitgebreid`.
+    Een nieuwe knop voor rapport, instellingen of koppelen: geef hem `alleen-uitgebreid`. Uitzondering op verzoek van de
+    gebruiker (1.31): Kolommen en het kruisje in de kolomkop bij Objecten staan ook in Basis.
   - Thema `licht`, `donker` of `auto`. De donkere kleuren staan in één blok aan het eind van de opmaak (zoek op
     `weergave: modus en donker thema`): eerst de variabelen, daarna de regels voor vaste kleuren. Een nieuwe vaste kleur
     in de opmaak of in een SVG op het scherm: zet daar de donkere tegenhanger bij en bekijk het scherm in donker.
@@ -118,15 +166,30 @@ CLAUDE.md     dit bestand
   kolommen op naam of veld; hetzelfde dossiernummer, of bij VHE's hetzelfde bestand, wordt vervangen door de
   nieuwe regels). Alleen ‘Ander bestand, alleen voor …’ (optie `alleen`) vervangt een deel; voorbeelddata gaat
   altijd weg. Rekenmodellen komen bij rekenmodellen; een query en rekenmodellen gaan niet samen (`kanErbij`).
-- Naar het overzicht (`gaNaarOverzicht`): de eerste keer per portefeuille het venster ‘Wat wil je zien?’
-  (`openOverzichtKeuze`, `S.ovKeuzeGedaan`; de keuze staat in `S.overzicht.kaarten`, zie `OV_KEUZES` en
-  `ovKaartAan`). Staat `S.kaart.auto` aan, dan zoekt `zoekAdressenMetBalk()` eerst de adressen op, met het
-  bezig-venster als voortgangsbalk. Een nieuw onderdeel in het overzicht: ook een regel in `OV_KAARTEN`,
-  `OV_KEUZES` en `ovKaartKan`.
+- Naar het overzicht (`gaNaarOverzicht`): de eerste keer per portefeuille eerst het scherm Inrichten (het oude
+  venster ‘Wat wil je zien?’; `openOverzichtKeuze` gaat er nu heen). Staat `S.kaart.auto` aan, dan zoekt
+  `zoekAdressenMetBalk()` eerst de adressen op, met het bezig-venster als voortgangsbalk. Een nieuw onderdeel in het
+  overzicht: ook een regel in `OV_KAARTEN`, `OV_KEUZES`, `OV_VOLGORDE` en `ovKaartKan` (en eventueel in `SOORTEN`).
 - Query: de tool zoekt de Excel-tabellen `tblQuery` en `tblVHE` en kent nieuwe en oude kolomnamen;
   kolommen met `_Prev` en `_Delta` horen bij hun veld.
 - Rekenmodellen: alleen het tabblad Overview wordt uitgepakt: regel 1 de kolomnamen, regel 2 de waarden;
   de VHE's in de kolommen A–D, kop op regel 34, eenheden op 35–209.
+- De query op de rekenmodellen (`query/query.txt`, sinds 1.29 in de tool verwerkt): tblQuery heeft vooraan `Bronbestand`,
+  `Laadstatus` en `Gevulde cellen`, tblVHE `Bestand` en `Laadstatus` (OK, LET OP: …, LEEG: …, FOUT: …). Die kolommen tellen
+  niet als onbekend (`isMetaKolom`). `koppelVhe` koppelt eerst op `bestandSleutel(Bronbestand) = bestandSleutel(Bestand)`.
+  Regels met LEEG of FOUT worden geen object of VHE; ze staan in `LAADSTATUS.obj`/`.vhe` met een reden van de tool
+  (`laadReden`; nooit de foutmelding zelf, daar kan een pad in staan). Een VHE-regel zonder adres, waarde en leegwaarde
+  telt nooit als eenheid. Op het blad Controle van de Excel staat dan een extra aftrekregel.
+- `query.txt` aangepast op 25-11-2026 (oude versie in `.testhulp/query-oud.txt`): tblVHE leest regel 35–209 en slaat lege regels
+  over (zoals `vheBlok` in de tool), stopt bij een totaalregel, ‘zonder waarde’ kijkt naar Value per VHE (commercieel heeft geen
+  VPV), meldt ‘waarde maar zonder adres’ (`laadReden` kent die melding); FOUT-meldingen zonder pad. Kolom ‘Bijwerken’ in Paden: alleen aangevinkte (of nieuwe)
+  bestanden worden gelezen, de rest komt uit de vorige tblQuery/tblVHE in de werkmap (zelfverwijzende query). Kolommen Actueel, Laatst gewijzigd
+  en Laatst ingelezen in tblQuery (wijzigdatum via Folder.Contents); de tool leest Actueel in `o.actueel` en meldt LET OP/ONBEKEND in de controle. Niet in Power Query getest.
+- VHE-waarden afstemmen (`schaalVhe`, `schaalDeel`, `S.vheSchalen`, standaard aan): komt het verschil tussen de som van de
+  VHE-waarden en MV_Total (of VPV) van afronden (halve `afrondStap` van het totaal, plus een halve stap per VHE als die ook
+  afgerond zijn), dan krijgt elke VHE waarde ÷ som × totaal, in hele euro's met de restjes bij de grootste delen. De ruwe
+  waarden staan in `u.waardeRuw` en `u.vpvRuw` (en in het datablad van de Excel); het blad Controle heeft dan twee regels
+  (zoals in het rekenmodel, en afgestemd). Een grotere afwijking blijft een aandachtspunt.
 
 ## Adressen op de kaart
 
@@ -217,8 +280,12 @@ De tool laat de wijzigingen zien onder ‘Over deze tool’.
 
 - Er is geen testscript meer in deze map. Controleer met de browser (bijvoorbeeld Playwright voor Python:
   `pip install playwright` en `python -m playwright install chromium`).
-- Open `index.html` als `file://`, klik op `#knopVoorbeeld` (of `await laadVoorbeeld()`) en wacht op
-  `OBJ.length === 20`. Blokkeer het netwerk met `ctx.route(re.compile(r"^https?://"), ...)`.
+- Open `index.html` als `file://`, roep `await laadVoorbeeld()` aan (gemengd; ook `laadVoorbeeld("resi")` of
+  `laadVoorbeeld("comm")`, zie `VOORBEELDEN`/`voorbeeldSet`) en wacht op `OBJ.length === 20`. `#knopVoorbeeld` opent
+  een keuze en staat alleen in beeld als er al data is. Daarna `gaNaarOverzicht()` en `#inGa` voor het overzicht; laad
+  nieuwe data vanaf het datascherm (`naar("data")`), anders telt het overzicht als al gezien. Data in de vorm van de
+  query op de rekenmodellen: zet `DATA = { obj: {…kolommen met Bronbestand en Laadstatus…}, vhe: {…} }` en
+  `await naNieuweData("test")` (zie `.testhulp/test129.py` als die er nog is). Blokkeer het netwerk met `ctx.route(re.compile(r"^https?://"), ...)`.
 - Handig in de pagina: `naar("kaart")`, `S.pagina.sjabloon = "geel"`, `S.pagina.taal = "en"`,
   `bouwRapport({ voorbeeld: true })` en dat met `page.set_content(html)` openen en wachten op
   `window.__klaar === true`; `maakExcel()` geeft `{ data, naam, bladen, soort }` (met `{ soort: "klant" }`
