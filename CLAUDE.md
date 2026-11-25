@@ -9,7 +9,7 @@ Excel-bestand. Alles gebeurt in de browser, zonder internet.
 ## Wat er in deze map staat
 
 ```
-index.html        de tool, met de handleiding erin (huidige versie: 1.32, 25 november 2026)
+index.html        de tool, met de handleiding erin (huidige versie: 1.33, 25 november 2026)
 CLAUDE.md         dit bestand
 query/query.txt   de twee Power Query's (M) van de gebruiker: tblQuery en tblVHE uit de rekenmodellen in tabel Paden
 ```
@@ -140,6 +140,8 @@ query/query.txt   de twee Power Query's (M) van de gebruiker: tblQuery en tblVHE
   woningobjecten weg.
 - VHE-aansluiting (sinds 1.32): `vheAansluiting` boven de VHE-tabel (som VHE-waarden tegen MV van de gekoppelde objecten),
   `vheAfwijkChip` (‘≠ marktwaarde’) per bestand; de controle noemt niet afgestemde objecten met een verschil onder 1%.
+- Parkeer-VHE's (sinds 1.33): `isParkeerVhe(u)` (type met park, garage, carport, stalling, pp). Is Units_Total precies het aantal VHE's min de
+  parkeerplaatsen, dan geeft de controle een info-regel in plaats van ‘Aantal VHE's wijkt af’. In de voorbeelddata telt Units_Total ze wel mee.
 - Like-for-like is op 25-11-2026 onafhankelijk nagerekend (Python uit de ruwe regels, `.testhulp/lfl.py`, sinds 1.32 met de
   oppervlakregel en NAR alleen niet-woningen): sommen, gewogen rendementen, leegstand, beide manieren van Verschil, per
   portefeuille en de waardebrug kloppen tot op de laatste decimaal. In de voorbeelddata is Zwarte Janstraat 62 uitgebreid
@@ -180,7 +182,7 @@ query/query.txt   de twee Power Query's (M) van de gebruiker: tblQuery en tblVHE
   Regels met LEEG of FOUT worden geen object of VHE; ze staan in `LAADSTATUS.obj`/`.vhe` met een reden van de tool
   (`laadReden`; nooit de foutmelding zelf, daar kan een pad in staan). Een VHE-regel zonder adres, waarde en leegwaarde
   telt nooit als eenheid. Op het blad Controle van de Excel staat dan een extra aftrekregel.
-- `query.txt` aangepast op 25-11-2026 (oude versie in `.testhulp/query-oud.txt`): tblVHE leest regel 35–209 en slaat lege regels
+- `query.txt` aangepast op 25-11-2026 (oude versie in `.testhulp/query-oud.txt`): tblVHE leest regel 35–500 (sinds 25-11-2026; de tool zelf bij .xlsm nog 35–209) en slaat lege regels
   over (zoals `vheBlok` in de tool), stopt bij een totaalregel, ‘zonder waarde’ kijkt naar Value per VHE (commercieel heeft geen
   VPV), meldt ‘waarde maar zonder adres’ (`laadReden` kent die melding); FOUT-meldingen zonder pad. Kolom ‘Bijwerken’ in Paden: alleen aangevinkte (of nieuwe)
   bestanden worden gelezen, de rest komt uit de vorige tblQuery/tblVHE in de werkmap (zelfverwijzende query). Kolommen Actueel, Laatst gewijzigd

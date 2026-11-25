@@ -150,7 +150,7 @@ ________________________________________________________________________________
 
 // tblVHE — de verhuurbare eenheden uit tabblad Overview, kolom A–D vanaf regel 35
 // Aangepast 25-11-2026:
-//  - leest regel 35 t/m 209 helemaal en slaat lege regels over; stopt niet meer bij de eerste lege regel
+//  - leest regel 35 t/m 500 helemaal en slaat lege regels over; stopt niet meer bij de eerste lege regel
 //    (daardoor vielen bij objecten met meerdere straten de eenheden onder een lege regel weg)
 //  - stopt wel bij een totaalregel (Totaal, Total, Subtotaal, Som …), zoals de tool zelf rekenmodellen leest
 //  - leeg is: niets, 0 of een streepje
@@ -164,7 +164,7 @@ ________________________________________________________________________________
 //    Bestand, Laadstatus en Value per VHE; hoe die tabel in Excel heet maakt niet uit.
 let
     StartRij   = 35,
-    EindRij    = 209,
+    EindRij    = 500,
     StadRij    = 2,
     StadKolom  = 5,
     Kolomnamen = {"Type", "City", "Address", "Vacant Possession Value", "Value per VHE", "Laadstatus"},
